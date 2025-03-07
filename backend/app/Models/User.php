@@ -15,7 +15,8 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
-
+    
+    protected $guard_name = 'web';
     /**
      * Масив атрибутів, які можна заповнювати через масове призначення.
      * Це означає, що ці поля можна передавати при створенні або оновленні користувача.
@@ -71,14 +72,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsTo(Role::class);
     }
 
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
     /**
      * Перевіряє, чи користувач є адміністратором.
      * Використовується для перевірки доступу до адмін-панелі.
      */
     public function isAdmin()
     {
-        return $this->role && $this->role->name === 'admin';
+        return $this->hasRole('admin');
     }
+
 
     /**
      * Перевіряє, чи користувач є няньою.
@@ -86,7 +93,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isNanny()
     {
-        return $this->role && $this->role->name === 'nanny';
+        return $this->hasRole('nanny');
     }
 
     /**
@@ -95,7 +102,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isParent()
     {
-        return $this->role && $this->role->name === 'parent';
+        return $this->hasRole('parent');
     }
 
     /**
@@ -160,16 +167,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getProfileTypeAttribute()
     {
         // Якщо роль користувача - це 'nanny', то профіль буде 'nanny'
-        // Якщо роль користувача - це 'parent', то профіль буде 'parent'
-        // Можна додати й інші перевірки для інших ролей, якщо потрібно
+        // Якщо роль користувача - це 'parent', то профіль буде 'parent'       
 
         if ($this->role && $this->role->name === 'parent') {
             return 'parent';
         } elseif ($this->role && $this->role->name === 'nanny') {
             return 'nanny';
         }
-
-        // За замовчуванням повертаємо NULL або будь-яке інше значення
+   
         return null;
     }
 }

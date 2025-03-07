@@ -4,25 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Redirect;
 
 class VerificationController extends Controller
 {
+    /**
+     * Підтвердження email без редиректу.
+     */
     public function verify(Request $request)
     {
-        $user = \App\Models\User::findOrFail($request->id);
+         // Отримання користувача по ID та хешу
+         $user = User::findOrFail($request->route('id'));
 
+        //  // Перевірка, чи збігається хеш з хешем у URL
+         if (!hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
+            throw new \Illuminate\Auth\Access\AuthorizationException;
+        }  
+        
+        // Якщо email вже підтверджено
         if ($user->hasVerifiedEmail()) {
-            return Redirect::route('home')->with('status', 'Email already verified.');
+            return response()->json(['message' => 'Ваш email вже підтверджено! Ви можете увійти в систему.']);
         }
 
-        if ($user->markEmailAsVerified()) {
-            event(new Verified($user));
+       // Підтвердження email
+       if ($user->markEmailAsVerified()) {
+        event(new Verified($user));
+         }
+
+        return response()->json(['message' => 'Email успішно підтверджено!']);
+    }
+
+    /**
+     * Надіслати повторно лист для підтвердження.
+     */
+    public function resend(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email вже підтверджено.'], 400);
         }
 
-        return Redirect::route('home')->with('status', 'Email successfully verified.');
+        $request->user()->sendEmailVerificationNotification();
+
+        return response()->json(['message' => 'Лист для підтвердження надіслано!']);
     }
 }
