@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\Role;
+use Illuminate\Support\Facades\Log;
+
 
 class AuthController extends Controller
 {
@@ -37,21 +39,31 @@ class AuthController extends Controller
         }
 
         // Автоматичне визначення profile_type
-        $profileType = ($role->name == 'nanny') ? 'nanny' : 'parent';
+        $profileType = match ($role->name) {
+            'nanny' => 'nanny',
+            'parent' => 'parent',
+            'admin' => 'admin', // Тепер адміністратор отримує правильний тип профілю
+            default => null,
+        };
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role_id' => $role->id,
+            'password' => Hash::make($validated['password']),            
             'phone' => $validated['phone'],
             'city' => $validated['city'] ?? null,
             'district' => $validated['district'] ?? null,
             'street' => $validated['street'] ?? null,
             'house' => $validated['house'] ?? null,
-            'profile_type' => $profileType,       
+            'profile_type' => $profileType, 
+            'role_id' => $role->id,      
         ]);        
 
+        // Призначаємо роль через Spatie
+        $user->assignRole($validated['role']);
+
+        Log::info('Роль користувача після реєстрації: ', [$user->roles]);
+        
         event(new Registered($user));
 
         return response()->json([
@@ -67,10 +79,23 @@ class AuthController extends Controller
         public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        
+        Log::info('Аутентифікований користувач: ' . $request->email); 
+       
 
+        // Перевірка на правильність облікових даних
         if (Auth::guard('web')->attempt($credentials)) {
-            $user = Auth::user();
+            $user = Auth::user();// Отримуємо користувача після успішного логіну
             
+            // Логування ролі користувача
+            Log::info('Роль користувача: ' . $user->role->name);
+
+
+            // Перевірка, чи користувач існує і чи підтвердив email
+            if (!$user) {
+                return response()->json(['message' => 'Користувача не знайдено.'], 404);
+            }
+
             // Перевірка email на підтвердження
             if (!$user->hasVerifiedEmail()) {
                 return response()->json(['message' => 'Email не підтверджено'], 403);
@@ -125,6 +150,36 @@ class AuthController extends Controller
         Auth::login($user); // Авторизація користувача
 
         $token = $user->createToken('Google Token')->plainTextToken;
+
+        return response()->json([
+            'token' => $token,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Apple авторизація.
+     */
+    public function redirectToApple()
+    {
+        return Socialite::driver('apple')->stateless()->redirect();
+    }
+
+    public function handleAppleCallback()
+    {
+        $appleUser = Socialite::driver('apple')->stateless()->user();
+
+        // Перевірка, чи існує користувач з таким Apple email
+        $user = User::firstOrCreate([
+            'email' => $appleUser->getEmail(),
+        ], [
+            'name' => $appleUser->getName() ?? 'Apple User',
+            'password' => bcrypt(str()->random(16)), // Генерація випадкового пароля
+        ]);
+
+        Auth::login($user); // Авторизація користувача
+
+        $token = $user->createToken('Apple Token')->plainTextToken;
 
         return response()->json([
             'token' => $token,

@@ -26,5 +26,6 @@ class AppServiceProvider extends ServiceProvider
             UserRegistered::class,
             SendWelcomeEmail::class
         );
+        $this->app['router']->aliasMiddleware('role', \App\Http\Middleware\RoleMiddleware::class);
     }
 }

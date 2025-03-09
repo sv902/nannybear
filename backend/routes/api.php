@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MessageController;
@@ -12,7 +13,8 @@ use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\NannyProfileController;
 use App\Http\Controllers\Api\ParentProfileController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,23 +27,20 @@ use App\Http\Controllers\AdminController;
 |
 */
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('/users/{user}/role', [UserController::class, 'updateRole']);
+});
+
 /**
  *  АВТОРИЗАЦІЯ ТА РЕЄСТРАЦІЯ
  */
 Route::post('/register', [AuthController::class, 'register']); // Реєстрація нового користувача
-Route::post('login', [AuthController::class, 'login']); // Вхід у систему
+Route::post('/login', [AuthController::class, 'login'])->name('login'); // Вхід у систему
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); // Вихід
-
-/**
- *  ОТРИМАННЯ ВСІХ КОРИСТУВАЧІВ (ТІЛЬКИ АВТОРИЗОВАНІ)
- */
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/users', [AuthController::class, 'index']);
-    Route::get('/users/{id}', [AuthController::class, 'show']);
-    Route::put('/users/{id}', [AuthController::class, 'update']);
-    Route::delete('/users/{id}', [AuthController::class, 'destroy']);
-    Route::patch('/users/{id}/role', [AuthController::class, 'updateRole']);
-});
 
 /**
  *  ВЕРИФІКАЦІЯ EMAIL (автоматично відправляється при реєстрації)
@@ -51,8 +50,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
         return response()->json(['message' => 'Email успішно підтверджено!']);
-    })->name('verification.verify');
-
+    })->name('verification.verify'); 
+    
     // Повторна відправка листа для верифікації
     Route::post('/email/resend', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
@@ -61,12 +60,26 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 /**
+ *  КЕРУВАННЯ КОРИСТУВАЧАМИ (тільки для авторизованих)
+ */
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/users', [UserController::class, 'index']); // Отримати список всіх користувачів (тільки адмін)
+    Route::get('/users/{id}', [UserController::class, 'show']); // Отримати конкретного користувача
+    Route::put('/users/{id}', [UserController::class, 'update']); // Оновити користувача
+    Route::delete('/users/{id}', [UserController::class, 'destroy']); // Видалити користувача
+    Route::patch('/users/{id}/role', [UserController::class, 'updateRole']); // Оновити роль користувача
+    });
+
+/**
  * ПРОФІЛІ
  */
 Route::middleware('auth:sanctum')->group(function () {
     // Створення профілю
     Route::post('/profile/nanny', [NannyProfileController::class, 'create']);
     Route::post('/profile/parent', [ParentProfileController::class, 'create']);
+
+    Route::get('/profile/nanny/{id}', [NannyProfileController::class, 'show']);
+    Route::get('/profile/parent/{id}', [ParentProfileController::class, 'show']);
     
     // Загальні маршрути
     Route::post('/profile/check', [ProfileController::class, 'createProfileIfNotExists']);
@@ -98,6 +111,12 @@ Route::get('/auth/google', [AuthController::class, 'googleRedirect']); // Пер
 Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']); // Обробка відповіді від Google
 
 /**
+ *  АВТОРИЗАЦІЯ ЧЕРЕЗ APPLE
+ */
+Route::get('/auth/apple', [AuthController::class, 'redirectToApple']);
+Route::get('/auth/apple/callback', [AuthController::class, 'handleAppleCallback']);
+
+/**
  *  ОГОЛОШЕННЯ (Список доступних нянь)
  */
 Route::middleware('auth:sanctum')->group(function () {
@@ -121,18 +140,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/nanny/{id}/reviews', [ReviewController::class, 'index']); // Отримати всі відгуки про няню
 });
 
-/**
- *  УПРАВЛІННЯ (тільки для адмінів)
- */
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
-    Route::get('/admin/users', [AdminController::class, 'users']); // Отримати всіх користувачів
-    Route::delete('/admin/user/{id}', [AdminController::class, 'destroy']); // Видалити користувача
-});
-
-/**
- *  РЕЗЕРВНИЙ МАРШРУТ ДЛЯ ТЕСТУВАННЯ
- */
-// Route::get('/test', function () {
-//     return response()->json(['message' => 'API працює! 🎉']);
-// });
 

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserController extends Controller
 {
@@ -14,10 +17,14 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->isAdmin()) {
-            return response()->json(['message' => 'Доступ заборонено'], 403);
-        }
+        Log::info('Початок виклику index() для користувача ' . Auth::id());
 
+        if (!Auth::user()->isAdmin()) {
+        Log::warning('Користувач ' . Auth::id() . ' намагається отримати доступ без прав адміністратора.');
+        return response()->json(['message' => 'Доступ заборонено'], 403);
+    }
+
+        Log::info('Адміністратор має доступ.');
         $users = User::with('role')->get();
         return response()->json($users);
     }
@@ -27,9 +34,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::with('role')->find($id);
-
-        if (!$user) {
+        $user = User::with('roles')->findOrFail($id);
+         if (!$user) {
             return response()->json(['message' => 'Користувача не знайдено'], 404);
         }
 
@@ -71,21 +77,46 @@ class UserController extends Controller
      * Видалити користувача (доступно тільки адміну).
      */
     public function destroy($id)
-    {
+    {   
+        
+        $authUser = Auth::user();
+
+        // Логування для перевірки
+        Log::info("Користувач {$authUser->id} перевіряється на роль admin");
+
+        // if (!$authUser->hasRole('admin')) {
+        //     Log::warning("Користувач {$authUser->id} не має прав для видалення користувачів.");
+        //     return response()->json(['message' => 'Доступ заборонено'], 403);
+        // }
+         // Перевірка ролі користувача
+         if ($authUser->role->name !== 'admin') {
+            Log::warning("Користувач {$authUser->id} не має прав адміністратора для видалення користувачів.");
+            return response()->json(['message' => 'Доступ заборонено'], 403);
+        }
+        
+         // Логування, якщо у користувача є права адміністратора
+         Log::info("Користувач {$authUser->id} має права адміністратора");
+        
         // Шукаємо користувача за ID
         $user = User::find($id);
 
+        Log::info("Користувач {$authUser->id} ({$authUser->role->name}) намагається видалити {$id}");
+
         // Якщо користувача не знайдено, повертаємо помилку
         if (!$user) {
+            Log::warning("Користувача з ID {$id} не знайдено");
             return response()->json(['message' => 'Користувача не знайдено'], 404);
-        }
+        }          
 
-        if (!Auth::user()->isAdmin()) {
-            return response()->json(['message' => 'Доступ заборонено'], 403);
+         // Перевірка, чи не намагається адміністратор видалити самого себе
+        if ($authUser->id == $user->id) {
+            Log::warning("Адміністратор {$authUser->id} намагався видалити себе!");
+            return response()->json(['message' => 'Ви не можете видалити самого себе'], 403);
         }
 
         // Видаляємо користувача
         $user->delete();
+        Log::info("Користувач {$id} видалений адміністратором {$authUser->id}");
 
         // Повертаємо підтвердження видалення
         return response()->json(['message' => 'Користувача видалено']);
@@ -120,4 +151,17 @@ class UserController extends Controller
        // Повертаємо відповідь із підтвердженням оновлення ролі
        return response()->json(['message' => 'Роль оновлено', 'user' => $user]);
    }
+   
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+        
+        $this->middleware(function ($request, $next) {
+            if (!auth()->user() || !auth()->user()->isAdmin()) {
+                return response()->json(['message' => 'Доступ заборонено'], 403);
+            }
+
+            return $next($request);
+        });
+    }
 }
