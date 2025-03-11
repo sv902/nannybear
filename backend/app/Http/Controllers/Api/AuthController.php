@@ -11,7 +11,7 @@ use Illuminate\Auth\Events\Registered;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -135,61 +135,191 @@ class AuthController extends Controller
     /**
      * Google Callback.
      */
-        public function googleCallback()
+    public function googleCallback()
     {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+        Log::info('Запуск googleCallback');
+        try {            
+    
+            $googleUser = Socialite::driver('google')                
+                ->stateless()
+                ->user();
+            Log::info('Дані користувачів Google отримано');
+               
+            Log::info('Google User: ', [
+                'email' => $googleUser->getEmail(),
+                'name' => $googleUser->getName(),
+            ]);
 
-        // Перевірка, чи існує вже користувач з таким Google email
-        $user = User::firstOrCreate([
-            'email' => $googleUser->getEmail(),
-        ], [
-            'name' => $googleUser->getName(),
-            'password' => bcrypt(str_random(16)), // Генерація випадкового пароля
-        ]);
+            // Перевірка, чи існує вже користувач з таким Google email
+            $user = User::firstOrCreate([             
+                'email' => $googleUser->getEmail(),
+            ], [
+                'name' => $googleUser->getName(),
+                'password' => bcrypt(Str::random(16)),  // Генерація випадкового пароля
+            ]);             
+          
+            Log::info('Користувач створений або знайдений: ', ['user' => $user]);
+              
 
-        Auth::login($user); // Авторизація користувача
+             // Отримуємо роль з запиту (або встановлюємо за замовчуванням "parent")
+            $roleName = request()->input('role', 'parent'); // Якщо роль не передано, встановлюється "parent"
+            
+            // Перевіряємо, чи є роль в базі
+            $role = Role::where('name', $roleName)->first();
+            if ($role) {
+                $user->role_id = $role->id;
+                $user->save();
+                Log::info('Роль користувача встановлена: ' . $role->name);
+            } else {
+                Log::error('Роль "' . $roleName . '" не знайдена');
+            }
+    
+            // Автоматичне визначення profile_type
+            if (isset($role)) {
+                $profileType = match ($role->name) {
+                    'nanny' => 'nanny',
+                    'parent' => 'parent',
+                    'admin' => 'admin',
+                    default => null,
+                };
+                $user->profile_type = $profileType;
+                $user->save();
+                Log::info('Profile type збережено: ' . $user->profile_type);
+            }
 
-        $token = $user->createToken('Google Token')->plainTextToken;
+            // Призначення ролі через Spatie (якщо роль була знайдена)
+            if (isset($role)) {
+                $user->assignRole($role->name);
+                Log::info('Роль користувача призначена через Spatie');
+            }    
+           
+            Auth::login($user); // Авторизація користувача
+            if (Auth::check()) {
+                Log::info('Користувач успішно авторизований');
+            } else {
+                Log::error('Не вдалося авторизувати користувача');
+            }
+                
+            // Перевіряємо email та автоматично підтверджуємо його
+            if (!$user->hasVerifiedEmail()) {
+                $user->markEmailAsVerified();
+                Log::info('Електронна пошта підтверджена');
+            }
+    
+            $token = $user->createToken('Google Token')->plainTextToken;
+            Log::info('Створено Token'); 
+    
+            Log::info('Відповідь надіслано');
+            return response()->json([
+                'token' => $token,
+                'user' => $user,
+            ]);
+    
+        } catch (\Exception $e) {          
+            Log::error('Google callback error: ' . $e->getMessage(), [
+                'stack' => $e->getTraceAsString(),
+            ]);
+            return response()->json(['error' => 'Error authenticating with Google'], 500);
+        }
+    }
+    
 
-        return response()->json([
-            'token' => $token,
-            'user' => $user,
-        ]);
+    /**
+     * Перенаправлення на Facebook для авторизації.
+     */
+    public function facebookRedirect()
+    {
+        return Socialite::driver('facebook')->stateless()->redirect();
     }
 
     /**
-     * Apple авторизація.
+     * Обробка callback-даних від Facebook.
      */
-    public function redirectToApple()
+    public function facebookCallback()
     {
-        return Socialite::driver('apple')->stateless()->redirect();
-    }
+        Log::info('Запуск facebookCallback');
+        try {
+            // Отримуємо дані користувача через Socialite
+            $facebookUser = Socialite::driver('facebook')->stateless()->user();
+            Log::info('Дані користувачів Facebook отримано');
 
-    public function handleAppleCallback()
-    {
-        $appleUser = Socialite::driver('apple')->stateless()->user();
+            Log::info('Facebook User: ', [
+                'email' => $facebookUser->getEmail(),
+                'name' => $facebookUser->getName(),
+            ]);
 
-        // Перевірка, чи існує користувач з таким Apple email
-        $user = User::firstOrCreate([
-            'email' => $appleUser->getEmail(),
-        ], [
-            'name' => $appleUser->getName() ?? 'Apple User',
-            'password' => bcrypt(str()->random(16)), // Генерація випадкового пароля
-        ]);
+            // Перевірка, чи існує вже користувач з таким Facebook email
+            $user = User::firstOrCreate([
+                'email' => $facebookUser->getEmail(),
+            ], [
+                'name' => $facebookUser->getName(),
+                'password' => bcrypt(Str::random(16)),  // Генерація випадкового пароля
+            ]);
 
-        Auth::login($user); // Авторизація користувача
+            Log::info('Користувач створений або знайдений: ', ['user' => $user]);
 
-        $token = $user->createToken('Apple Token')->plainTextToken;
+            // Отримуємо роль з запиту (або встановлюємо за замовчуванням "parent")
+            $roleName = request()->input('role', 'parent');
+            $role = Role::where('name', $roleName)->first();
+            if ($role) {
+                $user->role_id = $role->id;
+                $user->save();
+                Log::info('Роль користувача встановлена: ' . $role->name);
+            } else {
+                Log::error('Роль "' . $roleName . '" не знайдена');
+            }
 
-        return response()->json([
-            'token' => $token,
-            'user' => $user,
-        ]);
+            // Автоматичне визначення profile_type
+            if (isset($role)) {
+                $profileType = match ($role->name) {
+                    'nanny' => 'nanny',
+                    'parent' => 'parent',
+                    'admin' => 'admin',
+                    default => null,
+                };
+                $user->profile_type = $profileType;
+                $user->save();
+                Log::info('Profile type збережено: ' . $user->profile_type);
+            }
+
+            // Призначення ролі через Spatie (якщо роль була знайдена)
+            if (isset($role)) {
+                $user->assignRole($role->name);
+                Log::info('Роль користувача призначена через Spatie');
+            }
+
+            Auth::login($user); // Авторизація користувача
+            if (Auth::check()) {
+                Log::info('Користувач успішно авторизований');
+            } else {
+                Log::error('Не вдалося авторизувати користувача');
+            }
+
+            // Перевіряємо email та автоматично підтверджуємо його
+            if (!$user->hasVerifiedEmail()) {
+                $user->markEmailAsVerified();
+                Log::info('Електронна пошта підтверджена');
+            }
+
+            $token = $user->createToken('Facebook Token')->plainTextToken;
+            Log::info('Створено Token');
+
+            Log::info('Відповідь надіслано');
+            return response()->json([
+                'token' => $token,
+                'user' => $user,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Facebook callback error: ' . $e->getMessage(), [
+                'stack' => $e->getTraceAsString(),
+            ]);
+            return response()->json(['error' => 'Error authenticating with Facebook'], 500);
+        }
     }
 
         public function __construct()
     {
-        $this->middleware('auth:sanctum')->except(['login', 'register']);
+        $this->middleware('auth:sanctum')->except(['login', 'register', 'googleCallback', 'facebookCallback']);
     }   
 
 }
