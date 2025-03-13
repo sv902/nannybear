@@ -79,6 +79,15 @@ class AdminController extends Controller
            return response()->json(['message' => 'Ви не можете видалити самого себе'], 403);
        }
 
+       // Видаляємо профіль, якщо він існує
+        if ($user->nannyProfile) {
+            $user->nannyProfile->delete();
+        }
+
+        if ($user->parentProfile) {
+            $user->parentProfile->delete();
+        }
+
        // Видаляємо користувача
        $user->delete();
        Log::info("Користувач {$id} видалений адміністратором {$authUser->id}");
