@@ -4,6 +4,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ChatController;
@@ -60,16 +61,35 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 /**
- *  КЕРУВАННЯ КОРИСТУВАЧАМИ (тільки для авторизованих)
+ *  АВТОРИЗАЦІЯ ЧЕРЕЗ GOOGLE
+ */
+Route::get('/google/redirect', [AuthController::class, 'googleRedirect']); // Перенаправлення на Google
+Route::get('/google/callback', [AuthController::class, 'googleCallback']); // Обробка відповіді від Google
+
+/**
+ *  АВТОРИЗАЦІЯ ЧЕРЕЗ Facebook
+ */
+Route::get('/facebook/redirect', [AuthController::class, 'facebookRedirect']);
+Route::get('/facebook/callback', [AuthController::class, 'facebookCallback']);
+
+/**
+ *  КОРИСТУВАЧІ (няні, батьки)
  */
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/users', [UserController::class, 'index']); // Отримати список всіх користувачів (тільки адмін)
-    Route::get('/users/{id}', [UserController::class, 'show']); // Отримати конкретного користувача
-    Route::put('/users/{id}', [UserController::class, 'update']); // Оновити користувача
-    Route::delete('/users/{id}', [UserController::class, 'destroy']); // Видалити користувача
-    Route::patch('/users/{id}/role', [UserController::class, 'updateRole']); // Оновити роль користувача
+    Route::get('/user/{id}', [UserController::class, 'show']); // Отримати конкретного користувача
+    Route::put('/user/{id}', [UserController::class, 'update']); // Оновити користувача
+    Route::delete('/user', [UserController::class, 'destroySelf']); // Видалити користувача
     });
 
+/**
+ * АДМІНІСТРАТОР
+ */
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::get('/users', [AdminController::class, 'index']); // Отримати список всіх користувачів
+    Route::patch('/users/{id}/role', [AdminController::class, 'updateRole']); // Оновити роль користувача
+    Route::delete('/users/{id}', [AdminController::class, 'destroy']); // Видалити користувача
+    });
+    
 /**
  * ПРОФІЛІ
  */
@@ -77,7 +97,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Створення профілю
     Route::post('/profile/nanny', [NannyProfileController::class, 'create']);
     Route::post('/profile/parent', [ParentProfileController::class, 'create']);
-
     Route::get('/profile/nanny/{id}', [NannyProfileController::class, 'show']);
     Route::get('/profile/parent/{id}', [ParentProfileController::class, 'show']);
     
@@ -103,18 +122,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Надіслати нове повідомлення
     Route::post('/messages', [MessageController::class, 'store']);
 });
-
-/**
- *  АВТОРИЗАЦІЯ ЧЕРЕЗ GOOGLE
- */
-Route::get('/auth/google', [AuthController::class, 'googleRedirect']); // Перенаправлення на Google
-Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']); // Обробка відповіді від Google
-
-/**
- *  АВТОРИЗАЦІЯ ЧЕРЕЗ APPLE
- */
-Route::get('/auth/apple', [AuthController::class, 'redirectToApple']);
-Route::get('/auth/apple/callback', [AuthController::class, 'handleAppleCallback']);
 
 /**
  *  ОГОЛОШЕННЯ (Список доступних нянь)
