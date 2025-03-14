@@ -9,86 +9,108 @@ use Illuminate\Support\Facades\Auth;
 class ProfileController extends Controller
 {
     /**
-     * Перевірка та автоматичне створення профілю після підтвердження email.
+     * Автоматичне створення профілю після підтвердження email.
      */
     public function createProfileIfNotExists()
     {
         $user = Auth::user();
 
-        if ($user->role->name === 'nanny' && !$user->nannyProfile) {
-            $user->nannyProfile()->create([
+        if ($user->hasRole('nanny') && !$user->nannyProfile) {
+            $profile = $user->nannyProfile()->create([
                 'photo' => '',
                 'experience' => '',
                 'qualification' => '',
                 'education' => '',
                 'languages' => '',
-               'availability' => json_encode(['status' => 'unavailable']),
+                'availability' => json_encode(['status' => 'unavailable']),
                 'hourly_rate' => 0,
             ]);
-        } elseif ($user->role->name === 'parent' && !$user->parentProfile) {
-            $user->parentProfile()->create([
+            return response()->json(['message' => 'Профіль няні створено', 'profile' => $profile], 201);
+        }
+
+        if ($user->hasRole('parent') && !$user->parentProfile) {
+            $profile = $user->parentProfile()->create([
                 'children_count' => 1,
                 'children_ages' => '[]',
                 'special_needs' => '',
                 'preferred_language' => 'uk',
             ]);
+            return response()->json(['message' => 'Профіль батька створено', 'profile' => $profile], 201);
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Профіль перевірено або створено',
-            'user' => $user->load(['nannyProfile', 'parentProfile']),
-        ]);
+        return response()->json(['error' => 'Профіль вже існує або створення неможливе'], 400);
     }
+
 
     /**
      * Оновлення профілю.
      */
-    public function updateProfile(Request $request)
+    public function update(Request $request)
     {
         $user = Auth::user();
 
-        if ($user->role->name === 'nanny' && $user->nannyProfile) {
+         // Перевірка для няні
+        if ($user->hasRole('nanny') && $user->nannyProfile) {
+        // Перевірка, чи профіль належить цьому користувачеві
+        if ($user->nannyProfile->user_id !== $user->id) {
+            return response()->json(['error' => 'Ви не можете редагувати профіль іншої няні'], 403);
+        }    
+
             $validated = $request->validate([
                 'photo' => 'nullable|string',
                 'experience' => 'nullable|string|max:255',
                 'qualification' => 'nullable|string|max:255',
                 'education' => 'nullable|string|max:255',
                 'languages' => 'nullable|string|max:255',
-                'availability' => 'nullable|string|max:255',
+                'availability' => 'nullable|array',
                 'hourly_rate' => 'nullable|numeric|min:0',
             ]);
+    
             $user->nannyProfile->update($validated);
-        } elseif ($user->role->name === 'parent' && $user->parentProfile) {
+    
+            return response()->json(['message' => 'Профіль няні оновлено', 'profile' => $user->nannyProfile]);
+        }
+    
+        
+        if ($user->hasRole('parent') && $user->parentProfile) {
+        // Перевірка, чи профіль належить цьому користувачеві
+        if ($user->parentProfile->user_id !== $user->id) {
+            return response()->json(['error' => 'Ви не можете редагувати профіль іншого батька'], 403);
+        }
+
             $validated = $request->validate([
                 'children_count' => 'nullable|integer|min:1',
                 'children_ages' => 'nullable|string|max:255',
                 'special_needs' => 'nullable|string|max:255',
                 'preferred_language' => 'nullable|string|max:255',
             ]);
+    
             $user->parentProfile->update($validated);
-        } else {
-            return response()->json(['error' => 'Профіль не знайдено'], 404);
+    
+            return response()->json(['message' => 'Профіль батька оновлено', 'profile' => $user->parentProfile]);
         }
-
-        return response()->json(['message' => 'Профіль оновлено успішно']);
+    
+        return response()->json(['error' => 'Профіль не знайдено'], 404);
     }
-
+    
     /**
      * Видалення профілю.
      */
-    public function deleteProfile()
+    public function destroy()
     {
         $user = Auth::user();
 
         if ($user->nannyProfile) {
             $user->nannyProfile->delete();
-        } elseif ($user->parentProfile) {
-            $user->parentProfile->delete();
-        } else {
-            return response()->json(['error' => 'Профіль не знайдено'], 404);
+            return response()->json(['message' => 'Профіль няні видалено']);
         }
 
-        return response()->json(['message' => 'Профіль видалено успішно']);
+        if ($user->parentProfile) {
+            $user->parentProfile->delete();
+            return response()->json(['message' => 'Профіль батька видалено']);
+        }
+
+        return response()->json(['error' => 'Профіль не знайдено'], 404);
     }
+
 }

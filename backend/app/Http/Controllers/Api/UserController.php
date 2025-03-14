@@ -76,6 +76,11 @@ class UserController extends Controller
             $user = Auth::user(); // Отримуємо аутентифікованого користувача
             Log::info('Аутентифікований користувач: ', [$user]);
         
+             // Адміну заборонено видаляти свій акаунт
+            if ($user->hasRole('admin')) {
+            return response()->json(['error' => 'Адміністратор не може видалити свій акаунт'], 403);
+        }
+        
             if (!$user) {
             return response()->json(['message' => 'Користувач не знайдений'], 404);
         }

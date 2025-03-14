@@ -95,15 +95,19 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
  */
 Route::middleware('auth:sanctum')->group(function () {
     // Створення профілю
-    Route::post('/profile/nanny', [NannyProfileController::class, 'create']);
-    Route::post('/profile/parent', [ParentProfileController::class, 'create']);
-    Route::get('/profile/nanny/{id}', [NannyProfileController::class, 'show']);
-    Route::get('/profile/parent/{id}', [ParentProfileController::class, 'show']);
-    
-    // Загальні маршрути
-    Route::post('/profile/check', [ProfileController::class, 'createProfileIfNotExists']);
-    Route::put('/profile/update', [ProfileController::class, 'updateProfile']);
-    Route::delete('/profile/delete', [ProfileController::class, 'deleteProfile']);
+    Route::post('/profile/create', [ProfileController::class, 'createProfileIfNotExists']);
+
+    // Оновлення та видалення профілю
+    Route::put('/profile/update', [ProfileController::class, 'update']);
+    Route::delete('/profile/delete', [ProfileController::class, 'destroy']);
+
+     // Профілі нянь
+    Route::get('/nanny-profiles', [NannyProfileController::class, 'index']);
+    Route::get('/nanny-profiles/{id}', [NannyProfileController::class, 'show']);
+   
+    // Профілі батьків
+    Route::get('/parent-profiles', [ParentProfileController::class, 'index']);
+    Route::get('/parent-profiles/{id}', [ParentProfileController::class, 'show']);
 });
 
 /**
