@@ -1,0 +1,51 @@
+.form-button {
+    height: 46px;
+    width: 417px;
+  }
+  
+  .form-button .overlap-group-2 {
+    border-radius: 30px;
+    height: 47px;
+    position: relative;
+  }
+  
+  .form-button .text-wrapper-6 {
+    color: #fffaee99;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    left: 16px;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    position: absolute;
+    top: 11px;
+    width: 325px;
+  }
+  
+  .form-button .rectangle-4 {
+    border: 2px solid;
+    border-color: #fffaee;
+    border-radius: 30px;
+    height: 47px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 417px;
+  }
+  
+  .form-button .img {
+    height: 15px;
+    left: 355px;
+    position: absolute;
+    top: 16px;
+    width: 53px;
+  }
+  
+  .form-button:hover .text-wrapper-6 {
+    color: #fffaee;
+  }
+  
+  .form-button:hover .rectangle-4 {
+    border-color: #4db3ae;
+  }
+  

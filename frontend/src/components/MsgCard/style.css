@@ -1,0 +1,112 @@
+.msg-card {
+    height: 174px;
+    width: 446px;
+  }
+  
+  .msg-card .overlap-group {
+    height: 165px;
+    position: relative;
+    top: 9px;
+    width: 413px;
+  }
+  
+  .msg-card .p {
+    color: transparent;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    left: 33px;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    position: absolute;
+    top: 0;
+    width: 380px;
+  }
+  
+  .msg-card .rectangle {
+    background-color: #4db3ae;
+    border-radius: 30px 30px 30px 0px;
+    height: 50px;
+    left: 0;
+    position: absolute;
+    top: 115px;
+    width: 85px;
+  }
+  
+  .msg-card .text-wrapper-2 {
+    color: #fffaee;
+    font-family: "Oswald", Helvetica;
+    font-size: 32px;
+    font-weight: 400;
+    left: 33px;
+    letter-spacing: 0;
+    line-height: 33.6px;
+    position: absolute;
+    top: 122px;
+    white-space: nowrap;
+  }
+  
+  .msg-card .rectangle-2 {
+    background-color: #4db3ae;
+    border-radius: 30px 30px 30px 0px;
+    height: 174px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 446px;
+  }
+  
+  .msg-card .frame {
+    height: 1px;
+    position: relative;
+    width: 1px;
+  }
+  
+  .msg-card .text-wrapper-3 {
+    color: #fffaee;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    position: relative;
+    width: 380px;
+  }
+  
+  .msg-card .frame-2 {
+    height: 1px;
+    margin-bottom: -2.00px;
+    position: relative;
+    width: 1px;
+  }
+  
+  .msg-card .rectangle-3 {
+    border-radius: 30px 30px 30px 0px;
+    height: 50px;
+    margin-bottom: -51.00px;
+    position: relative;
+    width: 85px;
+  }
+  
+  .msg-card .text-wrapper-4 {
+    color: transparent;
+    font-family: "Oswald", Helvetica;
+    font-size: 32px;
+    font-weight: 400;
+    left: 33px;
+    letter-spacing: 0;
+    line-height: 33.6px;
+    position: absolute;
+    top: 131px;
+    white-space: nowrap;
+  }
+  
+  .msg-card.variant-2 {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0px 0px;
+    padding: 10px 33px;
+    position: relative;
+  }
+  

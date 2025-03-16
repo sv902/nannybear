@@ -1,0 +1,879 @@
+.main {
+    background-color: #fffaee;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .main .div-2 {
+    background-color: #fffaee;
+    height: 5890px;
+    overflow: hidden;
+    position: relative;
+    width: 1440px;
+  }
+  
+  .main .overlap {
+    height: 221px;
+    left: 511px;
+    position: absolute;
+    top: 2327px;
+    width: 417px;
+  }
+  
+  .main .stat-card-instance {
+    left: 1px !important;
+    position: absolute !important;
+    top: 0 !important;
+  }
+  
+  .main .design-component-instance-node {
+    left: 0 !important;
+    position: absolute !important;
+    top: 0 !important;
+  }
+  
+  .main .overlap-2 {
+    height: 972px;
+    left: 70px;
+    position: absolute;
+    top: 3821px;
+    width: 1552px;
+  }
+  
+  .main .rectangle-5 {
+    background-color: #f9d8e0;
+    border-radius: 20px;
+    height: 972px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1300px;
+  }
+  
+  .main .text-wrapper-14 {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 20px;
+    font-weight: 600;
+    left: 221px;
+    letter-spacing: -0.40px;
+    line-height: 24.0px;
+    position: absolute;
+    text-align: center;
+    top: 147px;
+    width: 858px;
+  }
+  
+  .main .screenshot-2 {
+    height: 546px;
+    left: 110px;
+    position: absolute;
+    top: 366px;
+    width: 1080px;
+  }
+  
+  .main .text-wrapper-15 {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 100px;
+    font-weight: 400;
+    left: 485px;
+    letter-spacing: 0;
+    line-height: 105.0px;
+    position: absolute;
+    text-align: center;
+    top: 24px;
+    white-space: nowrap;
+  }
+  
+  .main .rectangle-6 {
+    background-color: #4db3ae;
+    border-radius: 30px 30px 30px 0px;
+    height: 50px;
+    left: 417px;
+    position: absolute;
+    top: 192px;
+    width: 466px;
+  }
+  
+  .main .text-wrapper-16 {
+    color: #fffaee;
+    font-family: "Oswald", Helvetica;
+    font-size: 32px;
+    font-weight: 400;
+    left: 446px;
+    letter-spacing: 0;
+    line-height: 33.6px;
+    position: absolute;
+    top: 199px;
+    white-space: nowrap;
+  }
+  
+  .main .msg-card-instance {
+    left: 110px !important;
+    position: absolute !important;
+    top: 420px !important;
+  }
+  
+  .main .msg-card-2 {
+    left: 331px !important;
+    position: absolute !important;
+    top: 586px !important;
+  }
+  
+  .main .msg-card-3 {
+    left: 773px !important;
+    position: absolute !important;
+    top: 295px !important;
+  }
+  
+  .main .msg-card-4 {
+    left: 883px !important;
+    position: absolute !important;
+    top: 470px !important;
+  }
+  
+  .main .msg-card-5 {
+    left: 1106px !important;
+    position: absolute !important;
+    top: 361px !important;
+  }
+  
+  .main .overlap-3 {
+    height: 1248px;
+    left: 70px;
+    position: absolute;
+    top: 1019px;
+    width: 1370px;
+  }
+  
+  .main .overlap-4 {
+    height: 1248px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1370px;
+  }
+  
+  .main .pexels-arina {
+    height: 495px;
+    left: 0;
+    position: absolute;
+    top: 753px;
+    width: 748px;
+  }
+  
+  .main .overlap-5 {
+    height: 828px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1370px;
+  }
+  
+  .main .slogan {
+    border-radius: 20px;
+    height: 693px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1300px;
+  }
+  
+  .main .overlap-6 {
+    height: 587px;
+    left: -196px;
+    position: absolute;
+    top: -145px;
+    width: 1692px;
+  }
+  
+  .main .ellipse {
+    background-color: #f9d8e0;
+    border-radius: 196px;
+    height: 392px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 392px;
+  }
+  
+  .main .ellipse-2 {
+    background-color: #f9d8e0;
+    border-radius: 196px;
+    height: 392px;
+    left: 1300px;
+    position: absolute;
+    top: 0;
+    width: 392px;
+  }
+  
+  .main .rectangle-7 {
+    background-color: #f9d8e0;
+    height: 442px;
+    left: 198px;
+    position: absolute;
+    top: 145px;
+    width: 1298px;
+  }
+  
+  .main .text-wrapper-17 {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 64px;
+    font-weight: 400;
+    left: 305px;
+    letter-spacing: 0;
+    line-height: 76.8px;
+    position: absolute;
+    text-align: center;
+    top: 150px;
+    width: 1081px;
+  }
+  
+  .main .overlap-7 {
+    height: 251px;
+    left: 2px;
+    position: absolute;
+    top: 442px;
+    width: 1298px;
+  }
+  
+  .main .rectangle-8 {
+    background-color: #f9d8e0;
+    border-radius: 0px 0px 500px 500px;
+    height: 251px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 649px;
+  }
+  
+  .main .rectangle-9 {
+    background-color: #f9d8e0;
+    border-radius: 0px 0px 500px 500px;
+    height: 251px;
+    left: 649px;
+    position: absolute;
+    top: 0;
+    width: 649px;
+  }
+  
+  .main .vector {
+    height: 157px;
+    left: 550px;
+    position: absolute;
+    top: 0;
+    width: 196px;
+  }
+  
+  .main .vector-2 {
+    height: 12px;
+    left: 597px;
+    position: absolute;
+    top: 12px;
+    width: 101px;
+  }
+  
+  .main .round-animate {
+    height: 270px !important;
+    left: 1162px !important;
+    position: absolute !important;
+    top: 558px !important;
+    width: 208px !important;
+  }
+  
+  .main .text-wrapper-18 {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 100px;
+    font-weight: 400;
+    left: 773px;
+    letter-spacing: 0;
+    line-height: 105.0px;
+    position: absolute;
+    text-align: center;
+    top: 752px;
+    white-space: nowrap;
+  }
+  
+  .main .nanny-bear-2 {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    left: 773px;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    position: absolute;
+    top: 875px;
+    width: 524px;
+  }
+  
+  .main .overlap-8 {
+    height: 50px;
+    left: 994px;
+    position: absolute;
+    top: 1198px;
+    width: 307px;
+  }
+  
+  .main .text-wrapper-19 {
+    color: #fffaee;
+    font-family: "Oswald", Helvetica;
+    font-size: 32px;
+    font-weight: 400;
+    left: 29px;
+    letter-spacing: 0;
+    line-height: 33.6px;
+    position: absolute;
+    top: 7px;
+    white-space: nowrap;
+  }
+  
+  .main .arrow-2 {
+    height: 15px;
+    left: 240px;
+    position: absolute;
+    top: 18px;
+    width: 52px;
+  }
+  
+  .main .overlap-9 {
+    height: 932px;
+    left: 70px;
+    position: absolute;
+    top: 87px;
+    width: 1300px;
+  }
+  
+  .main .baner {
+    background-color: #add1f5;
+    border-radius: 20px;
+    height: 847px;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 25px;
+    width: 1300px;
+  }
+  
+  .main .overlap-group-4 {
+    height: 1622px;
+    left: -774px;
+    position: relative;
+    top: -726px;
+    width: 1638px;
+  }
+  
+  .main .ellipse-3 {
+    border: 2px solid;
+    border-color: #fffaee;
+    border-radius: 667px;
+    height: 1334px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1334px;
+  }
+  
+  .main .ellipse-4 {
+    border: 2px solid;
+    border-color: #fffaee;
+    border-radius: 811px;
+    height: 1622px;
+    left: 16px;
+    position: absolute;
+    top: 0;
+    width: 1622px;
+  }
+  
+  .main .text-wrapper-20 {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    left: 884px;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    position: absolute;
+    top: 1119px;
+    width: 397px;
+  }
+  
+  .main .text-wrapper-21 {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 100px;
+    font-weight: 400;
+    left: 884px;
+    letter-spacing: 0;
+    line-height: 105.0px;
+    position: absolute;
+    top: 785px;
+    white-space: nowrap;
+  }
+  
+  .main .text-wrapper-22 {
+    -webkit-text-stroke: 1px #3a3b61;
+    color: #add1f5;
+    font-family: "Princess Diana-Regular", Helvetica;
+    font-size: 200px;
+    font-weight: 400;
+    left: 1044px;
+    letter-spacing: -2.00px;
+    line-height: normal;
+    position: absolute;
+    top: 742px;
+  }
+  
+  .main .text-wrapper-23 {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 100px;
+    font-weight: 400;
+    left: 884px;
+    letter-spacing: 0;
+    line-height: 105.0px;
+    position: absolute;
+    top: 891px;
+  }
+  
+  .main .cta-button {
+    left: 884px !important;
+    position: absolute !important;
+    top: 1433px !important;
+  }
+  
+  .main .ph {
+    height: 932px;
+    left: 425px;
+    position: absolute;
+    top: 0;
+    width: 872px;
+  }
+  
+  .main .instagram {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 64px;
+    font-weight: 400;
+    left: 70px;
+    letter-spacing: 0;
+    line-height: 76.8px;
+    position: absolute;
+    top: 4852px;
+    width: 417px;
+  }
+  
+  .main .text-wrapper-24 {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 100px;
+    font-weight: 400;
+    left: 489px;
+    letter-spacing: 0;
+    line-height: 105.0px;
+    position: absolute;
+    text-align: center;
+    top: 2607px;
+    white-space: nowrap;
+  }
+  
+  .main .text-wrapper-25 {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 20px;
+    font-weight: 600;
+    left: 297px;
+    letter-spacing: -0.40px;
+    line-height: 24.0px;
+    position: absolute;
+    text-align: center;
+    top: 2730px;
+    width: 846px;
+  }
+  
+  .main .element-2 {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 20px;
+    font-weight: 600;
+    left: 512px;
+    letter-spacing: -0.40px;
+    line-height: 24.0px;
+    position: absolute;
+    text-align: center;
+    top: 3676px;
+    width: 416px;
+  }
+  
+  .main .rectangle-10 {
+    height: 408px;
+    left: 70px;
+    position: absolute;
+    top: 4955px;
+    width: 306px;
+  }
+  
+  .main .rectangle-11 {
+    height: 408px;
+    left: 401px;
+    position: absolute;
+    top: 4955px;
+    width: 306px;
+  }
+  
+  .main .rectangle-12 {
+    height: 408px;
+    left: 732px;
+    position: absolute;
+    top: 4955px;
+    width: 306px;
+  }
+  
+  .main .rectangle-13 {
+    height: 408px;
+    left: 1063px;
+    object-fit: cover;
+    position: absolute;
+    top: 4955px;
+    width: 306px;
+  }
+  
+  .main .overlap-10 {
+    height: 471px;
+    left: 0;
+    position: absolute;
+    top: 5423px;
+    width: 1440px;
+  }
+  
+  .main .rectangle-14 {
+    background-color: #3a3b61;
+    height: 467px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1440px;
+  }
+  
+  .main .overlap-wrapper {
+    height: 198px;
+    left: 1189px;
+    position: absolute;
+    top: 290px;
+    transform: rotate(90.00deg);
+    width: 164px;
+  }
+  
+  .main .overlap-11 {
+    height: 198px;
+    position: relative;
+    width: 160px;
+  }
+  
+  .main .vector-3 {
+    height: 160px;
+    left: -19px;
+    position: absolute;
+    top: 19px;
+    transform: rotate(-90.00deg);
+    width: 198px;
+  }
+  
+  .main .vector-4 {
+    height: 49px;
+    left: 72px;
+    position: absolute;
+    top: 74px;
+    transform: rotate(-90.00deg);
+    width: 68px;
+  }
+  
+  .main .group-2 {
+    height: 4px;
+    left: 72px;
+    position: absolute;
+    top: 97px;
+    transform: rotate(-90.00deg);
+    width: 35px;
+  }
+  
+  .main .vector-5 {
+    height: 11px;
+    left: 66px;
+    position: absolute;
+    top: 146px;
+    transform: rotate(-90.00deg);
+    width: 11px;
+  }
+  
+  .main .vector-6 {
+    height: 11px;
+    left: 67px;
+    position: absolute;
+    top: 41px;
+    transform: rotate(-90.00deg);
+    width: 10px;
+  }
+  
+  .main .email {
+    color: #fffaee;
+    font-family: "Oswald", Helvetica;
+    font-size: 64px;
+    font-weight: 400;
+    left: 70px;
+    letter-spacing: 0;
+    line-height: 76.8px;
+    position: absolute;
+    top: 24px;
+    width: 442px;
+  }
+  
+  .main .text-wrapper-26 {
+    color: #fffaee;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    left: 70px;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    position: absolute;
+    top: 195px;
+    width: 417px;
+  }
+  
+  .main .text-wrapper-27 {
+    color: #fffaee;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 14px;
+    font-weight: 400;
+    left: 733px;
+    letter-spacing: -0.28px;
+    line-height: 16.8px;
+    position: absolute;
+    top: 410px;
+    width: 417px;
+  }
+  
+  .main .text-wrapper-28 {
+    color: #fffaee;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 20px;
+    font-weight: 600;
+    left: 733px;
+    letter-spacing: -0.40px;
+    line-height: 24.0px;
+    position: absolute;
+    top: 37px;
+    width: 196px;
+  }
+  
+  .main .text-wrapper-29 {
+    color: #fffaee;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 20px;
+    font-weight: 600;
+    left: 1064px;
+    letter-spacing: -0.40px;
+    line-height: 24.0px;
+    position: absolute;
+    top: 37px;
+    width: 196px;
+  }
+  
+  .main .form-button-instance {
+    left: 70px !important;
+    position: absolute !important;
+    top: 255px !important;
+  }
+  
+  .main .body-hyperlink-instance {
+    left: 733px !important;
+    position: absolute !important;
+    top: 72px !important;
+  }
+  
+  .main .body-hyperlink-2 {
+    left: 1065px !important;
+    position: absolute !important;
+    top: 72px !important;
+  }
+  
+  .main .body-hyperlink-3 {
+    left: 1065px !important;
+    position: absolute !important;
+    top: 102px !important;
+  }
+  
+  .main .body-hyperlink-4 {
+    height: 46px !important;
+    left: 733px !important;
+    position: absolute !important;
+    top: 150px !important;
+  }
+  
+  .main .body-hyperlink-5 {
+    height: 69px !important;
+    left: 733px !important;
+    position: absolute !important;
+    top: 204px !important;
+  }
+  
+  .main .body-hyperlink-6 {
+    height: 42px !important;
+    left: 733px !important;
+    position: absolute !important;
+    top: 100px !important;
+  }
+  
+  .main .insta-icon {
+    height: 32px !important;
+    left: 117px !important;
+    position: absolute !important;
+    top: 396px !important;
+    width: 32px !important;
+  }
+  
+  .main .tiktok-icon {
+    height: 32px !important;
+    left: 164px !important;
+    position: absolute !important;
+    top: 396px !important;
+    width: 32px !important;
+  }
+  
+  .main .facebook-icon {
+    height: 32px !important;
+    left: 70px !important;
+    position: absolute !important;
+    top: 396px !important;
+    width: 32px !important;
+  }
+  
+  .main .group-wrapper {
+    height: 50px;
+    left: 70px;
+    overflow: hidden;
+    position: absolute;
+    top: 324px;
+    width: 198px;
+  }
+  
+  .main .div-wrapper {
+    height: 50px;
+    left: 7px;
+    position: relative;
+    width: 184px;
+  }
+  
+  .main .logo-2 {
+    height: 50px;
+    position: relative;
+  }
+  
+  .main .ICON-2 {
+    height: 50px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 51px;
+  }
+  
+  .main .nanny-bear-3 {
+    height: 18px;
+    left: 58px;
+    position: absolute;
+    top: 14px;
+    width: 126px;
+  }
+  
+  .main .arrow-3 {
+    height: 15px;
+    left: 1319px;
+    position: absolute;
+    top: 4904px;
+    width: 52px;
+  }
+  
+  .main .type-card-instance {
+    left: 70px !important;
+    position: absolute !important;
+    top: 2795px !important;
+  }
+  
+  .main .type-card-2 {
+    background-color: #fffaee !important;
+    left: 512px !important;
+    position: absolute !important;
+    top: 2795px !important;
+  }
+  
+  .main .type-card-3 {
+    left: 954px !important;
+    position: absolute !important;
+    top: 2795px !important;
+  }
+  
+  .main .type-card-4 {
+    background-color: #fffaee !important;
+    left: 70px !important;
+    position: absolute !important;
+    top: 3236px !important;
+  }
+  
+  .main .type-card-5 {
+    left: 512px !important;
+    position: absolute !important;
+    top: 3236px !important;
+  }
+  
+  .main .type-card-6 {
+    background-color: #fffaee !important;
+    left: 954px !important;
+    position: absolute !important;
+    top: 3236px !important;
+  }
+  
+  .main .stat-card-2 {
+    left: 70px !important;
+    position: absolute !important;
+    top: 2327px !important;
+  }
+  
+  .main .stat-card-3 {
+    left: 954px !important;
+    position: absolute !important;
+    top: 2327px !important;
+  }
+  
+  .main .h-hyperlink-instance {
+    left: 1174px !important;
+    position: absolute !important;
+    top: 4877px !important;
+  }
+  
+  .main .h3-hyperlink-instance {
+    text-align: right !important;
+  }
+  
+  .main .property-1-default {
+    left: 567px !important;
+    position: absolute !important;
+    top: 3711px !important;
+  }
+  
+  .main .header-instance {
+    background-color: transparent !important;
+    left: 1px !important;
+    position: absolute !important;
+    top: 29px !important;
+  }
+  
+  .main .header-2 {
+    width: 1440px !important;
+  }
+  
