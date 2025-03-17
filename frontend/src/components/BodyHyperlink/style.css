@@ -1,0 +1,23 @@
+.body-hyperlink {
+    height: 22px;
+    position: relative;
+    width: 195px;
+  }
+  
+  .body-hyperlink .text-wrapper-7 {
+    color: #fffaee;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    left: 0;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    position: absolute;
+    top: -1px;
+    width: 195px;
+  }
+  
+  .body-hyperlink:hover .text-wrapper-7 {
+    text-decoration: underline;
+  }
+  

@@ -1,0 +1,35 @@
+.secondary-button {
+    align-items: center;
+    background-color: #fffaee;
+    border: 2px solid;
+    border-color: #3a3b61;
+    border-radius: 30px;
+    display: inline-flex;
+    gap: 10px;
+    padding: 10px 20px;
+    position: relative;
+  }
+  
+  .secondary-button .text-wrapper-12 {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    margin-top: -2.00px;
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+    width: fit-content;
+  }
+  
+  .secondary-button:hover {
+    background-color: #3a3b61;
+    height: 42px;
+  }
+  
+  .secondary-button:hover .text-wrapper-12 {
+    color: #fffaee;
+  }
+  

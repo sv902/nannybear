@@ -1,0 +1,44 @@
+.type-card {
+    background-color: #add1f5;
+    border-radius: 20px;
+    height: 416px;
+    position: relative;
+    width: 416px;
+  }
+  
+  .type-card .text-wrapper-8 {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 20px;
+    font-weight: 600;
+    left: 20px;
+    letter-spacing: -0.40px;
+    line-height: 24.0px;
+    position: absolute;
+    text-align: center;
+    top: 24px;
+    width: 376px;
+  }
+  
+  .type-card .text-wrapper-9 {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    left: 25px;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    position: absolute;
+    text-align: center;
+    top: 346px;
+    width: 366px;
+  }
+  
+  .type-card .screenshot {
+    height: 267px;
+    left: 20px;
+    position: absolute;
+    top: 65px;
+    width: 376px;
+  }
+  
