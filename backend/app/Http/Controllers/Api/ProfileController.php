@@ -21,9 +21,15 @@ class ProfileController extends Controller
                 'experience' => '',
                 'qualification' => '',
                 'education' => '',
-                'languages' => '',
+                'languages' => json_encode([]),
                 'availability' => json_encode(['status' => 'unavailable']),
-                'hourly_rate' => 0,
+                'nanny_type' => json_encode([]),
+                'schedule_type' => '',
+                'employment_duration' => '',
+                'additional_skills' => json_encode([]),
+                'experience_years' => 0,
+                'gender' => null,
+                'payment_level' => '',
             ]);
             return response()->json(['message' => 'Профіль няні створено', 'profile' => $profile], 201);
         }
@@ -61,9 +67,15 @@ class ProfileController extends Controller
                 'experience' => 'nullable|string|max:255',
                 'qualification' => 'nullable|string|max:255',
                 'education' => 'nullable|string|max:255',
-                'languages' => 'nullable|string|max:255',
+                'languages' => 'nullable|array',
                 'availability' => 'nullable|array',
-                'hourly_rate' => 'nullable|numeric|min:0',
+                'nanny_type' => 'nullable|array',
+                'schedule_type' => 'nullable|string',
+                'employment_duration' => 'nullable|string',
+                'additional_skills' => 'nullable|array',
+                'experience_years' => 'nullable|integer|min:0',
+                'gender' => 'nullable|in:male,female,other',
+                'payment_level' => 'nullable|string',
             ]);
     
             $user->nannyProfile->update($validated);

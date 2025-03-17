@@ -16,9 +16,9 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // Створення ролей
         $roles = [
-            ['name' => 'admin'],
-            ['name' => 'parent'],
-            ['name' => 'nanny'],
+            ['name' => 'admin', 'guard_name' => 'web'],
+            ['name' => 'parent', 'guard_name' => 'web'],
+            ['name' => 'nanny', 'guard_name' => 'web'],
         ];
 
         DB::table('roles')->insert($roles);
