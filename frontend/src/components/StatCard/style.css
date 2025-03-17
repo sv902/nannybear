@@ -1,0 +1,56 @@
+.stat-card {
+    height: 221px;
+    position: relative;
+    width: 416px;
+  }
+  
+  .stat-card .group {
+    height: 182px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 420px;
+  }
+  
+  .stat-card .text-wrapper {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 64px;
+    font-weight: 400;
+    left: 0;
+    letter-spacing: 0;
+    line-height: 76.8px;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 416px;
+  }
+  
+  .stat-card .element {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 100px;
+    font-weight: 400;
+    left: 0;
+    letter-spacing: 0;
+    line-height: 105.0px;
+    position: absolute;
+    text-align: center;
+    top: 77px;
+    width: 416px;
+  }
+  
+  .stat-card .div {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 20px;
+    font-weight: 600;
+    left: 0;
+    letter-spacing: -0.40px;
+    line-height: 24.0px;
+    position: absolute;
+    text-align: center;
+    top: 196px;
+    width: 416px;
+  }
+  

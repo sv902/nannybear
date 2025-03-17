@@ -18,8 +18,9 @@ class RoleMiddleware
     // }
 
     public function handle(Request $request, Closure $next, $role): Response {
-        if (!$request->user() || $request->user()->role->name !== $role) {
-            abort(403, 'Доступ заборонено');
+        // Перевіряємо, чи є користувач авторизований і чи має він відповідну роль
+        if (!auth()->check() || !auth()->user()->hasRole($role)) {
+            return response()->json(['message' => 'Доступ заборонений.'], 403);
         }
 
         return $next($request);

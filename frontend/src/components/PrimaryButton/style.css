@@ -1,0 +1,36 @@
+.primary-button {
+    align-items: center;
+    background-color: #3a3b61;
+    border-radius: 30px;
+    display: inline-flex;
+    gap: 10px;
+    height: 42px;
+    padding: 10px 20px;
+    position: relative;
+  }
+  
+  .primary-button .text-wrapper-11 {
+    color: #fffaee;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+    margin-top: -1.00px;
+    position: relative;
+    text-align: center;
+    white-space: nowrap;
+    width: fit-content;
+  }
+  
+  .primary-button:hover {
+    background-color: #fffaee;
+    border: 2px solid;
+    border-color: #3a3b61;
+  }
+  
+  .primary-button:hover .text-wrapper-11 {
+    color: #3a3b61;
+    margin-top: -2.00px;
+  }
+  

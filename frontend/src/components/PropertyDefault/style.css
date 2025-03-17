@@ -1,0 +1,38 @@
+.property-default {
+    align-items: center;
+    display: flex;
+    gap: 31px;
+    height: 50px;
+    padding: 8px 15px;
+    position: relative;
+    width: 307px;
+  }
+  
+  .property-default .union {
+    height: 50px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 307px;
+  }
+  
+  .property-default .text-wrapper-5 {
+    color: #fffaee;
+    font-family: "Oswald", Helvetica;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 33.6px;
+    margin-top: -1.00px;
+    position: relative;
+    white-space: nowrap;
+    width: fit-content;
+  }
+  
+  .property-default .arrow {
+    height: 14.73px;
+    margin-right: -1.00px;
+    position: relative;
+    width: 67px;
+  }
+  

@@ -2,50 +2,37 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VerificationController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Auth;
 
-// Головна сторінка
+// Головна сторінка або статус API
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json(['message' => 'API працює! 🎉']);
 });
-
-Auth::routes(['verify' => true]);
 
 // Маршрут для підтвердження email
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])  
     ->name('verification.verify');
 
-// Логін
-// Route::get('/login', function () {
-//     return view('auth.login');
-// })->name('login');
-Route::get('/', function () {
-    return response()->json(['message' => 'API працює! 🎉']);
-});
-
-// Група для підтверджених користувачів
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return response()->json(['message' => 'Доступ до дашборду дозволено']);
     });
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-});
+// Адмін-панель (лише для адмінів)
+// Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+//     Route::get('/users', [AdminController::class, 'index'])->name('admin.users'); // Отримати список користувачів
+//     Route::get('/users/{id}', [UserController::class, 'show']); // Отримати конкретного користувача
+//     Route::put('/users/{id}', [UserController::class, 'update']); // Оновити користувача
+//     Route::delete('/users/{id}', [AdminController::class, 'destroy']); // Видалити користувача
+//     Route::patch('/users/{id}/role', [AdminController::class, 'updateRole'])->name('admin.users.role'); // Змінити роль
+// });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
-    Route::post('/admin/users/{user}/role', [UserController::class, 'updateRole'])->name('admin.users.role');
-});
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
-});
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Передача всіх маршрутів фронтенду React
+Route::get('/{any}', function () {
+   // return view('app'); // Віддає головний файл React (якщо використовуєш Blade)
+})->where('any', '.*');

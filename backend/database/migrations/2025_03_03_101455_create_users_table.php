@@ -26,8 +26,7 @@ return new class extends Migration
             $table->string('google_id')->nullable();
             $table->string('apple_id')->nullable();
             $table->unsignedBigInteger('role_id')->nullable();
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
-            $table->rememberToken();
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');         
             $table->timestamps();
         });
     }

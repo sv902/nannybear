@@ -1,0 +1,93 @@
+.header {
+    height: 58px;
+    width: 1440px;
+  }
+  
+  .header .overlap-group-3 {
+    height: 58px;
+    position: relative;
+  }
+  
+  .header .menu {
+    background-color: #fffaee;
+    height: 58px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1440px;
+  }
+  
+  .header .primary-button-instance {
+    left: 1285px !important;
+    position: absolute !important;
+    top: 8px !important;
+  }
+  
+  .header .secondary-button-instance {
+    left: 1102px !important;
+    position: absolute !important;
+    top: 8px !important;
+  }
+  
+  .header .h-hyperlink {
+    left: 401px !important;
+    position: absolute !important;
+    top: 17px !important;
+  }
+  
+  .header .h3-hyperlink {
+    left: 622px !important;
+    position: absolute !important;
+    top: 17px !important;
+  }
+  
+  .header .hyperlink-instance {
+    left: 843px !important;
+    position: absolute !important;
+    top: 17px !important;
+  }
+  
+  .header .logonannybear {
+    display: block;
+    height: 50px;
+    left: 70px;
+    position: absolute;
+    top: 4px;
+    width: 154px;
+  }
+  
+  .header .logonannybeargrid {
+    height: 39px;
+    overflow: hidden;
+    position: relative;
+    top: 5px;
+  }
+  
+  .header .logo-wrapper {
+    height: 39px;
+    left: 6px;
+    position: relative;
+    width: 143px;
+  }
+  
+  .header .logo {
+    height: 39px;
+    position: relative;
+  }
+  
+  .header .ICON {
+    height: 39px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 39px;
+  }
+  
+  .header .nanny-bear {
+    height: 14px;
+    left: 45px;
+    position: absolute;
+    top: 11px;
+    width: 98px;
+  }
+  
