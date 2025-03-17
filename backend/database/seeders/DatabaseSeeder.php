@@ -21,9 +21,13 @@ class DatabaseSeeder extends Seeder
        User::firstOrCreate([
         'email' => env('ADMIN_EMAIL', 'admin@example.com'),
     ], [
-        'name' => 'Admin',
+        'first_name' => 'Admin',
+        'last_name' => 'Administrator',  
         'password' => Hash::make(env('ADMIN_PASSWORD', 'password123')),
-        'role' => 'admin',
+        'role_id' => $adminRole->id ?? 1,
+        'birth_date' => '1990-01-01',
+        'phone' => '+1234567890',
+        'city' => 'Kyiv',
         'email_verified_at' => now(), // Адмін одразу підтверджений
     ]);
     }

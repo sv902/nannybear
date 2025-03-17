@@ -32,7 +32,7 @@ class CustomResetPassword extends Notification
     {
         return (new MailMessage)
             ->subject('Скидання пароля')
-            ->greeting('Привіт, ' . $notifiable->name . '!')
+            ->greeting('Привіт, ' . $notifiable->first_name . '!')
             ->line('Ви отримали цей лист, тому що запросили скидання пароля.')
             ->action('Скинути пароль', url('/reset-password/' . $this->token))
             ->line('Якщо ви не робили цей запит, просто проігноруйте цей лист.')

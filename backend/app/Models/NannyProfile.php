@@ -11,8 +11,7 @@ class NannyProfile extends Model
 
     protected $fillable = [
         'user_id',
-        'photo',
-        'experience',
+        'photo',        
         'qualification',
         'education',// Освіта
         'languages',

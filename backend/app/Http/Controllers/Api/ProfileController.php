@@ -17,8 +17,7 @@ class ProfileController extends Controller
 
         if ($user->hasRole('nanny') && !$user->nannyProfile) {
             $profile = $user->nannyProfile()->create([
-                'photo' => '',
-                'experience' => '',
+                'photo' => '',              
                 'qualification' => '',
                 'education' => '',
                 'languages' => json_encode([]),
@@ -63,8 +62,7 @@ class ProfileController extends Controller
         }    
 
             $validated = $request->validate([
-                'photo' => 'nullable|string',
-                'experience' => 'nullable|string|max:255',
+                'photo' => 'nullable|string',             
                 'qualification' => 'nullable|string|max:255',
                 'education' => 'nullable|string|max:255',
                 'languages' => 'nullable|array',

@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('nanny_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('photo')->nullable();
-            $table->text('experience')->nullable();
+            $table->string('photo')->nullable();          
             $table->text('qualification')->nullable();
             $table->string('education')->nullable();
             $table->json('languages')->nullable();
