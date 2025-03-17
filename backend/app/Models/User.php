@@ -92,7 +92,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole('admin');
     }
 
-
     /**
      * Перевіряє, чи користувач є няньою.
      * Використовується для обмеження функціоналу лише для нянь.
@@ -128,23 +127,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(ParentProfile::class);
     }
-
-    /**
-     * Відношення "один-до-багатьох": батьки можуть створювати замовлення (шукати няню).
-     */
-    public function orders()
-    {
-        return $this->hasMany(Order::class, 'parent_id');
-    }
-
-    /**
-     * Відношення "один-до-багатьох": нянь може отримувати замовлення від батьків.
-     */
-    public function nannyOrders()
-    {
-        return $this->hasMany(Order::class, 'nanny_id');
-    }
-
+   
     /**
      * Відношення "один-до-багатьох": відгуки, які отримала няня.
      * Відгуки залишають батьки після надання послуг.
