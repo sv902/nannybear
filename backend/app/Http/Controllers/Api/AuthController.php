@@ -21,15 +21,19 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255', 
+            'last_name' => 'nullable|string|max:255', 
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
-            'role' => 'required|in:parent,nanny,admin',
+            'birth_date' => 'required|date|before:today', // Перевіряємо, щоб дата була в минулому
             'phone' => 'required|string|min:10|max:15|unique:users',
             'city' => 'required|string|max:100',
             'district' => 'nullable|string|max:100',
             'street' => 'nullable|string|max:100',
-            'house' => 'nullable|string|max:10',                    
+            'house' => 'nullable|string|max:10', 
+            'floor' => 'nullable|integer|min:1',
+            'apartment' => 'nullable|string|max:10',
+            'role' => 'required|in:parent,nanny,admin',                   
         ]);
 
         $role = Role::where('name', $validated['role'])->first();        
@@ -47,14 +51,18 @@ class AuthController extends Controller
         };
 
         $user = User::create([
-            'name' => $validated['name'],
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'] ?? null,
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),            
+            'password' => Hash::make($validated['password']),
+            'birth_date' => $validated['birth_date'],             
             'phone' => $validated['phone'],
-            'city' => $validated['city'] ?? null,
+            'city' => $validated['city'],
             'district' => $validated['district'] ?? null,
             'street' => $validated['street'] ?? null,
             'house' => $validated['house'] ?? null,
+            'floor' => $validated['floor'] ?? null,
+            'apartment' => $validated['apartment'] ?? null,
             'profile_type' => $profileType, 
             'role_id' => $role->id,      
         ]);        
@@ -150,25 +158,38 @@ class AuthController extends Controller
                 'name' => $googleUser->getName(),
             ]);
 
+            // Розділяємо повне ім'я на first_name та last_name
+            $fullName = $googleUser->getName();
+            $nameParts = explode(' ', $fullName, 2);
+            $firstName = $nameParts[0] ?? 'Unknown';
+            $lastName = $nameParts[1] ?? 'Unknown';
+
             // Перевірка, чи існує вже користувач з таким Google email
             $user = User::firstOrCreate([             
                 'email' => $googleUser->getEmail(),
             ], [
-                'name' => $googleUser->getName(),
-                'password' => bcrypt(Str::random(16)),  // Генерація випадкового пароля
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'password' => bcrypt(Str::random(16)), 
+                'google_id' => $googleUser->getId(), 
             ]);             
           
             Log::info('Користувач створений або знайдений: ', ['user' => $user]);
               
 
-             // Отримуємо роль з запиту (або встановлюємо за замовчуванням "parent")
-            $roleName = request()->input('role', 'parent'); // Якщо роль не передано, встановлюється "parent"
+            // Отримуємо роль (за замовчуванням "parent")
+            $roleName = request()->input('role', 'parent');
+            if ($roleName === 'admin') {
+                return response()->json(['error' => 'Реєстрація адміністраторів не дозволена'], 403);
+            }
             
             // Перевіряємо, чи є роль в базі
             $role = Role::where('name', $roleName)->first();
             if ($role) {
                 $user->role_id = $role->id;
+                $user->profile_type = $roleName;
                 $user->save();
+                $user->assignRole($role->name);
                 Log::info('Роль користувача встановлена: ' . $role->name);
             } else {
                 Log::error('Роль "' . $roleName . '" не знайдена');
@@ -178,8 +199,7 @@ class AuthController extends Controller
             if (isset($role)) {
                 $profileType = match ($role->name) {
                     'nanny' => 'nanny',
-                    'parent' => 'parent',
-                    'admin' => 'admin',
+                    'parent' => 'parent',                    
                     default => null,
                 };
                 $user->profile_type = $profileType;
@@ -206,7 +226,7 @@ class AuthController extends Controller
                 Log::info('Електронна пошта підтверджена');
             }
     
-            $token = $user->createToken('Google Token')->plainTextToken;
+            $token = $user->createToken('Google Token')->plainTextToken;       
             Log::info('Створено Token'); 
     
             Log::info('Відповідь надіслано');
@@ -219,7 +239,7 @@ class AuthController extends Controller
             Log::error('Google callback error: ' . $e->getMessage(), [
                 'stack' => $e->getTraceAsString(),
             ]);
-            return response()->json(['error' => 'Error authenticating with Google'], 500);
+            return response()->json(['error' => 'Помилка автентифікації Google'], 500);
         }
     }
     
@@ -248,22 +268,37 @@ class AuthController extends Controller
                 'name' => $facebookUser->getName(),
             ]);
 
+            // Розділяємо повне ім'я на first_name та last_name
+            $fullName = $facebookUser->getName();
+            $nameParts = explode(' ', $fullName, 2);
+            $firstName = $nameParts[0] ?? 'Unknown';
+            $lastName = $nameParts[1] ?? 'Unknown';
+
             // Перевірка, чи існує вже користувач з таким Facebook email
             $user = User::firstOrCreate([
                 'email' => $facebookUser->getEmail(),
             ], [
-                'name' => $facebookUser->getName(),
+                'first_name' => $firstName,
+                'last_name' => $lastName,
                 'password' => bcrypt(Str::random(16)),  // Генерація випадкового пароля
+                'facebook_id' => $facebookUser->getId(), 
             ]);
 
             Log::info('Користувач створений або знайдений: ', ['user' => $user]);
 
             // Отримуємо роль з запиту (або встановлюємо за замовчуванням "parent")
             $roleName = request()->input('role', 'parent');
+            if ($roleName === 'admin') {
+                return response()->json(['error' => 'Реєстрація адміністраторів не дозволена'], 403);
+            }
+            
+            // Призначаємо роль користувачеві
             $role = Role::where('name', $roleName)->first();
             if ($role) {
                 $user->role_id = $role->id;
+                $user->profile_type = $roleName;
                 $user->save();
+                $user->assignRole($role->name);
                 Log::info('Роль користувача встановлена: ' . $role->name);
             } else {
                 Log::error('Роль "' . $roleName . '" не знайдена');
@@ -273,8 +308,7 @@ class AuthController extends Controller
             if (isset($role)) {
                 $profileType = match ($role->name) {
                     'nanny' => 'nanny',
-                    'parent' => 'parent',
-                    'admin' => 'admin',
+                    'parent' => 'parent',                  
                     default => null,
                 };
                 $user->profile_type = $profileType;
@@ -289,6 +323,7 @@ class AuthController extends Controller
             }
 
             Auth::login($user); // Авторизація користувача
+            
             if (Auth::check()) {
                 Log::info('Користувач успішно авторизований');
             } else {
@@ -313,7 +348,7 @@ class AuthController extends Controller
             Log::error('Facebook callback error: ' . $e->getMessage(), [
                 'stack' => $e->getTraceAsString(),
             ]);
-            return response()->json(['error' => 'Error authenticating with Facebook'], 500);
+            return response()->json(['error' => 'Помилка автентифікації Facebook'], 500);
         }
     }
 

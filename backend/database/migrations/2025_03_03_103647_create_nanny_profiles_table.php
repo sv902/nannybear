@@ -14,13 +14,18 @@ return new class extends Migration
         Schema::create('nanny_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('photo')->default('');
-            $table->string('experience')->default(''); 
-            $table->text('qualification')->default('');
-            $table->string('education')->default('');
-            $table->text('languages')->default(''); 
-            $table->json('availability')->default(json_encode(['status' => 'unavailable'])); // Використовуємо правильний формат JSON
-            $table->decimal('hourly_rate', 8, 2)->default(0);  // Додаємо дефолтне значення
+            $table->string('photo')->nullable();          
+            $table->text('qualification')->nullable();
+            $table->string('education')->nullable();
+            $table->json('languages')->nullable();
+            $table->json('availability')->nullable();
+            $table->json('nanny_type')->nullable(); // Масив типів няні
+            $table->string('schedule_type')->nullable(); // Графік роботи
+            $table->string('employment_duration')->nullable(); // Тривалість роботи
+            $table->json('additional_skills')->nullable(); // Додаткові навички
+            $table->integer('experience_years')->nullable(); // Досвід у роках
+            $table->enum('gender', ['male', 'female', 'other'])->nullable(); // Стать
+            $table->string('payment_level')->nullable(); // Рівень оплати
             $table->timestamps();
         });
     }

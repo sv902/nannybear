@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\CustomVerifyEmail;
+use App\Notifications\CustomResetPassword;
 use Illuminate\Auth\Events\Registered;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -24,17 +25,21 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<string>
      */
     protected $fillable = [
-        'name',        // Ім'я користувача
-        'email',       // Email
+        'first_name',   // Ім'я користувача
+        'last_name',    // Прізвище користувача
+        'email',        // Email
         'password',    // Пароль
         'phone',       // Телефонний номер
+        'birth_date',  // Дата народження
         'city',        // Місто проживання
         'district',    // Район проживання
         'street',      // Вулиця
         'house',       // Будинок
+        'floor',       // Поверх
+        'apartment',   // Квартира
         'profile_type',// Тип профілю (няня або батько)
         'google_id',   // ID Google-акаунту (якщо реєстрація через Google)
-        'apple_id',    // ID Apple-акаунту (якщо реєстрація через Apple)
+        'facebook_id',  // ID Facebook-акаунту (якщо реєстрація через Facebook)
         'role_id',     // ID ролі користувача
     ];
 
@@ -60,6 +65,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime', // Автоматичне перетворення дати
             'password' => 'hashed',           // Автоматичне хешування пароля
+            'birth_date' => 'date',           // Автоматичне приведення до формату дати
         ];
     }
 
@@ -85,7 +91,6 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasRole('admin');
     }
-
 
     /**
      * Перевіряє, чи користувач є няньою.
@@ -122,23 +127,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(ParentProfile::class);
     }
-
-    /**
-     * Відношення "один-до-багатьох": батьки можуть створювати замовлення (шукати няню).
-     */
-    public function orders()
-    {
-        return $this->hasMany(Order::class, 'parent_id');
-    }
-
-    /**
-     * Відношення "один-до-багатьох": нянь може отримувати замовлення від батьків.
-     */
-    public function nannyOrders()
-    {
-        return $this->hasMany(Order::class, 'nanny_id');
-    }
-
+   
     /**
      * Відношення "один-до-багатьох": відгуки, які отримала няня.
      * Відгуки залишають батьки після надання послуг.
@@ -163,6 +152,13 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new CustomVerifyEmail);
     } 
+    /**
+     * Надсилає email для скидання пароля користувача.
+    */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomResetPassword($token));
+    }
 
     public function getProfileTypeAttribute()
     {
@@ -176,5 +172,11 @@ class User extends Authenticatable implements MustVerifyEmail
         }
    
         return null;
+    }
+
+    // Для адміна
+    public function mustVerifyEmail()
+    {
+        return $this->role !== 'admin'; // Адміну підтвердження не потрібно
     }
 }
