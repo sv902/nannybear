@@ -33,7 +33,7 @@ export const Main = () => {
           <img
             className="screenshot-2"
             alt="Screenshot"
-            src="https://c.animaapp.com/2TWqjeZc/img/screenshot-2025-02-25-at-14-29-51-9.png"
+            src="/assets/Screenshot.png"
           />
 
           <div className="text-wrapper-15">ВІДГУКИ</div>
@@ -54,7 +54,7 @@ export const Main = () => {
             <img
               className="pexels-arina"
               alt="Pexels arina"
-              src="https://c.animaapp.com/2TWqjeZc/img/pexels-arina-krasnikova-5119802--1-.png"
+              src="/assets/pexels-arina-krasnikova.png"
             />
 
             <div className="overlap-5">
@@ -82,13 +82,13 @@ export const Main = () => {
                   <img
                     className="vector"
                     alt="Vector"
-                    src="https://c.animaapp.com/2TWqjeZc/img/vector.svg"
+                    src="/assets/vector.svg"
                   />
 
                   <img
                     className="vector-2"
                     alt="Vector"
-                    src="https://c.animaapp.com/2TWqjeZc/img/vector-1.svg"
+                    src="/assets/vector-1.svg"
                   />
                 </div>
               </div>
@@ -118,7 +118,7 @@ export const Main = () => {
             <img
               className="arrow-2"
               alt="Arrow"
-              src="https://c.animaapp.com/2TWqjeZc/img/arrow-1.svg"
+              src="/assets/arrow-1.svg"
             />
 
             <PropertyDefault className="design-component-instance-node" />
@@ -154,7 +154,7 @@ export const Main = () => {
           <img
             className="ph"
             alt="Ph"
-            src="https://c.animaapp.com/2TWqjeZc/img/ph1.png"
+            src="/assets/ph1.png"
           />
         </div>
 
@@ -171,25 +171,25 @@ export const Main = () => {
         <img
           className="rectangle-10"
           alt="Rectangle"
-          src="https://c.animaapp.com/2TWqjeZc/img/rectangle-120.svg"
+          src="/assets/rectangle-120.svg"
         />
 
         <img
           className="rectangle-11"
           alt="Rectangle"
-          src="https://c.animaapp.com/2TWqjeZc/img/rectangle-121.svg"
+          src="/assets/rectangle-121.svg"
         />
 
         <img
           className="rectangle-12"
           alt="Rectangle"
-          src="https://c.animaapp.com/2TWqjeZc/img/rectangle-122.svg"
+          src="/assets/rectangle-122.svg"
         />
 
         <img
           className="rectangle-13"
           alt="Rectangle"
-          src="https://c.animaapp.com/2TWqjeZc/img/rectangle-123.svg"
+          src="/assets/rectangle-123.svg"
         />
 
         <div className="overlap-10">
@@ -200,31 +200,31 @@ export const Main = () => {
               <img
                 className="vector-3"
                 alt="Vector"
-                src="https://c.animaapp.com/2TWqjeZc/img/vector-2.svg"
+                src="/assets/vector-2.svg"
               />
 
               <img
                 className="vector-4"
                 alt="Vector"
-                src="https://c.animaapp.com/2TWqjeZc/img/vector-3.svg"
+                src="/assets/vector-3.svg"
               />
 
               <img
                 className="group-2"
                 alt="Group"
-                src="https://c.animaapp.com/2TWqjeZc/img/group@2x.png"
+                src="/assets/group@2x.png"
               />
 
               <img
                 className="vector-5"
                 alt="Vector"
-                src="https://c.animaapp.com/2TWqjeZc/img/vector-4.svg"
+                src="/assets/vector-4.svg"
               />
 
               <img
                 className="vector-6"
                 alt="Vector"
-                src="https://c.animaapp.com/2TWqjeZc/img/vector-5.svg"
+                src="/assets/vector-5.svg"
               />
             </div>
           </div>
@@ -274,14 +274,10 @@ export const Main = () => {
                 <img
                   className="ICON-2"
                   alt="Icon"
-                  src="https://c.animaapp.com/2TWqjeZc/img/icon-2@2x.png"
+                  src="/assets/LogoNannyBearGrid.png"
                 />
 
-                <img
-                  className="nanny-bear-3"
-                  alt="Nanny bear"
-                  src="https://c.animaapp.com/2TWqjeZc/img/nanny-bear-2@2x.png"
-                />
+                
               </div>
             </div>
           </div>
@@ -290,7 +286,7 @@ export const Main = () => {
         <img
           className="arrow-3"
           alt="Arrow"
-          src="https://c.animaapp.com/2TWqjeZc/img/arrow-4.svg"
+          src="/assets/arrow-4.svg"
         />
 
         <TypeCard className="type-card-instance" />
@@ -348,7 +344,7 @@ export const Main = () => {
         <PropertyDefault className="property-1-default" />
         <Header
           className="header-instance"
-          nannyBear="https://c.animaapp.com/2TWqjeZc/img/nanny-bear-1@2x.png"
+          nannyBear="/assets/nanny-bear-1@2x.png"
           overlapGroupClassName="header-2"
         />
         <Marketing className="design-component-instance-node" />

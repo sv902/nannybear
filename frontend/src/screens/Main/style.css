@@ -4,6 +4,7 @@
     flex-direction: row;
     justify-content: center;
     width: 100%;
+    position: relative;
   }
   
   .main .div-2 {
@@ -752,6 +753,7 @@
     position: absolute !important;
     top: 396px !important;
     width: 32px !important;
+    z-index: 9999 !important;
   }
   
   .main .group-wrapper {
@@ -780,7 +782,9 @@
     left: 0;
     position: absolute;
     top: 0;
-    width: 51px;
+    width: auto;
+    object-fit: contain; 
+    max-width: 100%;
   }
   
   .main .nanny-bear-3 {
@@ -861,6 +865,7 @@
   }
   
   .main .property-1-default {
+    display: block;
     left: 567px !important;
     position: absolute !important;
     top: 3711px !important;
