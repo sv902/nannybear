@@ -15,7 +15,7 @@ export const TypeCard = ({
       <img
         className="screenshot"
         alt="Screenshot"
-        src="https://c.animaapp.com/2TWqjeZc/img/screenshot-2025-02-25-at-14-29-51-4-6@2x.png"
+        src="/assets/ScreenshotTypeCard.png"
       />
     </div>
   );

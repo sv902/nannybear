@@ -12,7 +12,7 @@ export const FormButton = ({ className }) => {
         <img
           className="img"
           alt="Arrow"
-          src="https://c.animaapp.com/2TWqjeZc/img/arrow-3-2.svg"
+          src="/assets/arrow-3.svg"
         />
       </div>
     </div>

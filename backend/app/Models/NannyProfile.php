@@ -11,17 +11,26 @@ class NannyProfile extends Model
 
     protected $fillable = [
         'user_id',
-        'photo',
-        'experience',
+        'photo',        
         'qualification',
-        'education',
+        'education',// Освіта
         'languages',
         'availability',
-        'hourly_rate',
+        'nanny_type',        // Тип няні
+        'schedule_type',     // Графік роботи
+        'employment_duration', // Тривалість роботи
+        'additional_skills', // Додаткові навички
+        'experience_years',  // Досвід роботи
+        'gender',            // Стать    
+        'payment_level',     // Рівень оплати
     ];
 
     protected $casts = [
+        'availability' => 'array',
         'survey_answers' => 'array', // JSON → Масив
+        'languages' => 'array',       // Мови
+        'nanny_type' => 'array',      // Типи няні (масив)
+        'additional_skills' => 'array', // Додаткові навички (масив)
     ];
 
     /**

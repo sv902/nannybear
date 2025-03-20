@@ -74,14 +74,16 @@
     height: 39px;
     position: relative;
   }
-  
+
   .header .ICON {
-    height: 39px;
+    height: 39px; 
+    width: auto;  
     left: 0;
     position: absolute;
     top: 0;
-    width: 39px;
-  }
+    object-fit: contain; 
+    max-width: 100%;
+}
   
   .header .nanny-bear {
     height: 14px;

@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\NannyProfileController;
 use App\Http\Controllers\Api\ParentProfileController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\Api\PasswordResetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,12 +66,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
  */
 Route::get('/google/redirect', [AuthController::class, 'googleRedirect']); // Перенаправлення на Google
 Route::get('/google/callback', [AuthController::class, 'googleCallback']); // Обробка відповіді від Google
+Route::post('/google/login', [AuthController::class, 'googleCallback']); 
 
 /**
  *  АВТОРИЗАЦІЯ ЧЕРЕЗ Facebook
  */
 Route::get('/facebook/redirect', [AuthController::class, 'facebookRedirect']);
 Route::get('/facebook/callback', [AuthController::class, 'facebookCallback']);
+Route::post('/facebook/login', [AuthController::class, 'facebookCallback']);
+
+/**
+ * ВІДНОВЛЕННЯ ПАРОЛЮ
+ */
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink']);
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
 
 /**
  *  КОРИСТУВАЧІ (няні, батьки)

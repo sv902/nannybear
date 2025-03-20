@@ -9,13 +9,13 @@ export const Marketing = ({ className }) => {
       <img
         className="waves"
         alt="Waves"
-        src="https://c.animaapp.com/2TWqjeZc/img/waves-2.svg"
+        src="/assets/waves.svg"
       />
 
       <img
         className="waves-2"
         alt="Waves"
-        src="https://c.animaapp.com/2TWqjeZc/img/waves-3.svg"
+        src="/assets/waves-2.svg"
       />
     </div>
   );

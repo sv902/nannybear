@@ -8,7 +8,6 @@ import "./style.css";
 export const Header = ({
   className,
   overlapGroupClassName,
-  nannyBear = "https://c.animaapp.com/2TWqjeZc/img/nanny-bear@2x.png",
 }) => {
   return (
     <div className={`header ${className}`}>
@@ -28,10 +27,8 @@ export const Header = ({
                 <img
                   className="ICON"
                   alt="Icon"
-                  src="https://c.animaapp.com/2TWqjeZc/img/icon-1@2x.png"
+                  src="/assets/LogoNannyBear11.png"
                 />
-
-                <img className="nanny-bear" alt="Nanny bear" src={nannyBear} />
               </div>
             </div>
           </div>

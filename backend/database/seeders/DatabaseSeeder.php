@@ -15,24 +15,20 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Спочатку створимо ролі
-        $this->call(RoleSeeder::class);
-
-        // Створюємо адміністратора
-        $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password123'),
-        ]);
-        $admin->assignRole('admin');
-
-        // Створюємо 3 батьків
-        User::factory(3)->create()->each(function ($user) {
-            $user->assignRole('parent');
-        });
-
-        // Створюємо 3 нянь
-        User::factory(3)->create()->each(function ($user) {
-            $user->assignRole('nanny');
-        });
+        $this->call(RolesAndPermissionsSeeder::class);
+    
+       // Створюємо адміна, якщо він ще не існує
+       User::firstOrCreate([
+        'email' => env('ADMIN_EMAIL', 'admin@example.com'),
+    ], [
+        'first_name' => 'Admin',
+        'last_name' => 'Administrator',  
+        'password' => Hash::make(env('ADMIN_PASSWORD', 'password123')),
+        'role_id' => $adminRole->id ?? 1,
+        'birth_date' => '1990-01-01',
+        'phone' => '+1234567890',
+        'city' => 'Kyiv',
+        'email_verified_at' => now(), // Адмін одразу підтверджений
+    ]);
     }
 }
