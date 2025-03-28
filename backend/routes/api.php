@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\ParentProfileController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\NannyPreferenceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +26,6 @@ use App\Http\Controllers\Api\PasswordResetController;
 |
 | Тут розміщені всі маршрути для API.
 | Всі маршрути мають префікс `/api`, тому в Postman викликати їх треба так:
-| http://127.0.0.1:8000/api/{маршрут}
 |
 */
 
@@ -37,6 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users/{user}/role', [UserController::class, 'updateRole']);
 });
 
+Route::get('/sanctum/csrf-cookie', function () {
+    return response()->json(['message' => 'CSRF cookie set']);
+});
+
 /**
  *  АВТОРИЗАЦІЯ ТА РЕЄСТРАЦІЯ
  */
@@ -44,24 +48,6 @@ Route::post('/register', [AuthController::class, 'register']); // Реєстра
 Route::post('/login', [AuthController::class, 'login'])->name('login'); // Вхід у систему
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); // Вихід
 
-/**
- *  ВЕРИФІКАЦІЯ EMAIL (автоматично відправляється при реєстрації)
- */
-Route::middleware(['auth:sanctum'])->group(function () {
-    // Підтвердження email через отримане посилання
-    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-        $request->fulfill();
-        return response()->json(['message' => 'Email успішно підтверджено!']);
-    })->name('verification.verify');
-
-    // Повторна відправка листа для верифікації
-    Route::post('/email/resend', function (Request $request) {
-        $request->user()->sendEmailVerificationNotification();
-        return response()->json(['message' => 'Лист для підтвердження надіслано!']);
-    })->name('verification.resend');
-});
-
-/**
  *  АВТОРИЗАЦІЯ ЧЕРЕЗ GOOGLE
  */
 Route::get('/google/redirect', [AuthController::class, 'googleRedirect']); // Перенаправлення на Google
@@ -103,20 +89,21 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
  * ПРОФІЛІ
  */
 Route::middleware('auth:sanctum')->group(function () {
-    // Створення профілю
-    Route::post('/profile/create', [ProfileController::class, 'createProfileIfNotExists']);
-
-    // Оновлення та видалення профілю
-    Route::put('/profile/update', [ProfileController::class, 'update']);
+    // === Загальні профільні операції ===
+    Route::post('/profile/create', [ProfileController::class, 'create']); 
     Route::delete('/profile/delete', [ProfileController::class, 'destroy']);
 
-     // Профілі нянь
-    Route::get('/nanny-profiles', [NannyProfileController::class, 'index']);
-    Route::get('/nanny-profiles/{id}', [NannyProfileController::class, 'show']);
+    // === БАТЬКИ ===
+    Route::post('/parent/profile', [ProfileController::class, 'storeParentProfile']); // створити/оновити
+    Route::get('/parent-profiles', [ParentProfileController::class, 'index']); // всі
+    Route::get('/parent-profiles/{id}', [ParentProfileController::class, 'show']); // один
 
-    // Профілі батьків
-    Route::get('/parent-profiles', [ParentProfileController::class, 'index']);
-    Route::get('/parent-profiles/{id}', [ParentProfileController::class, 'show']);
+    // === НЯНІ ===
+    Route::post('/nanny/profile', [ProfileController::class, 'storeNannyProfile']); // створити/оновити
+    Route::get('/nanny-profiles', [NannyProfileController::class, 'index']); // всі
+    Route::get('/nanny-profiles/{id}', [NannyProfileController::class, 'show']); // один
+    Route::post('/nanny-profiles/filter', [NannyProfileController::class, 'filterNannies']); // фільтр
+    Route::get('/nanny/profile', [NannyProfileController::class, 'me']); // Профіль залогіненої няні
 });
 
 /**

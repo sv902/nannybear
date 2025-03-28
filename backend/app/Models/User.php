@@ -24,20 +24,9 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array<string>
      */
-    protected $fillable = [
-        'first_name',   // Ім'я користувача
-        'last_name',    // Прізвище користувача
+    protected $fillable = [        
         'email',        // Email
-        'password',    // Пароль
-        'phone',       // Телефонний номер
-        'birth_date',  // Дата народження
-        'city',        // Місто проживання
-        'district',    // Район проживання
-        'street',      // Вулиця
-        'house',       // Будинок
-        'floor',       // Поверх
-        'apartment',   // Квартира
-        'profile_type',// Тип профілю (няня або батько)
+        'password',    // Пароль     
         'google_id',   // ID Google-акаунту (якщо реєстрація через Google)
         'facebook_id',  // ID Facebook-акаунту (якщо реєстрація через Facebook)
         'role_id',     // ID ролі користувача
@@ -64,8 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime', // Автоматичне перетворення дати
-            'password' => 'hashed',           // Автоматичне хешування пароля
-            'birth_date' => 'date',           // Автоматичне приведення до формату дати
+            'password' => 'hashed',           // Автоматичне хешування пароля            
         ];
     }
 
@@ -110,22 +98,29 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole('parent');
     }
 
-    /**
-     * Відношення "один-к-одному": якщо користувач – няня, у нього є профіль няні.
-     * Профіль няні містить додаткову інформацію (наприклад, досвід роботи).
-     */
-    public function nannyProfile()
-    {
-        return $this->hasOne(NannyProfile::class);
-    }
-
-    /**
-     * Відношення "один-к-одному" з профілем батьків.
-     * Профіль містить інформацію про дітей, контакти тощо.
-     */
     public function parentProfile()
     {
-        return $this->hasOne(ParentProfile::class);
+        return $this->hasOne(\App\Models\ParentProfile::class);
+    }
+
+    public function nannyProfile()
+    {
+        return $this->hasOne(\App\Models\NannyProfile::class);
+    }
+
+    // Визначає, який профіль має користувач
+    public function profile()
+    {
+        if ($this->role && $this->role->name === 'nanny') {
+            return $this->hasOne(NannyProfile::class, 'user_id');
+        } else {
+            return $this->hasOne(ParentProfile::class, 'user_id');
+        }
+    }
+    
+    public function nannyPreferences()
+    {
+        return $this->hasOne(NannyPreference::class);
     }
    
     /**
@@ -158,7 +153,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new CustomResetPassword($token));
-    }
+    } 
 
     public function getProfileTypeAttribute()
     {
@@ -173,10 +168,19 @@ class User extends Authenticatable implements MustVerifyEmail
    
         return null;
     }
+    
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            $user->profile()?->delete(); // Видаляємо профіль користувача
+        });
+    }
 
     // Для адміна
     public function mustVerifyEmail()
     {
-        return $this->role !== 'admin'; // Адміну підтвердження не потрібно
-    }
+        return $this->role?->name !== 'admin'; 
+    }    
 }

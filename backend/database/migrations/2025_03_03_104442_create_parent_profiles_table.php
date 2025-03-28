@@ -13,12 +13,19 @@ return new class extends Migration
     {
         Schema::create('parent_profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('children_count')->default(1);
-            $table->json('children_ages');
-            $table->text('special_needs')->nullable();
-            $table->string('preferred_language')->default('uk');
-            $table->timestamps();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');  // зв'язок з користувачем
+            $table->string('first_name');  // Ім'я
+            $table->string('last_name')->nullable();  // Прізвище (необов'язкове)
+            $table->date('birth_date');  // Дата народження
+            $table->string('city');  // Місто
+            $table->string('phone');  // Телефон                    
+            $table->json('children')->nullable(); // Діти (масив дітей)
+            $table->string('district')->nullable();  // Район  
+            $table->string('address')->nullable(); // Вулиця та Будинок 
+            $table->integer('floor')->nullable(); // Поверх
+            $table->string('apartment')->nullable(); // Квартира
+            $table->string('photo')->nullable(); 
+            $table->timestamps(); // Дата створення та оновлення
         });
     }    
 

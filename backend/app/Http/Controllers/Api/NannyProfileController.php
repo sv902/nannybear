@@ -30,6 +30,24 @@ class NannyProfileController extends Controller
         $nanny = NannyProfile::with('user')->findOrFail($id);
         return response()->json($nanny);
     }  
+
+    /**
+     * вивести профіль саме залогіненого користувача (няні) 
+     */
+
+    public function me()
+    {
+        $user = auth()->user();
+
+        \Log::info('Отримано профіль користувача:', [$user]);
+
+        if (!$user || !$user->nannyProfile) {
+            return response()->json(['message' => 'Профіль няні не знайдено'], 404);
+        }
+
+        return response()->json($user->nannyProfile->load('user'));
+    }
+
     
     /**
      * Фільтри нянь
@@ -40,32 +58,32 @@ class NannyProfileController extends Controller
          // Створюємо базовий запит на отримання всіх нянь
          $nannies = NannyProfile::query();
      
-         // Фільтрація за типом няні
-         if ($request->has('nanny_type')) {
-             $nannies->whereIn('nanny_type', $request->input('nanny_type'));
+         // Фільтрація за спеціалізацією (масив JSON)
+         if ($request->filled('specialization')) {
+             $nannies->whereJsonContains('specialization', $request->input('specialization'));
          }
      
-         // Фільтрація за графіком
-         if ($request->has('schedule_type')) {
-             $nannies->whereIn('schedule_type', $request->input('schedule_type'));
+         // Фільтрація за графіком (масив JSON)
+         if ($request->filled('work_schedule')) {
+             $nannies->whereJsonContains('work_schedule', $request->input('work_schedule'));
          }
      
-         // Фільтрація за тривалістю найму
-         if ($request->has('employment_duration')) {
-             $nannies->where('employment_duration', $request->input('employment_duration'));
+         // Фільтрація за погодинною оплатою (діапазон)
+         if ($request->has('hourly_rate')) {
+             $nannies->where('hourly_rate', '>=', $request->input('hourly_rate'));
          }
      
-         // Фільтрація за додатковими навичками
+         // Фільтрація за додатковими навичками (масив JSON)
          if ($request->has('additional_skills')) {
              $nannies->whereJsonContains('additional_skills', $request->input('additional_skills'));
          }
      
-         // Фільтрація за освітою
+         // Фільтрація за освітою (масив JSON)
          if ($request->has('education')) {
-             $nannies->where('education', $request->input('education'));
+             $nannies->whereJsonContains('education', $request->input('education'));
          }
      
-         // Фільтрація за досвідом роботи
+         // Фільтрація за досвідом роботи (діапазон)
          if ($request->has('experience_years')) {
              $nannies->where('experience_years', '>=', $request->input('experience_years'));
          }
@@ -75,25 +93,20 @@ class NannyProfileController extends Controller
              $nannies->where('gender', $request->input('gender'));
          }
      
-         // Фільтрація за мовами
+         // Фільтрація за мовами (масив JSON)
          if ($request->has('languages')) {
              $nannies->whereJsonContains('languages', $request->input('languages'));
          }
      
          // Фільтрація за місцем проживання
-         if ($request->has('location_preference')) {
-             $nannies->where('location_preference', $request->input('location_preference'));
-         }
-     
-         // Фільтрація за рівнем оплати
-         if ($request->has('payment_level')) {
-             $nannies->where('payment_level', '>=', $request->input('payment_level'));
+         if ($request->filled('location_preference')) {
+             $nannies->where('city', 'like', '%'.$request->input('location_preference').'%')
+                     ->orWhere('district', 'like', '%'.$request->input('location_preference').'%');
          }
      
          // Отримуємо результат
          $filteredNannies = $nannies->get();
      
          return response()->json($filteredNannies);
-     }
-     
+     }     
 }

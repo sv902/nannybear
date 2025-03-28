@@ -11,26 +11,50 @@ class ParentProfile extends Model
 
     protected $fillable = [
         'user_id',
-        'children_count',
-        'children_ages',
-        'special_needs',
-        'preferred_language',
+        'first_name',   // Ім'я користувача
+        'last_name',    // Прізвище користувача
+        'phone',       // Телефонний номер
+        'birth_date',  // Дата народження
+        'city',        // Місто проживання
+        'district',    // Район проживання
+        'address',      // Вулиця та будинок       
+        'floor',       // Поверх
+        'apartment',   // Квартира
+        'children',
+        'children.*.name', 
+        'children.*.birth_date',
+        'photo',               
     ];
 
-    /**
-     * Відношення "один-до-багатьох": відгуки, які залишив батько.
-     */
-    public function reviewsGiven()
-    {
-        return $this->hasMany(Review::class, 'parent_id', 'user_id');
-    }
-
     protected $casts = [
-        'children_ages' => 'array',
+        'birth_date' => 'date',
+        'children' => 'array',       
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+    public function children()
+    {
+        return $this->hasMany(Child::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($parentProfile) {
+            $parentProfile->nannyPreference?->delete(); // Видаляємо критерії няні
+        });
+    }
+    
+    /**
+     * Відношення "один-до-багатьох": відгуки, які залишив батько.
+     */
+    public function reviewsGiven()
+    {
+        return $this->hasMany(Review::class, 'parent_id', 'user_id');
+    }   
 }

@@ -30,12 +30,14 @@ class CustomResetPassword extends Notification
      */
     public function toMail($notifiable)
     {
+        $name = $notifiable->name ?? 'користувачу';
+
         return (new MailMessage)
             ->subject('Скидання пароля')
-            ->greeting('Привіт, ' . $notifiable->first_name . '!')
+            ->greeting("Привіт, {$name}!")
             ->line('Ви отримали цей лист, тому що запросили скидання пароля.')
-            ->action('Скинути пароль', url('/reset-password/' . $this->token))
+            ->action('Скинути пароль', config('app.frontend_url') . '/reset-password/' . $this->token . '?email=' . urlencode($notifiable->email))
             ->line('Якщо ви не робили цей запит, просто проігноруйте цей лист.')
-            ->salutation('З найкращими побажаннями, команда Nanny Bear!');
+            ->salutation('З найкращими побажаннями, команда Nanny Bear 🐻');
     }
 }
