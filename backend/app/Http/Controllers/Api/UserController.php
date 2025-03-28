@@ -51,16 +51,8 @@ class UserController extends Controller
         }
 
         // Валідація вхідних даних
-        $validated = $request->validate([
-            'first_name' => 'sometimes|string|max:255',
-            'last_name' => 'sometimes|string|max:255',
+        $validated = $request->validate([            
             'email' => 'sometimes|email|unique:users,email,' . $userToUpdate->id,
-            'birth_date' => 'nullable|date|before:today',
-            'phone' => 'sometimes|string|min:10|max:15|unique:users,phone,' . $userToUpdate->id,
-            'city' => 'nullable|string|max:100',
-            'district' => 'nullable|string|max:100',
-            'street' => 'nullable|string|max:100',
-            'house' => 'nullable|string|max:10',
         ]);
 
          // Оновлюємо дані користувача

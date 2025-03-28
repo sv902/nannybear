@@ -1,25 +1,53 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\VerificationController;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use App\Models\User;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Support\Facades\Auth;
+
 
 // Головна сторінка або статус API
 Route::get('/', function () {
     return response()->json(['message' => 'API працює! 🎉']);
 });
 
-// Маршрут для підтвердження email
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])  
-    ->name('verification.verify');
+// Підтвердження email через посилання
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+    $user = User::findOrFail($id);
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return response()->json(['message' => 'Доступ до дашборду дозволено']);
-    });
+    if (!hash_equals($hash, sha1($user->getEmailForVerification()))) {
+        abort(403, 'Недійсне посилання для підтвердження email');
+    }
+
+    if (!$user->hasVerifiedEmail()) {
+        $user->markEmailAsVerified();
+        event(new \Illuminate\Auth\Events\Verified($user));
+    }
+
+    // Перенаправлення на frontend сторінку для логіну
+    // return Redirect::to(env('FRONTEND_URL') . '/email-verified');
+    return redirect()->to(env('FRONTEND_URL') . '/email-verified')->withoutCookie('XSRF-TOKEN');
+})->middleware('signed')->name('verification.verify');
+
+// Повторна відправка листа
+Route::post('/email/resend', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return response()->json(['message' => 'Лист для підтвердження надіслано!']);
+})->name('verification.resend');
+
+// відновлення паролю
+Route::get('/reset-password/{token}', function () {
+    return File::get(public_path('index.html'));
+})->where('token', '.*');
+
+
+Route::middleware(['auth', 'profile.complete'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 // Адмін-панель (лише для адмінів)
@@ -34,5 +62,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Передача всіх маршрутів фронтенду React
 Route::get('/{any}', function () {
-   // return view('app'); // Віддає головний файл React (якщо використовуєш Blade)
+    return file_get_contents(public_path('index.html'));
 })->where('any', '.*');
