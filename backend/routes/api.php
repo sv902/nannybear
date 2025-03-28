@@ -48,12 +48,11 @@ Route::post('/register', [AuthController::class, 'register']); // Реєстра
 Route::post('/login', [AuthController::class, 'login'])->name('login'); // Вхід у систему
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); // Вихід
 
-/**
  *  АВТОРИЗАЦІЯ ЧЕРЕЗ GOOGLE
  */
 Route::get('/google/redirect', [AuthController::class, 'googleRedirect']); // Перенаправлення на Google
 Route::get('/google/callback', [AuthController::class, 'googleCallback']); // Обробка відповіді від Google
-Route::post('/google/login', [AuthController::class, 'googleCallback']); 
+Route::post('/google/login', [AuthController::class, 'googleCallback']);
 
 /**
  *  АВТОРИЗАЦІЯ ЧЕРЕЗ Facebook
@@ -85,7 +84,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::patch('/users/{id}/role', [AdminController::class, 'updateRole']); // Оновити роль користувача
     Route::delete('/users/{id}', [AdminController::class, 'destroy']); // Видалити користувача
     });
-    
+
 /**
  * ПРОФІЛІ
  */
@@ -144,8 +143,12 @@ Route::middleware('auth:sanctum')->group(function () {
  *  ВІДГУКИ
  */
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/reviews', [ReviewController::class, 'store']); // Залишити відгук
-    Route::get('/nanny/{id}/reviews', [ReviewController::class, 'index']); // Отримати всі відгуки про няню
+    // CRUD для відгуків
+    Route::get('/reviews/{nanny_id}', [ReviewController::class, 'index']);
+    Route::post('/reviews', [ReviewController::class, 'store']);
+    Route::put('/reviews/{review_id}', [ReviewController::class, 'update']);
+    Route::delete('/reviews/{review_id}', [ReviewController::class, 'destroy']);
+
+    // Додаткова можливість - відповідь від няні
+    Route::post('/reviews/{review_id}/reply', [ReviewController::class, 'reply']);
 });
-
-
