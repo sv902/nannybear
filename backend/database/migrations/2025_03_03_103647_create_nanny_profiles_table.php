@@ -14,18 +14,22 @@ return new class extends Migration
         Schema::create('nanny_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('photo')->nullable();          
-            $table->text('qualification')->nullable();
-            $table->string('education')->nullable();
-            $table->json('languages')->nullable();
+            $table->string('first_name');
+            $table->string('last_name')->nullable();
+            $table->string('city');
+            $table->string('district');
+            $table->string('phone');            
+            $table->date('birth_date');
+            $table->enum('gender', ['male', 'female']); // Стать
+            $table->json('specialization');
+            $table->json('work_schedule'); // Графік роботи
+            $table->json('education');
+            $table->json('languages');          
+            $table->json('additional_skills'); // Додаткові навички
+            $table->decimal('experience_years', 3, 1); // Досвід у роках
+            $table->decimal('hourly_rate', 8, 2); 
+            $table->string('photo')->nullable();               
             $table->json('availability')->nullable();
-            $table->json('nanny_type')->nullable(); // Масив типів няні
-            $table->string('schedule_type')->nullable(); // Графік роботи
-            $table->string('employment_duration')->nullable(); // Тривалість роботи
-            $table->json('additional_skills')->nullable(); // Додаткові навички
-            $table->integer('experience_years')->nullable(); // Досвід у роках
-            $table->enum('gender', ['male', 'female', 'other'])->nullable(); // Стать
-            $table->string('payment_level')->nullable(); // Рівень оплати
             $table->timestamps();
         });
     }

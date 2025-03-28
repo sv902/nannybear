@@ -11,27 +11,33 @@ class NannyProfile extends Model
 
     protected $fillable = [
         'user_id',
+        'first_name',   // Ім'я користувача
+        'last_name',    // Прізвище користувача
+        'phone',       // Телефонний номер
+        'birth_date',  // Дата народження
+        'gender',      // Стать 
+        'specialization', // Спеціалізація   
+        'city',        // Місто проживання
+        'district',    // Район проживання       
         'photo',        
-        'qualification',
+        'work_schedule',     // Графік роботи
         'education',// Освіта
-        'languages',
-        'availability',
-        'nanny_type',        // Тип няні
-        'schedule_type',     // Графік роботи
-        'employment_duration', // Тривалість роботи
+        'languages', // Мови
         'additional_skills', // Додаткові навички
         'experience_years',  // Досвід роботи
-        'gender',            // Стать    
-        'payment_level',     // Рівень оплати
+        'hourly_rate',     // Оплата за годину
+        'availability',       
     ];
 
     protected $casts = [
-        'availability' => 'array',
-        'survey_answers' => 'array', // JSON → Масив
+        'birth_date' => 'date',
+        'specialization' => 'array',      // Спеціалізація (масив)
+        'work_schedule' => 'array', // JSON → Масив
+        'education' => 'array',
         'languages' => 'array',       // Мови
-        'nanny_type' => 'array',      // Типи няні (масив)
         'additional_skills' => 'array', // Додаткові навички (масив)
-    ];
+        'availability' => 'array',
+    ];  
 
     /**
      * Зв’язок: профіль няні належить користувачеві.

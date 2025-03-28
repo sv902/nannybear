@@ -20,50 +20,22 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255', 
-            'last_name' => 'nullable|string|max:255', 
+        $validated = $request->validate([            
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-            'birth_date' => 'required|date|before:today', // Перевіряємо, щоб дата була в минулому
-            'phone' => 'required|string|min:10|max:15|unique:users',
-            'city' => 'required|string|max:100',
-            'district' => 'nullable|string|max:100',
-            'street' => 'nullable|string|max:100',
-            'house' => 'nullable|string|max:10', 
-            'floor' => 'nullable|integer|min:1',
-            'apartment' => 'nullable|string|max:10',
+            'password' => 'required|min:6|confirmed',           
             'role' => 'required|in:parent,nanny,admin',                   
         ]);
 
         $role = Role::where('name', $validated['role'])->first();        
 
         if (!$role) {
+            Log::error("Роль {$validated['role']} не знайдена!");
             return response()->json(['error' => 'Роль не знайдена'], 400);
-        }
+        }       
 
-        // Автоматичне визначення profile_type
-        $profileType = match ($role->name) {
-            'nanny' => 'nanny',
-            'parent' => 'parent',
-            'admin' => 'admin', // Тепер адміністратор отримує правильний тип профілю
-            default => null,
-        };
-
-        $user = User::create([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'] ?? null,
+        $user = User::create([            
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'birth_date' => $validated['birth_date'],             
-            'phone' => $validated['phone'],
-            'city' => $validated['city'],
-            'district' => $validated['district'] ?? null,
-            'street' => $validated['street'] ?? null,
-            'house' => $validated['house'] ?? null,
-            'floor' => $validated['floor'] ?? null,
-            'apartment' => $validated['apartment'] ?? null,
-            'profile_type' => $profileType, 
+            'password' => Hash::make($validated['password']),           
             'role_id' => $role->id,      
         ]);        
 
@@ -72,12 +44,18 @@ class AuthController extends Controller
 
         Log::info('Роль користувача після реєстрації: ', [$user->roles]);
         
+        // Автоматичний вхід після реєстрації
+        Auth::login($user);
+        
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         event(new Registered($user));
 
         return response()->json([
             'success' => true,
             'message' => 'Користувач зареєстрований. Перевірте email для підтвердження.',
             'user' => $user,
+            'token' => $token
         ], 201);
     }
 
@@ -93,8 +71,8 @@ class AuthController extends Controller
 
         // Перевірка на правильність облікових даних
         if (Auth::guard('web')->attempt($credentials)) {
-            $user = Auth::user();// Отримуємо користувача після успішного логіну
-            
+            $user = Auth::user()->load('role'); // Завантажуємо роль
+                 
             // Логування ролі користувача
             Log::info('Роль користувача: ' . $user->role->name);
 
@@ -110,10 +88,7 @@ class AuthController extends Controller
             }
 
             $token = $user->createToken('auth_token')->plainTextToken;
-
-            // Викликаємо автоматичне створення профілю
-            (new ProfileController())->createProfileIfNotExists();
-
+           
             return response()->json([
                 'token' => $token,
                 'user' => $user
@@ -158,18 +133,10 @@ class AuthController extends Controller
                 'name' => $googleUser->getName(),
             ]);
 
-            // Розділяємо повне ім'я на first_name та last_name
-            $fullName = $googleUser->getName();
-            $nameParts = explode(' ', $fullName, 2);
-            $firstName = $nameParts[0] ?? 'Unknown';
-            $lastName = $nameParts[1] ?? 'Unknown';
-
-            // Перевірка, чи існує вже користувач з таким Google email
+             // Перевірка, чи існує вже користувач з таким Google email
             $user = User::firstOrCreate([             
                 'email' => $googleUser->getEmail(),
-            ], [
-                'first_name' => $firstName,
-                'last_name' => $lastName,
+            ], [                
                 'password' => bcrypt(Str::random(16)), 
                 'google_id' => $googleUser->getId(), 
             ]);             
@@ -186,26 +153,13 @@ class AuthController extends Controller
             // Перевіряємо, чи є роль в базі
             $role = Role::where('name', $roleName)->first();
             if ($role) {
-                $user->role_id = $role->id;
-                $user->profile_type = $roleName;
+                $user->role_id = $role->id;               
                 $user->save();
                 $user->assignRole($role->name);
                 Log::info('Роль користувача встановлена: ' . $role->name);
             } else {
                 Log::error('Роль "' . $roleName . '" не знайдена');
-            }
-    
-            // Автоматичне визначення profile_type
-            if (isset($role)) {
-                $profileType = match ($role->name) {
-                    'nanny' => 'nanny',
-                    'parent' => 'parent',                    
-                    default => null,
-                };
-                $user->profile_type = $profileType;
-                $user->save();
-                Log::info('Profile type збережено: ' . $user->profile_type);
-            }
+            }    
 
             // Призначення ролі через Spatie (якщо роль була знайдена)
             if (isset($role)) {
@@ -243,7 +197,6 @@ class AuthController extends Controller
         }
     }
     
-
     /**
      * Перенаправлення на Facebook для авторизації.
      */
@@ -266,20 +219,12 @@ class AuthController extends Controller
             Log::info('Facebook User: ', [
                 'email' => $facebookUser->getEmail(),
                 'name' => $facebookUser->getName(),
-            ]);
-
-            // Розділяємо повне ім'я на first_name та last_name
-            $fullName = $facebookUser->getName();
-            $nameParts = explode(' ', $fullName, 2);
-            $firstName = $nameParts[0] ?? 'Unknown';
-            $lastName = $nameParts[1] ?? 'Unknown';
+            ]);         
 
             // Перевірка, чи існує вже користувач з таким Facebook email
             $user = User::firstOrCreate([
                 'email' => $facebookUser->getEmail(),
-            ], [
-                'first_name' => $firstName,
-                'last_name' => $lastName,
+            ], [                
                 'password' => bcrypt(Str::random(16)),  // Генерація випадкового пароля
                 'facebook_id' => $facebookUser->getId(), 
             ]);
@@ -295,27 +240,14 @@ class AuthController extends Controller
             // Призначаємо роль користувачеві
             $role = Role::where('name', $roleName)->first();
             if ($role) {
-                $user->role_id = $role->id;
-                $user->profile_type = $roleName;
+                $user->role_id = $role->id;               
                 $user->save();
                 $user->assignRole($role->name);
                 Log::info('Роль користувача встановлена: ' . $role->name);
             } else {
                 Log::error('Роль "' . $roleName . '" не знайдена');
             }
-
-            // Автоматичне визначення profile_type
-            if (isset($role)) {
-                $profileType = match ($role->name) {
-                    'nanny' => 'nanny',
-                    'parent' => 'parent',                  
-                    default => null,
-                };
-                $user->profile_type = $profileType;
-                $user->save();
-                Log::info('Profile type збережено: ' . $user->profile_type);
-            }
-
+            
             // Призначення ролі через Spatie (якщо роль була знайдена)
             if (isset($role)) {
                 $user->assignRole($role->name);

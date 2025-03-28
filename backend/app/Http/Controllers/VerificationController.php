@@ -11,7 +11,7 @@ use App\Models\User;
 class VerificationController extends Controller
 {
     /**
-     * Підтвердження email без редиректу.
+     * Підтвердження email з редиректом.
      */
     public function verify(Request $request)
     {
@@ -25,15 +25,16 @@ class VerificationController extends Controller
         
         // Якщо email вже підтверджено
         if ($user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Ваш email вже підтверджено! Ви можете увійти в систему.']);
+            return redirect(env('FRONTEND_URL') . '/email-verified?verified=already');
         }
 
        // Підтвердження email
        if ($user->markEmailAsVerified()) {
         event(new Verified($user));
+        Auth::login($user);
          }
 
-        return response()->json(['message' => 'Email успішно підтверджено!']);
+         return redirect(env('FRONTEND_URL') . '/email-verified?verified=success');
     }
 
     /**

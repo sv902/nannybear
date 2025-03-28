@@ -17,16 +17,23 @@ class PasswordResetController extends Controller
      */
     public function sendResetLink(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ]);
+        $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink($request->only('email'));
+        $status = Password::sendResetLink(
+            $request->only('email'),
+            function ($user, $token) {
+                $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
+                $resetUrl = "{$frontendUrl}/reset-password?token={$token}&email={$user->email}";
+
+                $user->sendPasswordResetNotification($token, $resetUrl);
+            }
+        );
 
         return $status === Password::RESET_LINK_SENT
-            ? response()->json(['message' => 'Посилання для скидання пароля надіслано!'], 200)
-            : response()->json(['message' => 'Помилка під час надсилання посилання'], 500);
+            ? response()->json(['message' => __($status)])
+            : response()->json(['email' => __($status)], 422);
     }
+
 
     /**
      * Відновлення паролю.
@@ -36,7 +43,7 @@ class PasswordResetController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email|exists:users,email',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:8|confirmed',
         ]);
 
         $status = Password::reset(
