@@ -48,8 +48,10 @@ Route::post('/register', [AuthController::class, 'register']); // Реєстра
 Route::post('/login', [AuthController::class, 'login'])->name('login'); // Вхід у систему
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); // Вихід
 
+/**
  *  АВТОРИЗАЦІЯ ЧЕРЕЗ GOOGLE
  */
+
 Route::get('/google/redirect', [AuthController::class, 'googleRedirect']); // Перенаправлення на Google
 Route::get('/google/callback', [AuthController::class, 'googleCallback']); // Обробка відповіді від Google
 Route::post('/google/login', [AuthController::class, 'googleCallback']);
