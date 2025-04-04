@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import { useNavigate } from "react-router-dom";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
@@ -15,12 +15,66 @@ import axios from '../../axiosConfig';
 
 
 const NannyProfileForm = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        await axios.get("/api/nanny/profile", { withCredentials: true });
+        // setProfile(res.data.profile); ← якщо потрібно
+        console.log("🎯 Сесія активна. Профіль існує.");
+      } catch (error) {
+        if (error.response?.status === 401) {
+          localStorage.setItem("lastVisited", window.location.pathname);
+          navigate("/registrationlogin");
+        } else {
+          console.error("❌ Помилка при перевірці сесії:", error);
+        }
+      }
+    };
+    fetchProfile();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (localStorage.getItem("justLoggedIn") === "true") {
+      localStorage.removeItem("nannyFormData");
+      localStorage.removeItem("justLoggedIn");
+      setFormData({ availability: "вільна" });
+    }
+  }, []); 
+  
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    availability: "вільна",
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem("nannyFormData");
+    return saved ? JSON.parse(saved) : { availability: "вільна" };
   });
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const saved = localStorage.getItem("nannyFormData");
+    const savedStep = localStorage.getItem("nannyFormStep");
+    if (saved && savedStep) {
+      setFormData(JSON.parse(saved));
+      setStep(parseInt(savedStep));
+    }
+  }, []);  
+  
+  useEffect(() => {
+    localStorage.setItem("nannyFormData", JSON.stringify(formData));
+  }, [formData]);
+
+  useEffect(() => {
+    localStorage.setItem("nannyFormStep", step);
+    localStorage.setItem("lastVisited", `/registration/nanny/profile?step=${step}`);
+  }, [step]); 
+  
+  useEffect(() => {
+    const timestamp = localStorage.getItem("nannyFormSavedAt");
+    if (timestamp && Date.now() - parseInt(timestamp) > 24 * 60 * 60 * 1000) {
+      localStorage.removeItem("nannyFormData");
+      localStorage.removeItem("nannyFormStep");
+    }
+    localStorage.setItem("nannyFormSavedAt", Date.now().toString());
+  }, []); 
 
   const next = () => setStep((prev) => prev + 1);
   const back = () => setStep((prev) => prev - 1);
@@ -30,65 +84,87 @@ const NannyProfileForm = () => {
       // 1. CSRF cookie
       await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
   
-      // 2. Email & password from localStorage
-      const email = localStorage.getItem("email");
-      const password = localStorage.getItem("password");
+      // // 2. Email & password from localStorage
+      // const email = localStorage.getItem("email");
+      // const password = localStorage.getItem("password");
   
-      if (!email || !password) {
-        alert("Не вдалося знайти email або пароль у localStorage");
-        return;
-      }
+      // if (!email || !password) {
+      //   alert("Не вдалося знайти email або пароль у localStorage");
+      //   return;
+      // }
   
-      // 3. Login
-      const loginRes = await axios.post('/api/login', { email, password }, { withCredentials: true });
-      const token = loginRes.data.token;
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      // // 3. Login
+      // const loginRes = await axios.post('/api/login', { email, password }, { withCredentials: true });
+      // const token = loginRes.data.token;
+      // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   
-      console.log("✅ Успішний логін:", loginRes.data);
+      // console.log("✅ Успішний логін:", loginRes.data);
   
       // 4. Формуємо дату народження
       const birthDate = `${formData.birthYear}-${formData.birthMonth.padStart(2, "0")}-${formData.birthDay.padStart(2, "0")}`;
-      const payload = {
-        ...formData,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        birth_date: birthDate,
-        phone: formData.phone,
-        city: formData.city,
-        district: formData.district,
-        gender: formData.gender,
-        specialization: formData.specialization,
-        work_schedule: formData.work_schedule,
-        education: formData.education,
-        languages: formData.languages,
-        additional_skills: formData.additional_skills,
-        experience_years: formData.experience_years,
-        hourly_rate: formData.hourly_rate,    
-        availability: Array.isArray(formData.availability) 
-          ? formData.availability 
-          : [formData.availability],
-      };
-        
-      delete payload.birthDay;
-      delete payload.birthMonth;
-      delete payload.birthYear;
-      delete payload.firstName;
-      delete payload.lastName; 
-  
-      console.log("📦 Payload для збереження:", payload);
+      
+      const formDataToSend = new FormData();
+      
+      formDataToSend.append("first_name", formData.firstName);
+      formDataToSend.append("last_name", formData.lastName);
+      formDataToSend.append("birth_date", birthDate);
+      formDataToSend.append("phone", formData.phone);
+      formDataToSend.append("city", formData.city);
+      formDataToSend.append("district", formData.district);
+      formDataToSend.append("gender", formData.gender);
+      formDataToSend.append("experience_years", formData.experience_years);
+      formDataToSend.append("hourly_rate", formData.hourly_rate);
+
+      if (Array.isArray(formData.availability)) {
+        formData.availability.forEach((val, idx) =>
+          formDataToSend.append(`availability[${idx}]`, val)
+        );
+      } else {
+        formDataToSend.append("availability[0]", formData.availability);
+      } 
+
+      formData.specialization.forEach((item, i) =>
+        formDataToSend.append(`specialization[${i}]`, item)
+      );
+      formData.work_schedule.forEach((item, i) =>
+        formDataToSend.append(`work_schedule[${i}]`, item)
+      );
+      formData.languages.forEach((item, i) =>
+        formDataToSend.append(`languages[${i}]`, item)
+      );
+      formData.additional_skills.forEach((item, i) =>
+        formDataToSend.append(`additional_skills[${i}]`, item)
+      );
+      
+      // 🎓 Освіта
+      (formData.education || []).forEach((edu, i) => {
+        formDataToSend.append(`education[${i}][institution]`, edu.institution);
+        formDataToSend.append(`education[${i}][specialty]`, edu.specialty);
+        formDataToSend.append(`education[${i}][years]`, `${edu.startYear}–${edu.endYear}`);
+
+        if (edu.diploma_image) {
+          formDataToSend.append(`education[${i}][diploma_image]`, edu.diploma_image);
+        }
+      });
   
       // 5. Створюємо профіль, якщо ще не існує
       //await axios.post('/api/profile/create', {}, { withCredentials: true });
   
       // 6. Зберігаємо повні дані профілю
-      const response = await axios.post('/api/nanny/profile', payload, { withCredentials: true });
+        const response = await axios.post("/api/nanny/profile", formDataToSend, {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
   
       console.log("🎉 Профіль збережено:", response.data);
   
       if (response.status === 200) {
-        localStorage.removeItem("email");
-        localStorage.removeItem("password");
-        navigate("/registration/nanny/profile");
+        // localStorage.removeItem("email");
+        // localStorage.removeItem("password");
+        localStorage.removeItem("nannyFormData");
+        navigate("/nanny/profile");
       }
     } catch (error) {
       console.error("❌ Помилка збереження профілю:", error.response?.data || error.message);
@@ -96,8 +172,6 @@ const NannyProfileForm = () => {
     }
   };
   
-
-
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -154,9 +228,9 @@ const NannyProfileForm = () => {
             setFormData={setFormData}
             onNext={next}
             onBack={back}
-            onSelect={(educationData) => {
-              setFormData(prev => ({ ...prev, education: educationData }));
-            }}
+            onSelect={(educationData) =>
+              setFormData((prev) => ({ ...prev, education: educationData }))
+            }
           />
         );
         case 7:

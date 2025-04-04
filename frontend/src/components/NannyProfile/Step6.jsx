@@ -1,43 +1,55 @@
+// components/NannyProfile/Step6.jsx
 import React, { useState } from "react";
 import "../../styles/register.css";
 import "../../styles/profileStep.css";
+import cameraIcon from "../../assets/camera.svg";
 
 const Step6 = ({ onNext, onBack, onSelect }) => {
   const [noEducation, setNoEducation] = useState(false);
   const [educations, setEducations] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [newEdu, setNewEdu] = useState({ institution: "", specialty: "", years: "" });
+  const MAX_EDUCATIONS = 5;
 
   const handleToggleNoEducation = () => {
     setNoEducation((prev) => !prev);
-    if (!noEducation) {
-      setEducations([]);
-      setShowForm(false);
-    }
+    setEducations([]);
   };
 
-  const handleChange = (e) => {
-    setNewEdu({ ...newEdu, [e.target.name]: e.target.value });
+  const handleInputChange = (index, e) => {
+    const { name, value, files } = e.target;
+    const updated = [...educations];
+    updated[index][name] = files ? files[0] : value;
+    setEducations(updated);
   };
 
-  const handleAddEducation = () => {
-    if (!newEdu.institution || !newEdu.specialty || !newEdu.years) {
-      alert("Будь ласка, заповніть усі поля.");
+  const addEducation = () => {
+    if (educations.length >= MAX_EDUCATIONS) {
+      alert(`Максимум ${MAX_EDUCATIONS} записів освіти.`);
       return;
     }
 
-    setEducations((prev) => [...prev, newEdu]);
-    setNewEdu({ institution: "", specialty: "", years: "" });
-    setShowForm(false);
+    setNoEducation(false); // якщо користувач вирішив додати — знімаємо "немає освіти"
+
+    setEducations((prev) => [
+      ...prev,
+      {
+        institution: "",
+        specialty: "",
+        startYear: "",
+        endYear: "",
+        diploma_image: null,
+      },
+    ]);
   };
 
-  const handleDeleteEducation = (index) => {
-    setEducations((prev) => prev.filter((_, i) => i !== index));
+  const deleteEducation = (index) => {
+    const updated = [...educations];
+    updated.splice(index, 1);
+    setEducations(updated);
   };
 
   const handleNextClick = () => {
-    if (!noEducation && educations.length === 0) {
-      alert("Будь ласка, додайте хоча б одну освіту або виберіть варіант без освіти.");
+    if (!noEducation && educations.some(e => !e.institution || !e.specialty || !e.startYear || !e.endYear)) {
+      alert("Будь ласка, заповніть усі поля або виберіть 'немає освіти'.");
       return;
     }
 
@@ -58,74 +70,99 @@ const Step6 = ({ onNext, onBack, onSelect }) => {
         Можна додати кілька варіантів. Ці дані допоможуть батькам <br />
         знаходити Вас.
       </p>
-
-      <div className="specialization-selection">
-        <div className="specialization-label-row">
+      <div className="specialization-label-row">
           <p className="left-text">Ваша освіта...</p>
           <p className="right-text">обов’язкове поле</p>
         </div>
+        
+      <div className="specialization-selection">
+        
 
-        <div className="options-row">
+        <div className="options-col">
           <button
             type="button"
             className={`option-pill ${noEducation ? "selected" : ""}`}
             onClick={handleToggleNoEducation}
           >
             Немає профільної освіти
-          </button>
-        </div>
+          </button>          
 
-        {!noEducation && (
-          <>
-            {educations.map((edu, index) => (
-              <div key={index} className="education-entry">
-                <p><strong>ЗВО:</strong> {edu.institution} | <strong>Спеціальність:</strong> {edu.specialty} | <strong>Роки:</strong> {edu.years}</p>
-                <button className="remove-education-btn" onClick={() => handleDeleteEducation(index)}>Видалити</button>
-              </div>
-            ))}
+        {!noEducation && educations.map((edu, index) => (
+          <div key={index} className="education-block">
+            <div className="education-header">
+              <strong>Освіта {index + 1}</strong>
+              <button
+                className="remove-education-btn"
+                onClick={() => deleteEducation(index)}
+              >
+                ✖
+              </button>
+            </div>
 
-            {!showForm ? (
-              <div className="add-education-block">
-                <button
-                  type="button"
-                  className="option-pill"
-                  onClick={() => setShowForm(true)}
-                >
-                  Додати освіту
-                </button>
-                <p className="option-description">Не забувайте про курси <br /> підвищення кваліфікації 😉</p>
-              </div>
-            ) : (
-              <div className="education-form">
-                <input
-                  type="text"
-                  name="institution"
-                  placeholder="Назва ЗВО"
-                  value={newEdu.institution}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="specialty"
-                  placeholder="Спеціальність"
-                  value={newEdu.specialty}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="years"
-                  placeholder="Роки навчання (рік–рік)"
-                  value={newEdu.years}
-                  onChange={handleChange}
-                />
-                <button type="button" className="option-pill" onClick={handleAddEducation}>
-                  Зберегти освіту
-                </button>
-              </div>
+            <input
+              className="education-input"
+              type="text"
+              name="institution"
+              placeholder="Назва навчального закладу..."
+              value={edu.institution}
+              onChange={(e) => handleInputChange(index, e)}
+            />
+            <input
+              className="education-input"
+              type="text"
+              name="specialty"
+              placeholder="Направлення..."
+              value={edu.specialty}
+              onChange={(e) => handleInputChange(index, e)}
+            />
+            <div className="years-row">
+              <input
+                className="education-input"
+                type="text"
+                name="startYear"
+                placeholder="Рік початку"
+                value={edu.startYear}
+                onChange={(e) => handleInputChange(index, e)}
+              />
+              <input
+                className="education-input"
+                type="text"
+                name="endYear"
+                placeholder="Рік закінчення"
+                value={edu.endYear}
+                onChange={(e) => handleInputChange(index, e)}
+              />
+            </div>
+            <label className="custom-file-upload">
+              <input
+                type="file"
+                name="diploma_image"
+                accept="image/*"
+                onChange={(e) => handleInputChange(index, e)}
+              />
+              <img src={cameraIcon} alt="Іконка камери" className="camera-icon" />Додати фото диплому
+            </label>
+            {edu.diploma_image && (
+              <p className="file-added-text">
+                📎 Файл додано: <strong>{typeof edu.diploma_image === "string" ? edu.diploma_image : edu.diploma_image.name}</strong>
+              </p>
             )}
-          </>
-        )}
-      </div>
+          </div>
+        ))}
+        {educations.length < MAX_EDUCATIONS && (
+                    <button 
+                      type="button"
+                      className="option-pill add-education-btn"
+                      onClick={addEducation}
+                    >
+                      Додати освіту
+                    </button>
+                  )}
+                  <p className="option-description">
+                    Не забувайте про курси <br /> підвищення кваліфікації 😉
+                  </p>
+                </div>
+     </div>
 
       <div className="step-next-button">
         <button className="next-btn" onClick={handleNextClick}>

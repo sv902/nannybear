@@ -19,12 +19,12 @@ const Step2 = ({onNext, onBack}) => {
       <p className="description-light">
       Починається новий етап реєстрації! Будь ласка, вкажіть Ваші <br/>дані чесно, щоб знайти клієнтів, яким Ви ідеально підійдете. 
       <p></p>
-      <br/> Дані можна буде змінити у будь-який час у розділі <br/> Налаштування профілю.
+      <br/> Дані можна буде змінити у будь-який час у розділі Налаштування<br/>профілю.
       </p>
       <div className="step-next-button">
         <button className="next-btn" onClick={handleNextClick}>
           ДАЛІ
-        </button>        
+        </button>
       </div>      
    </div>
   );

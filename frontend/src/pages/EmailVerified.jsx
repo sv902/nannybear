@@ -1,10 +1,10 @@
-// src/pages/EmailVerified.jsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../axiosConfig";
 
 const EmailVerified = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loginAndRedirect = async () => {
@@ -19,34 +19,57 @@ const EmailVerified = () => {
       }
 
       try {
-        // Отримуємо CSRF-cookie
-        await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
+        // Отримуємо CSRF cookie (для Sanctum)
+        await axios.get("/sanctum/csrf-cookie", { withCredentials: true });
 
         // Логін
         const loginResponse = await axios.post(
-          '/api/login',
+          "/api/login",
           { email, password },
           { withCredentials: true }
         );
-     
-        // Зберігаємо токен у localStorage (на випадок подальшого використання)
+
+        console.log("✅ Успішний логін:", loginResponse.data);
+
+        localStorage.removeItem("parentFormData");
+        localStorage.removeItem("nannyFormData");
+        localStorage.removeItem("surveyData");
+
+        // Зберігаємо токен для подальшого використання
         const token = loginResponse?.data?.token;
         if (token) {
           localStorage.setItem("authToken", token);
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         }
 
-        // Перенаправлення згідно з роллю
+        // Позначаємо, що користувач тільки що увійшов (для профілю)
+        localStorage.setItem("justLoggedIn", "true");
+
+        // ❗ НЕ видаляємо formData (щоб не стерти введене)
+        // localStorage.removeItem("parentFormData"); — не потрібно
+
+        // 🔀 Перенаправлення згідно з роллю
         if (role === "parent") {
-          window.location.replace("/registration/parent/profile");
+          navigate("/registration/parent/profile");
+          localStorage.setItem("lastVisited", "/registration/parent/profile");
         } else if (role === "nanny") {
-          window.location.replace("/registration/nanny/profile");
+          navigate("/registration/nanny/profile");
+          localStorage.setItem("lastVisited", "/registration/nanny/profile");
         } else {
-          window.location.replace("/");
-        }
+          navigate("/");
+        }        
+
+        // ✅ Тепер можна стерти логін-дані
+        // localStorage.removeItem("email");
+        // localStorage.removeItem("password");
+        // localStorage.removeItem("userRole");
+
       } catch (error) {
         console.error("❌ Помилка при логіні після підтвердження email:", error.response || error.message);
-        alert("Не вдалося увійти. Можливо, email ще не підтверджено або сесія втрачена.");
+        alert("Не вдалося увійти. Спробуйте ще раз.");
         navigate("/registration");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -57,7 +80,9 @@ const EmailVerified = () => {
     <div className="email-confirmation-container">
       <h1 className="title-light-full-page">Очікуємо підтвердження...</h1>
       <p className="description-light">
-      Будь ласка, зачекайте кілька секунд. Ми вас авторизуємо та перенаправимо...
+        {loading
+          ? "Будь ласка, зачекайте кілька секунд. Ми вас авторизуємо та перенаправимо..."
+          : "Спробуйте перезавантажити сторінку або увійти ще раз."}
       </p>
     </div>
   );

@@ -19,24 +19,26 @@ import axios from "./axiosConfig";
 
 const Layout = () => {
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
+  const path = location.pathname;
+  
+   const surveyPages = [
+    "/registration/parent/survey", 
+  ];
+
+  const isHomePage = path === "/";
+  const isSurveyPage = surveyPages.includes(path);
 
   useEffect(() => {
     axios.get('/sanctum/csrf-cookie');
   }, []);
 
   return (
-    <>
+    <div className={isSurveyPage ? "hide-menu no-border" : ""}>
       {!isHomePage && <Marketing />}
       {!isHomePage && <Header />}
       <Outlet />
-    </>
+    </div>
   );
-};
-
-
-const ErrorPage = () => {
-  return <div>Щось пішло не так. Сторінку не знайдено!</div>;
 };
 
 const router = createBrowserRouter([

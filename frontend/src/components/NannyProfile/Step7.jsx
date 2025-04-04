@@ -5,9 +5,11 @@ import "../../styles/register.css";
 import "../../styles/profileStep.css";
 
 const Step7 = ({ onNext, onBack, onSelect }) => {
+
+  const MAX_LANGUAGES = 5;
+
   const [selectedOptions, setSelectedOptions] = useState([]);
-  const [customLanguage, setCustomLanguage] = useState("");
-  const [showInput, setShowInput] = useState(false);
+  const [customLanguages, setCustomLanguages] = useState([]);
 
   const languages = [
     { code: "uk", name: "Українська", flag: "https://flagcdn.com/w40/ua.png" },
@@ -23,26 +25,23 @@ const Step7 = ({ onNext, onBack, onSelect }) => {
       prev.includes(lang) ? prev.filter((l) => l !== lang) : [...prev, lang]
     );
   };
-
-  const handleAddCustomLanguage = () => {
-    if (customLanguage.trim()) {
-      const formattedLang = customLanguage.trim();
-      if (!selectedOptions.includes(formattedLang)) {
-        setSelectedOptions((prev) => [...prev, formattedLang]);
-      }
-      setCustomLanguage("");
-      setShowInput(false);
-    }
-  };
+ 
 
   const handleNextClick = () => {
-    if (selectedOptions.length === 0) {
+    const allLanguages = [...selectedOptions, ...customLanguages.filter(Boolean)];
+  
+    if (allLanguages.length === 0) {
       alert("Будь ласка, оберіть мови якими володієте.");
       return;
     }
-    onSelect(selectedOptions);
+    if (allLanguages.length > MAX_LANGUAGES) {
+      alert(`Максимум ${MAX_LANGUAGES} мов.`);
+      return;
+    }
+  
+    onSelect(allLanguages); // передаємо ВСІ мови
     onNext();
-  };
+  };  
 
   return (
     <div className="specialization-container">
@@ -115,28 +114,45 @@ const Step7 = ({ onNext, onBack, onSelect }) => {
           <p className="lang-description">
             Немає мови, якою Ви володієте? Додайте нижче.
           </p>
-          {!showInput ? (
+
+          {customLanguages.map((lang, index) => (
+            <div key={index} className="lang-form-wrapper">
+            <input
+              type="text"
+              className="lang-input-with-btn"
+              placeholder="Ваша мова спілкування..."
+              value={lang}
+              onChange={(e) => {
+                const updated = [...customLanguages];
+                updated[index] = e.target.value;
+                setCustomLanguages(updated);
+              }}
+            />
+            <button
+              type="button"
+              className="remove-lang-btn-inside"
+              onClick={() => {
+                const updated = [...customLanguages];
+                updated.splice(index, 1);
+                setCustomLanguages(updated);
+              }}
+            >
+              ✖
+            </button>
+          </div>
+          ))}
+
+          {customLanguages.length + selectedOptions.length < MAX_LANGUAGES && (
             <button
               type="button"
               className="option-pill"
-              onClick={() => setShowInput(true)}
+              onClick={() => setCustomLanguages([...customLanguages, ""])}
             >
               Додати мову спілкування
             </button>
-          ) : (
-            <div className="lang-form">
-              <input
-                type="text"
-                placeholder="Ваша мова (наприклад: Італійська)"
-                value={customLanguage}
-                onChange={(e) => setCustomLanguage(e.target.value)}
-              />
-              <button type="button" className="option-pill" onClick={handleAddCustomLanguage}>
-              Додати мову спілкування
-              </button>
-            </div>
           )}
         </div>
+
       </div>
 
       <div className="step-next-button">
