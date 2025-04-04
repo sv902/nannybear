@@ -1,8 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100vw;
+}
+
 .main {
     background-color: #fffaee;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
+    align-items: center; 
     width: 100%;
     position: relative;
   }
@@ -10,11 +27,12 @@
   .main .div-2 {
     background-color: #fffaee;
     height: 5890px;
-    overflow: hidden;
     position: relative;
-    width: 1440px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
   }
-  
+
   .main .overlap {
     height: 221px;
     left: 511px;
@@ -40,7 +58,8 @@
     left: 70px;
     position: absolute;
     top: 3821px;
-    width: 1552px;
+    width: 1400px;
+    max-width: 100%;
   }
   
   .main .rectangle-5 {
@@ -50,7 +69,8 @@
     left: 0;
     position: absolute;
     top: 0;
-    width: 1300px;
+    /*width: 1300px;*/
+    width: 100%;
   }
   
   .main .text-wrapper-14 {
@@ -148,6 +168,7 @@
     position: absolute;
     top: 1019px;
     width: 1370px;
+    /*width: 100%;*/
   }
   
   .main .overlap-4 {
@@ -156,6 +177,7 @@
     position: absolute;
     top: 0;
     width: 1370px;
+    /*width: 100%;*/
   }
   
   .main .pexels-arina {
@@ -171,7 +193,8 @@
     left: 0;
     position: absolute;
     top: 0;
-    width: 1370px;
+    /*width: 1370px;*/
+    width: 100%;
   }
   
   .main .slogan {
@@ -180,7 +203,8 @@
     left: 0;
     position: absolute;
     top: 0;
-    width: 1300px;
+    /*width: 1300px;*/
+    width: 100%;
   }
   
   .main .overlap-6 {
@@ -188,7 +212,8 @@
     left: -196px;
     position: absolute;
     top: -145px;
-    width: 1692px;
+    /*width: 1692px;*/
+    width: 100%;
   }
   
   .main .ellipse {
@@ -218,6 +243,7 @@
     position: absolute;
     top: 145px;
     width: 1298px;
+    max-width: 100%;
   }
   
   .main .text-wrapper-17 {
@@ -232,6 +258,7 @@
     text-align: center;
     top: 150px;
     width: 1081px;
+    /*width: 100%;*/
   }
   
   .main .overlap-7 {
@@ -239,7 +266,8 @@
     left: 2px;
     position: absolute;
     top: 442px;
-    width: 1298px;
+    /*width: 1298px;*/
+    width: 100%;
   }
   
   .main .rectangle-8 {
@@ -280,10 +308,23 @@
   
   .main .round-animate {
     height: 270px !important;
-    left: 1162px !important;
+    left: 1200px !important;
     position: absolute !important;
-    top: 558px !important;
-    width: 208px !important;
+    top: 500px !important;
+    width: 271px !important;
+  }
+
+  .round-animate {
+    animation: spin-counter-clockwise 10s linear infinite;
+  }
+
+  @keyframes spin-counter-clockwise {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(-360deg); 
+    }
   }
   
   .main .text-wrapper-18 {
@@ -320,6 +361,34 @@
     top: 1198px;
     width: 307px;
   }
+
+  .overlap-8 {
+    display: inline-block;
+    position: relative;
+  }
+  
+  .property-default {
+    width: 310px;
+    height: 50px;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-image: url('/public/assets/cta-button.png');
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease, background-image 0.3s ease;
+    transform-origin: left center;
+  }
+  
+  .property-default:hover {
+    transform: scaleX(0.9);
+    transition-delay: 0s; 
+  }
+  
+  .property-default:hover {
+    background-image: url('/public/assets/cta-button-hover.png');
+    transition-delay: 0.5s; 
+  }
   
   .main .text-wrapper-19 {
     color: #fffaee;
@@ -348,6 +417,7 @@
     position: absolute;
     top: 87px;
     width: 1300px;
+    /*width: 100%;*/
   }
   
   .main .baner {
@@ -359,6 +429,7 @@
     position: absolute;
     top: 25px;
     width: 1300px;
+    max-width: 100%;
   }
   
   .main .overlap-group-4 {
@@ -366,7 +437,8 @@
     left: -774px;
     position: relative;
     top: -726px;
-    width: 1638px;
+    /*width: 1638px;*/
+    width: 100%;
   }
   
   .main .ellipse-3 {
@@ -377,7 +449,8 @@
     left: 0;
     position: absolute;
     top: 0;
-    width: 1334px;
+    /*width: 1334px;*/
+    width: 100%;
   }
   
   .main .ellipse-4 {
@@ -388,7 +461,8 @@
     left: 16px;
     position: absolute;
     top: 0;
-    width: 1622px;
+    /*width: 1622px;*/
+    width: 100%;
   }
   
   .main .text-wrapper-20 {
@@ -416,19 +490,26 @@
     top: 785px;
     white-space: nowrap;
   }
-  
+
+  @font-face {
+    font-family: 'PrincessDiana';
+    src: url('../../assets/fonts/PrincessDiana.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
   .main .text-wrapper-22 {
-    -webkit-text-stroke: 1px #3a3b61;
-    color: #add1f5;
-    font-family: "Princess Diana-Regular", Helvetica;
+    font-family: 'PrincessDiana', cursive !important;
+    font-style: italic;
     font-size: 200px;
     font-weight: 400;
-    left: 1044px;
-    letter-spacing: -2.00px;
-    line-height: normal;
+    color: #add1f5;
+    -webkit-text-stroke: 1px #3a3b61;
     position: absolute;
+    left: 1044px;
     top: 742px;
-  }
+    letter-spacing: -2px;
+}
   
   .main .text-wrapper-23 {
     color: #3a3b61;
@@ -549,7 +630,8 @@
     left: 0;
     position: absolute;
     top: 5423px;
-    width: 1440px;
+    /*width: 1440px;*/
+    width: 100%;
   }
   
   .main .rectangle-14 {
@@ -558,7 +640,8 @@
     left: 0;
     position: absolute;
     top: 0;
-    width: 1440px;
+    /*width: 1440px;*/
+    width: 100%;
   }
   
   .main .overlap-wrapper {
@@ -879,6 +962,6 @@
   }
   
   .main .header-2 {
-    width: 1440px !important;
+    /*width: 1440px !important;*/
+    width: 100%;
   }
-  
