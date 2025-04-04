@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('specialization')->nullable();
             $table->string('work_schedule')->nullable();
             $table->string('education')->nullable();
-            $table->string('languages')->nullable();
+            $table->text('languages')->nullable();
             $table->string('additional_skills')->nullable();
-            $table->integer('experience_years')->nullable();
+            $table->decimal('experience_years', 3, 1)->nullable();
             $table->decimal('hourly_rate', 8, 2)->nullable();
             $table->timestamps();
         });

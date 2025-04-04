@@ -29,84 +29,90 @@ class NannyProfileController extends Controller
     {
         $nanny = NannyProfile::with('user')->findOrFail($id);
         return response()->json($nanny);
-    }  
-
-    /**
-     * вивести профіль саме залогіненого користувача (няні) 
-     */
-
-    public function me()
-    {
-        $user = auth()->user();
-
-        \Log::info('Отримано профіль користувача:', [$user]);
-
-        if (!$user || !$user->nannyProfile) {
-            return response()->json(['message' => 'Профіль няні не знайдено'], 404);
-        }
-
-        return response()->json($user->nannyProfile->load('user'));
-    }
-
+    }      
     
     /**
      * Фільтри нянь
      */
+    public function filterNannies(Request $request)
+    {
+        $nannies = NannyProfile::query();
 
-     public function filterNannies(Request $request)
-     {
-         // Створюємо базовий запит на отримання всіх нянь
-         $nannies = NannyProfile::query();
-     
-         // Фільтрація за спеціалізацією (масив JSON)
-         if ($request->filled('specialization')) {
-             $nannies->whereJsonContains('specialization', $request->input('specialization'));
-         }
-     
-         // Фільтрація за графіком (масив JSON)
-         if ($request->filled('work_schedule')) {
-             $nannies->whereJsonContains('work_schedule', $request->input('work_schedule'));
-         }
-     
-         // Фільтрація за погодинною оплатою (діапазон)
-         if ($request->has('hourly_rate')) {
-             $nannies->where('hourly_rate', '>=', $request->input('hourly_rate'));
-         }
-     
-         // Фільтрація за додатковими навичками (масив JSON)
-         if ($request->has('additional_skills')) {
-             $nannies->whereJsonContains('additional_skills', $request->input('additional_skills'));
-         }
-     
-         // Фільтрація за освітою (масив JSON)
-         if ($request->has('education')) {
-             $nannies->whereJsonContains('education', $request->input('education'));
-         }
-     
-         // Фільтрація за досвідом роботи (діапазон)
-         if ($request->has('experience_years')) {
-             $nannies->where('experience_years', '>=', $request->input('experience_years'));
-         }
-     
-         // Фільтрація за статтю
-         if ($request->has('gender')) {
-             $nannies->where('gender', $request->input('gender'));
-         }
-     
-         // Фільтрація за мовами (масив JSON)
-         if ($request->has('languages')) {
-             $nannies->whereJsonContains('languages', $request->input('languages'));
-         }
-     
-         // Фільтрація за місцем проживання
-         if ($request->filled('location_preference')) {
-             $nannies->where('city', 'like', '%'.$request->input('location_preference').'%')
-                     ->orWhere('district', 'like', '%'.$request->input('location_preference').'%');
-         }
-     
-         // Отримуємо результат
-         $filteredNannies = $nannies->get();
-     
-         return response()->json($filteredNannies);
-     }     
+        // ✅ Стать (string або масив з одним елементом)
+        if ($request->filled('gender')) {
+            $gender = is_array($request->gender) ? $request->gender[0] : $request->gender;
+            $nannies->where('gender', $gender);
+        }
+
+        // ✅ Спеціалізація (JSON-масив)
+        if ($request->has('specialization') && is_array($request->specialization)) {
+            $nannies->where(function ($query) use ($request) {
+                foreach ($request->specialization as $spec) {
+                    $nannies->whereJsonContains('specialization', strtolower($spec));
+                }
+            });
+        }
+
+        // ✅ Графік роботи (JSON-масив)
+        if ($request->has('work_schedule') && is_array($request->work_schedule)) {
+            $nannies->where(function ($query) use ($request) {
+                foreach ($request->work_schedule as $schedule) {
+                    $query->orWhereJsonContains('work_schedule', $schedule);
+                }
+            });
+        }
+
+        // ✅ Ставка
+        if ($request->filled('hourly_rate')) {
+            $nannies->where('hourly_rate', '<=', $request->hourly_rate);
+        }
+
+        // ✅ Досвід
+        if ($request->filled('experience_years')) {
+            $nannies->where('experience_years', '>=', $request->experience_years);
+        }
+
+        // ✅ Навички (JSON-масив)
+        if ($request->has('additional_skills') && is_array($request->additional_skills)) {
+            $nannies->where(function ($query) use ($request) {
+                foreach ($request->additional_skills as $skill) {
+                    $query->orWhereJsonContains('additional_skills', $skill);
+                }
+            });
+        }
+
+        // ✅ Освіта (зв’язок)
+        if ($request->has('education') && is_array($request->education)) {
+            $nannies->whereHas('educations', function ($q) use ($request) {
+                $q->whereIn('specialty', $request->education);
+            });
+        }
+
+        // ✅ Мови (JSON-масив)
+        if ($request->has('languages') && is_array($request->languages)) {
+            $nannies->where(function ($query) use ($request) {
+                foreach ($request->languages as $lang) {
+                    $query->orWhereJsonContains('languages', $lang);
+                }
+            });
+        }
+
+        // ✅ Локація (опціонально)
+        if ($request->filled('location_preference')) {
+            $nannies->where(function ($query) use ($request) {
+                $query->where('city', 'like', '%' . $request->location_preference . '%')
+                    ->orWhere('district', 'like', '%' . $request->location_preference . '%');
+            });
+        }
+
+        // 🔁 Завантаження зв’язків
+        $filteredNannies = $nannies->with(['user', 'educations'])->get();
+
+        // 🔍 Логи
+        \Log::info('📥 Отримано фільтри', ['filters' => $request->all()]);
+        \Log::info('🎯 Кількість знайдених нянь', ['count' => $filteredNannies->count()]);
+        \Log::info('🧪 specialization', ['value' => $request->specialization ?? []]);
+
+        return response()->json($filteredNannies);
+    }    
 }

@@ -20,8 +20,7 @@ class NannyProfile extends Model
         'city',        // Місто проживання
         'district',    // Район проживання       
         'photo',        
-        'work_schedule',     // Графік роботи
-        'education',// Освіта
+        'work_schedule',     // Графік роботи        
         'languages', // Мови
         'additional_skills', // Додаткові навички
         'experience_years',  // Досвід роботи
@@ -32,8 +31,7 @@ class NannyProfile extends Model
     protected $casts = [
         'birth_date' => 'date',
         'specialization' => 'array',      // Спеціалізація (масив)
-        'work_schedule' => 'array', // JSON → Масив
-        'education' => 'array',
+        'work_schedule' => 'array', // JSON → Масив        
         'languages' => 'array',       // Мови
         'additional_skills' => 'array', // Додаткові навички (масив)
         'availability' => 'array',
@@ -45,6 +43,11 @@ class NannyProfile extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function educations()
+    {
+        return $this->hasMany(Education::class);
     }
 
     public function reviews()

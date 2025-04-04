@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class ProfileController extends Controller
 {
@@ -51,10 +53,27 @@ class ProfileController extends Controller
             'phone' => 'required|string|min:10|max:15|unique:parent_profiles,phone,' . $user->id . ',user_id',
             'birth_date' => 'required|date|before:today',
             'children' => 'nullable|array',
-            'children.*.name' => 'sometimes|required|string|max:255',
-            'children.*.birth_date' => 'sometimes|required|date|before:today',
-            'photo' => 'nullable|string',
+                'children.*.name' => 'sometimes|required|string|max:255',
+                'children.*.birth_date' => 'sometimes|required|date|before:today',
+            'photo' => 'nullable|file|image|max:5120',
         ]);
+
+        if ($request->hasFile('photo')) {
+            // Видаляємо старе фото, якщо є
+            if ($user->parentProfile && $user->parentProfile->photo) {
+                \Storage::disk('public')->delete($user->parentProfile->photo);
+            }
+        
+            $firstName = $validated['first_name'] ?? 'parent';
+            $lastName = $validated['last_name'] ?? '';
+            $extension = $request->file('photo')->getClientOriginalExtension();
+        
+            $filename = Str::slug($firstName . '_' . $lastName . '_parent_avatar') . '.' . $extension;
+        
+            // Зберігаємо фото з постійним іменем (без uniqid)
+            $validated['photo'] = $request->file('photo')->storeAs('photos/parents', $filename, 'public');
+        }
+              
 
         // ✅ Якщо профіль ще не створений — створюємо з validated
         if (!$user->parentProfile) {
@@ -88,36 +107,96 @@ class ProfileController extends Controller
         }
 
         $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'photo' => 'nullable|string',
-            'city' => 'required|string|max:100',
-            'district' => 'required|string|max:100',
-            'phone' => 'required|string|min:10|max:15|unique:nanny_profiles,phone,' . $user->id . ',user_id',
-            'birth_date' => 'required|date|before:today',
-            'gender' => 'required|in:male,female,other',
-            'specialization' => 'required|array',
-            'work_schedule' => 'required|array',
+            'first_name' => 'sometimes|required|string|max:255',
+            'last_name' => 'sometimes|nullable|string|max:255',
+            'photo' => 'sometimes|nullable|file|image|max:5120',
+            'city' => 'sometimes|required|string|max:100',
+            'district' => 'sometimes|required|string|max:100',
+            'phone' => 'sometimes|required|string|min:10|max:15|unique:nanny_profiles,phone,' . $user->id . ',user_id',
+            'birth_date' => 'sometimes|required|date|before:today',
+            'gender' => 'sometimes|required|in:male,female,other',
+            'specialization' => 'sometimes|required|array',
+            'work_schedule' => 'sometimes|required|array',
             'work_schedule.*' => 'string|max:255',
-            'education' => 'required|array',
-            'languages' => 'required|array',
-            'additional_skills' => 'required|array',
-            'experience_years' => 'required|numeric|min:0|max:50',
-            'hourly_rate' => 'required|numeric|min:0|max:500',
+            'education' => 'sometimes|required|array|min:1',
+                'education.*.institution' => 'sometimes|required|string|max:255',
+                'education.*.specialty' => 'sometimes|required|string|max:255',
+                'education.*.years' => 'sometimes|required|string|max:50', 
+                'education.*.diploma_image' => 'nullable|file|image|max:5120',             
+            'languages' => 'sometimes|required|array',
+            'additional_skills' => 'sometimes|required|array',
+            'experience_years' => 'sometimes|required|numeric|min:0|max:50',
+            'hourly_rate' => 'sometimes|required|numeric|min:0|max:500',
             'availability' => 'nullable|array',
         ]);
 
+        if ($request->hasFile('photo')) {
+            // Видаляємо старе фото, якщо є
+            if ($user->nannyProfile && $user->nannyProfile->photo) {
+                \Storage::disk('public')->delete($user->nannyProfile->photo);
+            }
+        
+            $firstName = $validated['first_name'] ?? 'nanny';
+            $lastName = $validated['last_name'] ?? '';
+        
+            $extension = $request->file('photo')->getClientOriginalExtension();
+            $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar') . '.' . $extension;
+        
+            $validated['photo'] = $request->file('photo')->storeAs('photos/nannies', $filename, 'public');
+        }
+            
+        
          // ✅ Якщо профіль ще не створений — створюємо з validated
          if (!$user->nannyProfile) {
             $profile = $user->nannyProfile()->create($validated);
         } else {
             $profile = $user->nannyProfile;
             $profile->update($validated);
-        }        
+        }
+        
+        if (isset($validated['education'])) {
+            foreach ($validated['education'] as $index => $eduData) {
+                $existing = $profile->educations()->where('institution', $eduData['institution'])->first();
+        
+                $diplomaPath = null;
+        
+                if ($request->hasFile("education.$index.diploma_image")) {
+                    $file = $request->file("education.$index.diploma_image");
+        
+                    $firstName = $validated['first_name'] ?? $user->first_name ?? 'nanny';
+                    $lastName = $validated['last_name'] ?? $user->last_name ?? '';
+                    $filename = Str::slug($firstName . '_' . $lastName . '_' . $eduData['institution'] . '_diploma') . '.' . $file->getClientOriginalExtension();
+        
+                    $diplomaPath = $file->storeAs('diplomas', $filename, 'public');
+                } else {
+                    // Якщо файл не передано, а існуючий запис є — зберігаємо старий шлях
+                    $diplomaPath = $existing?->diploma_image;
+                }
+        
+                if ($existing) {
+                    $existing->update([
+                        'specialty' => $eduData['specialty'],
+                        'years' => $eduData['years'],
+                        'diploma_image' => $diplomaPath,
+                    ]);
+                } else {
+                    $profile->educations()->create([
+                        'institution' => $eduData['institution'],
+                        'specialty' => $eduData['specialty'],
+                        'years' => $eduData['years'],
+                        'diploma_image' => $diplomaPath,
+                    ]);
+                }
+            }
+        }
+        
+             
+             
+        \Log::info('🎯 Дані профілю няні:', $profile->toArray());
 
         return response()->json([
             'message' => 'Профіль няні оновлено',
-            'profile' => $user->nannyProfile,
+            'profile' => $user->nannyProfile()->with('educations')->first()
         ]);
     }
 
@@ -131,6 +210,7 @@ class ProfileController extends Controller
 
         if ($user->nannyProfile) {
             $user->nannyProfile->delete();
+            $user->nannyProfile->educations()?->delete();
             $deleted = true;
         }
 
@@ -147,4 +227,18 @@ class ProfileController extends Controller
 
         return response()->json(['error' => 'Профіль не знайдено'], 404);
     }
+
+    public function getNannyProfile()
+{
+    $user = Auth::user();
+
+    if (!$user || !$user->nannyProfile) {
+        return response()->json(['error' => 'Профіль няні не знайдено'], 404);
+    }
+
+    return response()->json([
+        'profile' => $user->nannyProfile->load('educations')
+    ]);
+}
+
 }
