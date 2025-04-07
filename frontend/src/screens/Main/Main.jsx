@@ -113,15 +113,7 @@ export const Main = () => {
           </p>
 
           <div className="overlap-8">
-            <div className="text-wrapper-19">ЗНАЙТИ НЯНЮ</div>
-
-            <img
-              className="arrow-2"
-              alt="Arrow"
-              src="/assets/arrow-1.svg"
-            />
-
-            <PropertyDefault className="design-component-instance-node" />
+            <PropertyDefault className="design-component-instance-node" /> {/*second button*/ }
           </div>
         </div>
 
@@ -139,7 +131,7 @@ export const Main = () => {
 
               <div className="text-wrapper-21">ЛЮБОВ</div>
 
-              <div className="text-wrapper-22">&amp;</div>
+              <div className="text-wrapper-22" style={{ fontFamily: 'Princess Diana, sans-serif' }}>&amp;</div>
 
               <div className="text-wrapper-23">
                 ТУРБОТА
@@ -147,7 +139,7 @@ export const Main = () => {
                 БЕЗПЕКА
               </div>
 
-              <PropertyDefault className="cta-button" />
+              <PropertyDefault className="cta-button" /> {/* first button  */}
             </div>
           </div>
 
@@ -341,7 +333,7 @@ export const Main = () => {
           divClassName="h3-hyperlink-instance"
           text="@NANNY_BEAR"
         />
-        <PropertyDefault className="property-1-default" />
+        <PropertyDefault className="property-1-default" /> {/*third button*/}
         <Header
           className="header-instance"
           nannyBear="/assets/nanny-bear-1@2x.png"

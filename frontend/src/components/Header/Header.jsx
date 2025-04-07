@@ -1,14 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; // Ensure React Router is used
 import { Hyperlink } from "../Hyperlink/Hyperlink.jsx";
 import { PrimaryButton } from "../PrimaryButton/PrimaryButton.jsx";
 import { SecondaryButton } from "../SecondaryButton/SecondaryButton.jsx";
 import "./style.css";
 
-export const Header = ({
-  className,
-  overlapGroupClassName,
-}) => {
+export const Header = ({ className, overlapGroupClassName }) => {
   return (
     <div className={`header ${className}`}>
       <div className={`overlap-group-3 ${overlapGroupClassName}`}>
@@ -37,4 +34,5 @@ export const Header = ({
     </div>
   );
 };
+
 export default Header;

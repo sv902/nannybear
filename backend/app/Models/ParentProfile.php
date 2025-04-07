@@ -56,5 +56,11 @@ class ParentProfile extends Model
     public function reviewsGiven()
     {
         return $this->hasMany(Review::class, 'parent_id', 'user_id');
-    }   
+    }  
+    
+    public function preferences()
+    {
+        return $this->hasOne(\App\Models\NannyPreference::class, 'parent_id');
+    }
+
 }

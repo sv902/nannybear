@@ -103,7 +103,7 @@
     letter-spacing: -2%;
     text-align: center;
     color: #3A3B61;
-    margin-bottom: 40px;
+    margin-bottom: 40px;    
   }
 
   .title-light {   
@@ -242,6 +242,14 @@
     background-color: #FFFAEE;
     color: #4DB3AE;
   }
+
+  .login-form-input:focus
+   {
+    outline: none;
+    border: 2px solid #4DB3AE; 
+    box-shadow: 0 0 5px rgba(77, 179, 174, 0.6);
+    transition: border 0.2s ease;
+  } 
 
   /*RegisterForm*/
   .right-form-container{
@@ -475,6 +483,19 @@ input:-webkit-autofill:active {
     max-width: 417px;
     border: 2px solid #FFFAEE;   
   }
+
+  .input-field:focus,
+.password-input:focus {
+  outline: none;
+  border: 2px solid #4DB3AE; 
+  box-shadow: 0 0 5px rgba(77, 179, 174, 0.6);
+  transition: border 0.2s ease;
+}
+
+.input-error {
+  border: 2px solid #4DB3AE !important; 
+  box-shadow: 0 0 5px rgba(77, 179, 174, 0.6);
+}
   
   .show-password-btn {
     position: absolute;
@@ -547,8 +568,8 @@ input:-webkit-autofill:active {
   border: none;
   cursor: pointer;
   display: flex;
-  align-items: center;
-  padding: 0;
+  align-items: flex-start;
+  padding: 0; 
   position: absolute;
   top: 112px;
   left: 71px;
@@ -558,14 +579,12 @@ input:-webkit-autofill:active {
   font-weight: 600; 
   color: #FFFAEE; /* Колір тексту */
   text-align: center;
-  display: flex;
-  flex-direction: column; /* Розташування в стовпчик */
-  align-items: center;
+  flex-direction: column; /* Розташування в стовпчик */  
   gap: 5px; /* Відступ між текстом і стрілкою */
 }
 
 .back-arrow {
-  width: 80px; /* Довжина стрілки */
+  width: 40px; /* Довжина стрілки */
   height: 2px; /* Товщина стрілки */
   background-color: #FFFAEE; /* Колір стрілки */
   position: relative;

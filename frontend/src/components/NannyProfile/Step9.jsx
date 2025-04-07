@@ -8,23 +8,33 @@ const Step9 = ({ onNext, onBack, onSelect }) => {
   const [bearPosition, setBearPosition] = useState(0);
   const sliderRef = useRef(null);
   
+  const sliderMin = 0;
+  const sliderMax = 5;
+
   useEffect(() => {
-    if (sliderRef.current) {
-      const sliderWidth = sliderRef.current.offsetWidth;
-      const bearWidth = 122; // ширина .bear-head
-      const stepCount = 5;
-      const position = (experience / stepCount) * (sliderWidth - bearWidth);
-      setBearPosition(position);
-    }
-  }, [experience]);
+      if (sliderRef.current) {
+        const sliderWidth = sliderRef.current.offsetWidth;
+        const bearWidth = 122;
+        const percent = (experience - sliderMin) / (sliderMax - sliderMin);
+        const position = percent * (sliderWidth - bearWidth);
+        setBearPosition(position);
+        document.documentElement.style.setProperty('--progress', experience / sliderMax);
+      }
+    }, [experience]);
   
+    const getLabel = (value) => {
+      if (value === 0) return "<1 року";
+      if (value === 1) return "1 рік";
+      if (value === 5) return "5+ років";
+      return `${value} роки`;
+    }; 
 
   const handleNextClick = () => {
     if (experience === null) {
       alert("Будь ласка, оберіть свій досвід роботи.");
       return;
     }
-    onSelect(experience);
+    onSelect && onSelect(experience === 0 ? 0.5 : experience);
     onNext();
   };
 
@@ -54,13 +64,11 @@ const Step9 = ({ onNext, onBack, onSelect }) => {
               left: `${bearPosition}px`,             
             }}
           >
-            <span className="bear-value">
-              {experience === 5 ? "5+" : `${experience}`} РОКІВ
-            </span>
+            <span className="bear-value">{getLabel(experience)}</span>
           </div>
           <div className="slider-labels-top">
-            <span>0</span>
-            <span>5+</span>
+              <span>&lt;1</span>
+              <span>5+</span>
           </div>
           <input
             type="range"

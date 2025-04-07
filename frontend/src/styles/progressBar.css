@@ -1,0 +1,30 @@
+/* styles/progressBar.css */
+
+.progress-bar-wrapper {
+    width: 100%;
+    max-width: 638px;
+    margin: 30px auto 20px;
+    text-align: center;
+  }
+  
+  .progress-bar-track {
+    height: 10px;
+    background-color: #E0E0E0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .progress-bar-fill {
+    height: 10px;
+    background-color: #4DB3AE;
+    width: 0%;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .progress-bar-text {
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 14px;
+    color: #3A3B61;
+    margin-top: 8px;
+  }
+  

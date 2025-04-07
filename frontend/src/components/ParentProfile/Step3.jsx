@@ -88,7 +88,7 @@ const Step3 = ({ formData, setFormData, onBack, onSubmit }) => {
           </button>
         </div>
       </div>
-      <p className="description-light">Заповнити пізніше</p>
+      <p className="description-light-leter">Заповнити пізніше</p>
     </div>
   );
 };

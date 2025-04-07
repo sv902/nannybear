@@ -17,7 +17,7 @@ use App\Http\Controllers\Api\ParentProfileController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\Api\PasswordResetController;
-use App\Http\Controllers\Api\NannyPreferenceController;
+use App\Http\Controllers\NannyPreferenceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +48,7 @@ Route::post('/register', [AuthController::class, 'register']); // Реєстра
 Route::post('/login', [AuthController::class, 'login'])->name('login'); // Вхід у систему
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); // Вихід
 
+/**
  *  АВТОРИЗАЦІЯ ЧЕРЕЗ GOOGLE
  */
 Route::get('/google/redirect', [AuthController::class, 'googleRedirect']); // Перенаправлення на Google
@@ -100,10 +101,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // === НЯНІ ===
     Route::post('/nanny/profile', [ProfileController::class, 'storeNannyProfile']); // створити/оновити
+    Route::get('/nanny/profile', [ProfileController::class, 'getNannyProfile']); 
     Route::get('/nanny-profiles', [NannyProfileController::class, 'index']); // всі
     Route::get('/nanny-profiles/{id}', [NannyProfileController::class, 'show']); // один
     Route::post('/nanny-profiles/filter', [NannyProfileController::class, 'filterNannies']); // фільтр
-    Route::get('/nanny/profile', [NannyProfileController::class, 'me']); // Профіль залогіненої няні
+   
+    Route::post('/nanny-preferences', [NannyPreferenceController::class, 'store']);
+    Route::get('/nanny-preferences', [NannyPreferenceController::class, 'show']);
 });
 
 /**
@@ -123,21 +127,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/messages', [MessageController::class, 'store']);
 });
 
-/**
- *  ОГОЛОШЕННЯ (Список доступних нянь)
- */
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/nannies', [ListingController::class, 'index']); // Отримати список всіх нянь
-    Route::get('/nanny/{id}', [ListingController::class, 'show']); // Отримати деталі няні
-});
-
-/**
- *  ЗАМОВЛЕННЯ (Бронювання няні)
- */
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/order', [OrderController::class, 'store']); // Створити нове замовлення
-    Route::get('/orders', [OrderController::class, 'index']); // Отримати всі замовлення
-});
 
 /**
  *  ВІДГУКИ

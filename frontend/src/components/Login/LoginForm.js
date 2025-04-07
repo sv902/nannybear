@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from '../../axiosConfig.js';
 import googleLogo from "../../assets/google-cirkle-icon.png";
 import facebookLogo from "../../assets/facebook-cirkle-icon.png";
@@ -11,6 +12,8 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,21 +33,28 @@ const LoginForm = () => {
       // Зберегти токен у localStorage (якщо API повертає його)
       if (response.data.token) {
         localStorage.setItem("authToken", response.data.token);
+        localStorage.setItem("email", email);     
+        localStorage.setItem("password", password);
 
-        const userRole = response.data.user.role?.name;
+        const userRole = response.data.user.role?.name;       
+
+        const lastVisited = localStorage.getItem("lastVisited");
+        navigate(lastVisited || "/");
+        localStorage.removeItem("lastVisited");
 
         // Перенаправлення залежно від ролі
-      if (userRole === "nanny") {
-        window.location.href = "/nanny/profile"; // маршрут для няні
-      } else if (userRole === "parent") {
-        window.location.href = "/nanny-profiles"; // маршрут для батька - усі оголошення
-      } else if (userRole === "admin") {
-        window.location.href = "/admin"; // адмін панель
-      } else {
-        window.location.href = "/"; // fallback
-      }
-    }
-     
+        if (lastVisited) {
+          navigate(lastVisited);
+        } else if (userRole === "nanny") {
+          navigate("/nanny/profile");
+        } else if (userRole === "parent") {
+          navigate("/nanny-profiles");
+        } else if (userRole === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
+    }     
     } catch (err) {     
       setError("Невірний email або пароль!");
     }

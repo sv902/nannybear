@@ -120,7 +120,7 @@ class User extends Authenticatable implements MustVerifyEmail
     
     public function nannyPreferences()
     {
-        return $this->hasOne(NannyPreference::class);
+        return $this->hasOne(NannyPreference::class, 'parent_id');
     }
    
     /**

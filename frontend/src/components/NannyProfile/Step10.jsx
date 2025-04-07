@@ -15,6 +15,8 @@ const Step10 = ({ onNext, onBack, onSelect }) => {
       const stepCount = 500;
       const position = (experience / stepCount) * (sliderWidth - bearWidth);
       setBearPosition(position);
+
+      document.documentElement.style.setProperty('--progress', experience / stepCount);
     }
   }, [experience]);
   
@@ -70,7 +72,7 @@ const Step10 = ({ onNext, onBack, onSelect }) => {
             step="10"
             value={experience}
             onChange={(e) => setExperience(parseInt(e.target.value))}
-            className="experience-slider"
+            className="experience-slider-money"
           />          
         </div>
       </div>

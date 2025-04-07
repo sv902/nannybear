@@ -38,10 +38,10 @@ instance.interceptors.response.use(
       if (error.response) {
         const status = error.response.status;
   
-        if (status === 401) {
+        if (status === 401 && window.location.pathname !== "/registrationlogin") {
           console.warn("⛔ Неавторизований. Можливо, користувач вийшов із системи.");
-          // Можна перенаправити на логін:
-          // window.location.href = "/login";
+          localStorage.setItem("lastVisited", window.location.pathname);
+          window.location.href = "/registrationlogin";
         }
   
         if (status === 403) {

@@ -9,12 +9,7 @@ use App\Models\User;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
-
-
-// Головна сторінка або статус API
-Route::get('/', function () {
-    return response()->json(['message' => 'API працює! 🎉']);
-});
+use Illuminate\Support\Facades\File;
 
 // Підтвердження email через посилання
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {

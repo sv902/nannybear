@@ -13,8 +13,7 @@ const ResetPassword = () => {
 
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); 
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -73,7 +72,7 @@ const ResetPassword = () => {
         <div className="password-container">
           <input
             className="input-field password-input"
-            type={showConfirmPassword ? "text" : "password"}
+            type={showPassword ? "text" : "password"}
             placeholder="Повторіть пароль..."
             value={passwordConfirmation}
             onChange={(e) => setPasswordConfirmation(e.target.value)}
@@ -81,9 +80,9 @@ const ResetPassword = () => {
           <button
             type="button"
             className="show-password-btn"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            onClick={() => setPassword(!showPassword)}
           >
-            <img src={showConfirmPassword ? eyeOpen : eyeClosed} alt="toggle visibility" />
+            <img src={showPassword ? eyeOpen : eyeClosed} alt="toggle visibility" />
           </button>
         </div>
 

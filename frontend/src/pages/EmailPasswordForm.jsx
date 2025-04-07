@@ -15,8 +15,7 @@ const EmailPasswordForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");  
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); 
   const [errors, setErrors] = useState({}); 
 
   const handleNext = async (e) => {
@@ -78,6 +77,7 @@ const EmailPasswordForm = () => {
         <span className="back-text">НАЗАД</span>
         <span className="back-arrow"></span>
       </button>
+     
       <h1 className="title-light-full-page">реєстрація</h1>
       <p className="description-light">Ви перейшли на створення акаунту для...</p>
       <button className="role-info-btn" disabled>
@@ -96,7 +96,8 @@ const EmailPasswordForm = () => {
             </div>
             <p className="description-light">або</p>
       <form className="register-form" onSubmit={handleNext}>
-        <input className="input-field"          
+        <input 
+          className={`input-field ${errors.email ? "input-error" : ""}`}      
           type="email" 
           placeholder="Ваш email..." 
           value={email} 
@@ -107,7 +108,7 @@ const EmailPasswordForm = () => {
         
       <div className="password-container">
         <input 
-          className="input-field password-input"
+          className={`input-field password-input ${errors.password ? "input-error" : ""}`}
           type={showPassword ? "text" : "password"}
           placeholder="Пароль..." 
           value={password} 
@@ -126,8 +127,8 @@ const EmailPasswordForm = () => {
         
       <div className="password-container">
         <input 
-          className="input-field password-input"
-          type={showConfirmPassword ? "text" : "password"}
+          className={`input-field password-input ${errors.confirmPassword ? "input-error" : ""}`}
+          type={showPassword ? "text" : "password"}
           placeholder="Пароль..." 
           value={confirmPassword} 
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -136,9 +137,9 @@ const EmailPasswordForm = () => {
         <button 
             type="button" 
             className="show-password-btn" 
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            onClick={() => setShowPassword(!showPassword)}
           >
-            <img src={showConfirmPassword ? eyeOpen : eyeClosed} alt="toggle visibility" />
+            <img src={showPassword ? eyeOpen : eyeClosed} alt="toggle visibility" />
           </button>
       </div>
         {errors.confirmPassword && <p className="error-text">{errors.confirmPassword}</p>}

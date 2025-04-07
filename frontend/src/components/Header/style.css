@@ -1,6 +1,6 @@
 .header {
     height: 58px;
-    width: 1440px;
+    width: 100%;
   }
   
   .header .overlap-group-3 {
@@ -14,17 +14,21 @@
     left: 0;
     position: absolute;
     top: 0;
-    width: 1440px;
+    width: 100%;
   }
   
   .header .primary-button-instance {
-    left: 1285px !important;
+    left: auto;  
+    /*right: 20px; */
+    left: 1285px;
     position: absolute !important;
     top: 8px !important;
   }
   
   .header .secondary-button-instance {
-    left: 1102px !important;
+    left: auto;
+    /*right: 140px;*/
+    left: 1102px;
     position: absolute !important;
     top: 8px !important;
   }

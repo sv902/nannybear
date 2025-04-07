@@ -46,7 +46,7 @@ const Step3 = ({ onNext, onBack, onSelect }) => {
             onClick={() => handleSelect("female")}
           >
             <img src={Female} alt="Жінка" />
-            <p>Жіночий</p>
+            <p>Жіноча</p>
           </div>
 
           <div
@@ -54,7 +54,7 @@ const Step3 = ({ onNext, onBack, onSelect }) => {
             onClick={() => handleSelect("male")}
           >
             <img src={Male} alt="Чоловік" />
-            <p>Чоловічий</p>
+            <p>Чоловіча</p>
           </div>
         </div>
       </div>
