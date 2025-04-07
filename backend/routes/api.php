@@ -51,6 +51,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 /**
  *  АВТОРИЗАЦІЯ ЧЕРЕЗ GOOGLE
  */
+
 Route::get('/google/redirect', [AuthController::class, 'googleRedirect']); // Перенаправлення на Google
 Route::get('/google/callback', [AuthController::class, 'googleCallback']); // Обробка відповіді від Google
 Route::post('/google/login', [AuthController::class, 'googleCallback']);
