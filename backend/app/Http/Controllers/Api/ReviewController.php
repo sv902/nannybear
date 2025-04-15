@@ -15,10 +15,13 @@ class ReviewController extends Controller
      */
     public function index($nanny_id)
     {
-        $reviews = Review::with(['parent:id,name'])
-            ->where('nanny_id', $nanny_id)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        // $reviews = Review::with(['parent:id,name'])
+        $reviews = Review::with([
+            'parentProfile:id,user_id,first_name,last_name,photo'
+        ])
+        ->where('nanny_id', $nanny_id)
+        ->orderBy('created_at', 'desc')
+        ->get();
 
         return response()->json($reviews);
     }

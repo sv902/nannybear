@@ -1,0 +1,187 @@
+.header {
+    height: 58px;
+    width: 100%;
+    max-width: 1440px;
+    border-bottom: none;
+  }
+  
+  .header .overlap-group-3 {
+    height: 58px;
+    position: relative;
+  }
+  
+  .header .menu {
+    background-color: #fffaee;
+    height: 58px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+  
+  .header .primary-button-instance {
+    left: auto;  
+    /*right: 20px; */
+    left: 1285px;
+    position: absolute !important;
+    top: 8px !important;
+  }
+  
+  .header .secondary-button-instance {
+    left: auto;
+    /*right: 140px;*/
+    left: 1102px;
+    position: absolute !important;
+    top: 8px !important;
+  }
+  
+  .all-nanny-btn {
+    left: 401px;
+    position: absolute;
+    top: 17px;
+    cursor: pointer;
+    background-color: #FFFAEE;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    color: #3A3B61;
+    border: none;
+  }
+  .all-nanny-btn::after {
+    content: ''; 
+    position: absolute; 
+    bottom: 0;  /* Розміщуємо підкреслення внизу кнопки */
+    left: 0;
+    width: 100%;  /* Підкреслення буде на всю ширину кнопки */
+    height: 2px;  /* Товщина лінії підкреслення */
+    background-color: #3A3B61;  /* Колір підкреслення */
+    transform: scaleX(0);  /* Спочатку лінія невидима */
+    transform-origin: bottom right;  /* Вирівнюємо анімацію з правого кута */
+    transition: transform 0.3s ease;  /* Анімація лінії */
+  }
+  
+  /* Показати підкреслення при наведенні */
+  .all-nanny-btn:hover::after {
+    transform: scaleX(1);  /* Розширюємо лінію при наведенні */
+    transform-origin: bottom left;  /* Вирівнюємо анімацію з лівого кута */
+  }
+  
+  .header .h3-hyperlink {
+    left: 622px !important;
+    position: absolute !important;
+    top: 17px !important;
+  }
+  
+  .header .hyperlink-instance {
+    left: 843px !important;
+    position: absolute !important;
+    top: 17px !important;
+  }
+  
+  .header .logonannybear {
+    display: block;
+    height: 50px;
+    left: 70px;
+    position: absolute;
+    top: 4px;
+    width: 154px;
+  }
+  
+  .header .logonannybeargrid {
+    height: 39px;
+    overflow: hidden;
+    position: relative;
+    top: 5px;
+  }
+  
+  .header .logo-wrapper {
+    height: 39px;
+    left: 6px;
+    position: relative;
+    width: 143px;
+  }
+  
+  .header .logo {
+    height: 39px;
+    position: relative;
+  }
+
+  .header .ICON {
+    height: 39px; 
+    width: auto;  
+    left: 0;
+    position: absolute;
+    top: 0;
+    object-fit: contain; 
+    max-width: 100%;
+}
+  
+  .header .nanny-bear {
+    height: 14px;
+    left: 45px;
+    position: absolute;
+    top: 11px;
+    width: 98px;
+  }
+  
+ /* -------------------------- */
+ .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #f9f9f9;
+  }
+  
+  .logo-wrapper {
+    flex: 1;
+  }
+  
+  .logo-icon {
+    width: 150px; 
+    height: auto;
+  }
+  
+  .center-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex: 2;
+  }
+  
+  .icon-buttons {
+    display: flex;
+    gap: 15px;
+    flex: 1;
+    justify-content: flex-end;
+    padding-top: 15px;
+  }
+  
+  .icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  
+  .icon-button img {
+    width: 25px;
+    height: 25px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  
+  .icon-button.selected img {
+    filter: brightness(0) saturate(100%) invert(35%) sepia(95%) saturate(6719%) hue-rotate(145deg) brightness(89%) contrast(96%);
+    transform: rotate(15deg); /* Обертання при виборі */
+  }
+  
+  .icon-button.pressed img {
+    filter: brightness(0) saturate(100%) invert(35%) sepia(95%) saturate(6719%) hue-rotate(145deg) brightness(55%) contrast(96%);
+    transform: rotate(-15deg); /* Обертання при натисканні */
+  }
+  
+  .icon-button img {
+    transform: rotate(0deg); /* Стандартний стан */
+  }
+  

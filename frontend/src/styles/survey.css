@@ -43,6 +43,7 @@
   flex-direction: column;
   align-items: center;
   gap: 5px; 
+  padding-top: 20px;
 }
 
 .back-arrow-dark {
@@ -68,7 +69,8 @@
 .animals-img {
     width: 100%;
     max-width: 637px; 
-    margin-bottom: 20px;  
+    margin-bottom: 20px;
+    margin-top: 20px;  
 }
 
 .title-dark-survey {   

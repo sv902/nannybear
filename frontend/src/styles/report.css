@@ -1,0 +1,104 @@
+.report-page {
+  display: flex;
+  flex-direction: column;
+  max-width: 1440px;
+  width: 100%;
+  height: auto;
+  min-height: 100vh; 
+  }
+
+  .title-report{
+    align-self: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 100px;
+    line-height: 105%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;
+  }
+
+  .report-info h2 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;
+    margin-left: 40px;
+  }
+  .report-info {
+    margin-bottom: 20px;
+  }
+  .text-admin {
+    font-family: 'Comfortaa', sans-serif; 
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: right;
+    color: #3A3B61;
+    margin-right: 60px;
+  }
+  
+  .text-nanny-name {
+    font-family: 'Comfortaa', sans-serif; 
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    color: #3A3B61;
+  }
+  
+  .radio-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .radio-option input[type="radio"] {
+    margin-left: 12px;
+    transform: scale(1.3); /* Збільшує кнопку */
+  }
+  
+  
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    font-family: inherit;
+    font-size: 16px;
+    resize: vertical;
+  }
+  
+  .submit-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .submit-report-btn {
+    padding: 12px 24px;
+    background-color: #3A3B61;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-report-btn:hover {
+    background-color: #2b2c4d;
+  }
+  

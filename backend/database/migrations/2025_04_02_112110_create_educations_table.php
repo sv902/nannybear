@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('educations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('nanny_profile_id')->constrained()->onDelete('cascade'); // зв'язок з профілем
+            $table->foreignId('nanny_profile_id')->constrained('nanny_profiles')->onDelete('cascade'); // зв'язок з профілем
             $table->string('institution'); // назва ЗВО
             $table->string('specialty');   // спеціальність
             $table->string('years');       // роки навчання

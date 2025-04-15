@@ -12,54 +12,54 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  // const lastVisited = localStorage.getItem("lastVisited");
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // Очистити помилки перед відправкою   
-
-    // Перевірка email та пароля
+    setError("");
+  
     if (!email || !password) {
       setError("Будь ласка, введіть email та пароль.");
       return;
     }
-    
-    try {  
+  
+    try {
+      // Отримуємо CSRF cookie перед запитом на логін
       await axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`);
-      // Виконуємо запит на логін
-      const response = await axios.post('/api/login', { email, password });
-
-      // Зберегти токен у localStorage (якщо API повертає його)
+  
+      // Запит на логін
+      const response = await axios.post("/api/login", { email, password });
+  
       if (response.data.token) {
+        // Збереження токену в localStorage
         localStorage.setItem("authToken", response.data.token);
-        localStorage.setItem("email", email);     
-        localStorage.setItem("password", password);
-
-        const userRole = response.data.user.role?.name;       
-
-        const lastVisited = localStorage.getItem("lastVisited");
-        navigate(lastVisited || "/");
-        localStorage.removeItem("lastVisited");
-
-        // Перенаправлення залежно від ролі
-        if (lastVisited) {
-          navigate(lastVisited);
-        } else if (userRole === "nanny") {
-          navigate("/nanny/profile");
+        console.log("Токен знайдено:", response.data.token);
+        localStorage.setItem("email", email);
+  
+        // Додавання токену в заголовки для всіх подальших запитів
+        axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+  
+        const userRole = response.data.user.role?.name;
+  
+        // 🎯 Редірект залежно від ролі
+        if (userRole === "nanny") {
+          return navigate("/nanny/profile");
         } else if (userRole === "parent") {
-          navigate("/nanny-profiles");
+          return navigate("/nanny-profiles");
         } else if (userRole === "admin") {
-          navigate("/admin");
+          return navigate("/admin");
         } else {
-          navigate("/");
+          return navigate("/");
         }
-    }     
-    } catch (err) {     
+      }
+    } catch (err) {
       setError("Невірний email або пароль!");
     }
   };
-
+     
+  
   return (
     <div className="login-form-container">
       <h1 className="title-light">ВХІД В АКАУНТ</h1>

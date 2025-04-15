@@ -25,6 +25,11 @@ class Review extends Model
         return $this->belongsTo(User::class, 'parent_id');
     }
 
+    public function parentProfile()
+    {
+        return $this->belongsTo(ParentProfile::class, 'parent_id', 'user_id');
+    }
+
     /**
      * Зв’язок: відгук належить няні.
      */

@@ -22,14 +22,17 @@ return new class extends Migration
             $table->date('birth_date');
             $table->enum('gender', ['male', 'female']); // Стать
             $table->json('specialization');
-            $table->json('work_schedule'); // Графік роботи
-            $table->json('education');
+            $table->json('work_schedule'); // Графік роботи          
             $table->json('languages');          
             $table->json('additional_skills'); // Додаткові навички
             $table->decimal('experience_years', 3, 1); // Досвід у роках
             $table->decimal('hourly_rate', 8, 2); 
             $table->string('photo')->nullable();               
             $table->json('availability')->nullable();
+            $table->text('goat')->nullable();     // мета
+            $table->text('about_me')->nullable(); // опис про роботу
+            $table->string('video')->nullable();  // відео-презентація
+            $table->json('gallery')->nullable(); // фото з дітьми
             $table->timestamps();
         });
     }

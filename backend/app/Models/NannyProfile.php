@@ -25,7 +25,11 @@ class NannyProfile extends Model
         'additional_skills', // Додаткові навички
         'experience_years',  // Досвід роботи
         'hourly_rate',     // Оплата за годину
-        'availability',       
+        'availability',
+        'goat', //мета няні
+        'about_me', // як проходить робота  
+        'video', // відео-презентація
+        'gallery', // масив фото з дітьми    
     ];
 
     protected $casts = [
@@ -35,6 +39,7 @@ class NannyProfile extends Model
         'languages' => 'array',       // Мови
         'additional_skills' => 'array', // Додаткові навички (масив)
         'availability' => 'array',
+        'gallery' => 'array',
     ];  
 
     /**
@@ -52,11 +57,18 @@ class NannyProfile extends Model
 
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'nanny_id');
+        // return $this->hasMany(Review::class, 'nanny_id');
+        return $this->hasMany(Review::class, 'nanny_id', 'user_id');
     }
 
     public function schedule()
     {
         return $this->hasMany(Schedule::class, 'nanny_id');
+    }
+
+    // Зв'язок з улюбленими
+    public function favorites()
+    {
+        return $this->hasMany(FavoriteNanny::class);
     }
 }

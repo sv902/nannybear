@@ -1,0 +1,220 @@
+/* Основні стилі футера */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+.footer {
+    background-color: #3A3B61;
+    display: flex; 
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    padding-top: 20px;
+    max-width: 1440px;
+    margin: 0 auto;  
+    position: relative; 
+    z-index: 10; 
+    margin-top: auto;
+}
+
+/* Стилі для контейнера всіх елементів футера */
+.footer-content {
+    display: flex;
+    justify-content: space-between;  
+    width: 100%;  
+}
+.footer-column {
+    flex: 1;
+  }
+
+.footer-title{
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #FFFAEE;   
+    text-align: left;
+    min-width: 442px;
+    margin-left: 60px;    
+}
+.footer-text-wrapper-26 {
+    font-family: "Comfortaa", Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #FFFAEE;
+    max-width: 417px;
+    margin-top: 20px;
+    margin-left: 60px;
+}
+    .footer-form-button-instance {
+        width: 100%;
+        margin-top: 20px;
+        margin-left: 60px;
+    }
+
+    .footer-logo-2 {
+        height: 40px;
+        width: auto;
+        margin-left: 60px;
+        margin-top: 20px;
+    } 
+    
+.footer-social-icons{
+    margin-left: 60px;
+    margin-top: 40px;
+    margin-bottom: 40px;   
+}
+.footer-insta-icon, .footer-tiktok-icon{
+    margin-right: 20px;
+}
+
+.footer-text-wrapper-28 {
+    font-family: "Comfortaa", Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    color: #FFFAEE;
+    margin-top: 10px;
+    margin-left: 200px;
+    margin-bottom: 20px;
+}
+
+.footer-body-hyperlink-instance, 
+.footer-body-hyperlink-6, 
+.footer-body-hyperlink-4, 
+.footer-body-hyperlink-5{
+    font-family: "Comfortaa", Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #FFFAEE;
+    margin-left: 200px;   
+}
+
+.footer-body-hyperlink-6 {
+    margin-bottom: 0px;
+}
+.footer-body-hyperlink-4{
+    margin-top: 50px;
+}
+.footer-body-hyperlink-5 {
+    margin-top: 30px;
+}
+
+.footer-text-wrapper-27{
+    font-family: "Comfortaa", Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #FFFAEE;    
+    margin-top: 170px;
+    margin-left: 200px; 
+    min-width: 417px;   
+}
+.footer-text-wrapper-29 {
+    color: #fffaee;  
+    font-family: "Comfortaa", Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.footer-body-hyperlink-3{
+    margin-top: 10px;
+}
+
+.bear-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 188px; 
+  }
+  
+  .bear-ligth {
+    max-width: 100%; 
+    height: auto;
+  }
+
+/* Зміни для мобільних */
+@media (max-width: 768px) {
+    .footer-email {
+        font-size: 32px;
+    }
+
+    .footer-text-wrapper-26 {
+        font-size: 14px;
+    }
+
+    .footer-text-wrapper-27 {
+        font-size: 12px;
+    }
+
+    .footer-text-wrapper-28,
+    .footer-text-wrapper-29 {
+        font-size: 16px;
+    }
+
+  
+
+    .footer-insta-icon,
+    .footer-tiktok-icon,
+    .footer-facebook-icon {
+        width: 30px;
+        height: 30px;
+        margin: 10px;
+    }
+
+ 
+
+    .footer-body-hyperlink-instance,
+    .footer-body-hyperlink-2,
+    .footer-body-hyperlink-3 {
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+        margin: 5px 0;
+    }
+}
+
+/* Для планшетів */
+@media (max-width: 1024px) {
+    .footer-email {
+        font-size: 40px;
+    }
+
+    .footer-text-wrapper-26 {
+        font-size: 16px;
+    }
+
+    .footer-text-wrapper-27 {
+        font-size: 14px;
+    }
+
+    .footer-text-wrapper-28,
+    .footer-text-wrapper-29 {
+        font-size: 18px;
+    }
+
+    .footer-body-hyperlink-instance,
+    .footer-body-hyperlink-2 {
+        font-size: 14px;
+        padding: 5px 0;
+    }
+
+    .footer-form-button-instance {
+        margin-top: 20px;
+    }
+}

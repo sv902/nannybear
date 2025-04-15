@@ -1,0 +1,355 @@
+.nanny-card {
+    width: 100%;
+    max-width: 417px;
+    min-height: 554px;
+    background-color: #FFFFFF;
+    border-radius: 20px; 
+    border: 1px solid #3A3B61;  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;    
+  }
+  
+  .nanny-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .nanny-card-header {
+    display: flex; 
+    max-height: 128px;   
+    margin-bottom: 0px;
+    max-width: 417px;
+    padding-top: 20px;
+  }
+
+  .female {
+    background-color: #F9D8E080;
+  } 
+
+  .male {
+    background-color: #ADD1F580;
+  }
+
+  .nanny-name-reviews{
+    margin-left: 10px;   
+  }
+
+  .reviews {
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 120%;
+    letter-spacing: -2%; 
+    color: #3A3B61;
+  } 
+   
+  .nanny-avatar {
+    width: 88px;
+    height: 88px; 
+    top: 20px;
+    left: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .nanny-name {
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: #3A3B61;
+  }
+
+  .client-info {
+    display: flex;
+   justify-content: space-between;
+   gap: 10px;
+   font-family: 'Comfortaa', sans-serif;
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 120%;
+   letter-spacing: -2%;
+   margin-top: 20px;
+   color: #3A3B61;
+   white-space: nowrap;
+  }
+  
+  .rating {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .favorite-icon{
+    position: absolute;
+    /* top: 20px; */
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    z-index: 2; 
+    margin-top: -25px;   
+  }
+
+  .heart-svg {
+    width: 30px;
+    height: 27px;
+    position: absolute;    
+    cursor: pointer;
+    right: 1px;    
+  }
+
+  .favorite-icon:active .heart-svg {
+    transform: scale(1.2);
+  }
+  
+  
+  /* Не вибране сердечко */
+  .heart-svg.outlined path {
+    fill: none;
+    stroke: #3A3B61;
+    stroke-width: 2;
+  }
+  
+  /* Вибране сердечко — заливка */
+  .heart-svg.filled path {
+    fill: #3A3B61;
+    stroke: #3A3B61;
+    stroke-width: 2;
+  }
+
+  .rating-stars-card {
+    display: flex;
+    gap: 6px;
+    margin-top: 30px;
+    margin-left: -45px;
+  }
+  
+  .star-wrapper {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .star {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .match-wrapper {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: -40px;
+    max-height: 29px;
+  }
+  
+  .match-text { 
+    color: #3A3B61;
+    margin-bottom: 6px;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    margin-top: 20px;
+  }
+  
+  .match-bar {
+    width: 100%;
+    height: 4px;
+    background-color: #E6E6E6;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .match-bar-fill {
+    height: 100%;
+    background-color: #4DB3AE;
+    transition: width 0.4s ease;
+    border-radius: 4px;
+  }
+  .goal{
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;
+    margin-left: 20px;
+    margin-right: 20px; 
+    overflow-y: auto;
+    max-height: 100px;   
+  }
+
+  .types-scroll-wrapper {
+    overflow-x: auto;
+    overflow-y: none;
+    padding: 0 20px;    
+    position: relative;
+    max-height: 38px;  
+  }
+
+  .types-scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 4px;
+  
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;
+  
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #4DB3AE transparent;
+  }
+  
+  /* Chrome, Safari, Edge */
+  .types-scroll::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .types-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .types-scroll::-webkit-scrollbar-thumb {
+    background-color: #4DB3AE;
+    border-radius: 10px;
+  }
+    
+  .types-scroll::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }  
+
+  .bottom-details{
+    background-color: #449E9A33;
+    max-height: 168px;
+  }
+
+  .left-info {
+    max-width: 270px;
+  }
+
+  .experience {
+    margin-top: 10px; 
+  }
+  .experience, .location{
+    margin-left: 20px; 
+    margin-right: 0px;    
+  }
+
+  .yers-city {
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    color: #3A3B61;
+  }
+
+  .yers-city-text {
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;
+  }
+  
+  .rate {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-align: right;
+    text-transform: uppercase;
+    color: #3A3B61;
+    margin-right: 15px;
+    margin-top: 0px;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;    
+    margin: 10px 20px 40px 20px;   
+  }
+   
+  .chat-btn {
+    min-width: 119px;
+    height: 42px;
+    background-color: #FFFAEE;
+    border: 2px solid #3A3B61;
+    border-radius: 30px;
+    color: #3A3B61;
+
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  
+  .calendar-btn {
+    min-width: 244px;
+    height: 42px;
+    border-radius: 30px;
+    background-color: #4DB3AE; 
+    border: 2px solid #4DB3AE;
+    color: #FFFAEE;
+
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  
+  .icon-card {
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  
+  .icon-btn-card {
+    width: 28px;
+    height: 28px;
+    margin-right: 20px;
+    vertical-align: middle;
+  }
+  .bottom-details-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 16px;
+  }
+  
+  .left-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+
+  

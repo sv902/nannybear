@@ -58,6 +58,30 @@ const NannyProfilePage = () => {
 
     fetchProfile();
   }, []);
+
+  const [newEducation, setNewEducation] = useState({
+    institution: "",
+    specialty: "",
+    years: "",
+    diploma_image: null,
+  });
+  
+  const handleAddEducation = () => {
+    if (newEducation.institution && newEducation.specialty && newEducation.years) {
+      setProfile({
+        ...profile,
+        educations: [...profile.educations, newEducation],
+      });
+      setNewEducation({
+        institution: "",
+        specialty: "",
+        years: "",
+        diploma_image: null,
+      });
+    } else {
+      alert("Будь ласка, заповніть всі поля.");
+    }
+  }; 
       
   const saveChanges = async () => {
     const formData = new FormData();
@@ -92,6 +116,10 @@ const NannyProfilePage = () => {
     });
     if (profile.photo instanceof File) {
       formData.append("photo", profile.photo);
+    }
+
+    if (profile.video instanceof File) {
+      formData.append("video", profile.video);
     }
   
     if (Array.isArray(profile.educations)) {
@@ -355,7 +383,37 @@ const NannyProfilePage = () => {
             )}
           </div>
         ))}
-      </ul>     
+      </ul>  
+      {isEditing && !profile.educations?.length && (
+  <div>
+    <h3>Додати освіту</h3>
+    <input
+      type="text"
+      placeholder="Навчальний заклад"
+      value={newEducation.institution}
+      onChange={(e) => setNewEducation({ ...newEducation, institution: e.target.value })}
+    />
+    <input
+      type="text"
+      placeholder="Спеціальність"
+      value={newEducation.specialty}
+      onChange={(e) => setNewEducation({ ...newEducation, specialty: e.target.value })}
+    />
+    <input
+      type="text"
+      placeholder="Рік закінчення"
+      value={newEducation.years}
+      onChange={(e) => setNewEducation({ ...newEducation, years: e.target.value })}
+    />
+    <input
+      type="file"
+      accept="image/*"
+      onChange={(e) => setNewEducation({ ...newEducation, diploma_image: e.target.files[0] })}
+    />
+    <button onClick={handleAddEducation}>Додати освіту</button>
+  </div>
+)}
+   
       {isEditing ? (
         <textarea
           value={profile.languages?.join(", ")}
@@ -387,7 +445,26 @@ const NannyProfilePage = () => {
         />
       ) : (
         <p><strong>Доступність:</strong> {profile.availability?.join(", ")}</p>
-      )}      
+      )}
+      {profile.video && (
+      <video width="400" height="300" controls style={{ borderRadius: "10px" }}>
+        <source src={`${baseUrl}/storage/${profile.video}`} type="video/mp4" />
+        Ваш браузер не підтримує відео.
+      </video>
+      )}
+      <input
+        type="file"
+        accept="video/*"
+        onChange={(e) => {
+          const file = e.target.files[0];
+          if (file && file.size > 20 * 1024 * 1024) {
+            alert("Відео перевищує 20MB. Завантажте менше.");
+            return;
+          }
+          setProfile({ ...profile, video: file });
+        }}
+      />
+      
    
       <div style={{ marginTop: "20px" }}>
         {!isEditing ? (
