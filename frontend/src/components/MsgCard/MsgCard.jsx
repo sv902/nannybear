@@ -69,6 +69,7 @@ function reducer(state, action) {
         ...state,
         property1: "default",
       };
+      default:
   }
 
   return state;

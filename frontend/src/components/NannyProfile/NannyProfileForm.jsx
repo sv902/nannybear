@@ -12,6 +12,7 @@ import Step9 from "./Step9";
 import Step10 from "./Step10";
 import Step11 from "./Step11";
 import axios from '../../axiosConfig';
+import Header from "../../components/Header/Header";
 
 
 const NannyProfileForm = () => {
@@ -43,11 +44,29 @@ const NannyProfileForm = () => {
     }
   }, []); 
   
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState(() => {
-    const saved = localStorage.getItem("nannyFormData");
-    return saved ? JSON.parse(saved) : { availability: "вільна" };
+  
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
+    city: "",
+    district: "",
+    gender: "",
+    experience_years: "",
+    hourly_rate: "",
+    availability: [],
+    specialization: [],  // Specializations will be stored here
+    work_schedule: [],
+    languages: [],
+    additional_skills: [],
+    education: [],
   });
+
+  const [step, setStep] = useState(1);
+  // const [formData, setFormData] = useState(() => {
+  //   const saved = localStorage.getItem("nannyFormData");
+  //   return saved ? JSON.parse(saved) : { availability: "вільна" };
+  // });
 
   useEffect(() => {
     const saved = localStorage.getItem("nannyFormData");
@@ -84,23 +103,6 @@ const NannyProfileForm = () => {
       // 1. CSRF cookie
       await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
   
-      // // 2. Email & password from localStorage
-      // const email = localStorage.getItem("email");
-      // const password = localStorage.getItem("password");
-  
-      // if (!email || !password) {
-      //   alert("Не вдалося знайти email або пароль у localStorage");
-      //   return;
-      // }
-  
-      // // 3. Login
-      // const loginRes = await axios.post('/api/login', { email, password }, { withCredentials: true });
-      // const token = loginRes.data.token;
-      // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  
-      // console.log("✅ Успішний логін:", loginRes.data);
-  
-      // 4. Формуємо дату народження
       const birthDate = `${formData.birthYear}-${formData.birthMonth.padStart(2, "0")}-${formData.birthDay.padStart(2, "0")}`;
       
       const formDataToSend = new FormData();
@@ -146,11 +148,8 @@ const NannyProfileForm = () => {
           formDataToSend.append(`education[${i}][diploma_image]`, edu.diploma_image);
         }
       });
-  
-      // 5. Створюємо профіль, якщо ще не існує
-      //await axios.post('/api/profile/create', {}, { withCredentials: true });
-  
-      // 6. Зберігаємо повні дані профілю
+        
+      //  Зберігаємо повні дані профілю
         const response = await axios.post("/api/nanny/profile", formDataToSend, {
           withCredentials: true,
           headers: {
@@ -160,9 +159,7 @@ const NannyProfileForm = () => {
   
       console.log("🎉 Профіль збережено:", response.data);
   
-      if (response.status === 200) {
-        // localStorage.removeItem("email");
-        // localStorage.removeItem("password");
+      if (response.status === 200) {        
         localStorage.removeItem("nannyFormData");
         navigate("/nanny/profile");
       }
@@ -290,6 +287,7 @@ const NannyProfileForm = () => {
 
   return (
     <div className="profile-form-wrapper">
+      <Header />  
       {renderStep()}  
     </div>
   );

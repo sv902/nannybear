@@ -4,6 +4,7 @@ import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import axios from '../../axiosConfig';
+import Header from "../../components/Header/Header";
 
 const ParentProfileForm = () => {
   const navigate = useNavigate();
@@ -123,7 +124,9 @@ const ParentProfileForm = () => {
     }
   };
 
-  return <div className="profile-form-wrapper">{renderStep()}</div>;
+  return <div className="profile-form-wrapper">
+    <Header />
+    {renderStep()}</div>;
 };
 
 export default ParentProfileForm;

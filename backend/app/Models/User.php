@@ -132,6 +132,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Review::class, 'nanny_id');
     }
 
+    // Улюблені нняні
+    public function favoriteNannies()
+    {
+        return $this->hasMany(FavoriteNanny::class);
+    }
+
     /**
      * Відношення "один-до-багатьох": відгуки, які залишив батько няням.
      */

@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\NannyPreferenceController;
+use App\Http\Controllers\Api\FavoriteNannyController;
+use App\Http\Controllers\Api\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,7 +111,17 @@ Route::middleware('auth:sanctum')->group(function () {
    
     Route::post('/nanny-preferences', [NannyPreferenceController::class, 'store']);
     Route::get('/nanny-preferences', [NannyPreferenceController::class, 'show']);
+
+    // Вподобані няні
+    Route::post('/favorite-nannies', [FavoriteNannyController::class, 'store']); // Додавання в улюблені
+    Route::delete('/favorite-nannies/{id}', [FavoriteNannyController::class, 'destroy']); // Видалення з улюблених
+    Route::get('/favorite-nannies', [FavoriteNannyController::class, 'index']); // Отримання списку улюблених
+
+    Route::get('/profile/{id}', [UserProfileController::class, 'show']);
 });
+
+// Скарга на профіль
+Route::middleware('auth:sanctum')->post('/reports', [ReportController::class, 'store']);
 
 /**
  *  ЧАТ ТА ПОВІДОМЛЕННЯ
@@ -132,9 +144,11 @@ Route::middleware('auth:sanctum')->group(function () {
 /**
  *  ВІДГУКИ
  */
+Route::get('/reviews/{nanny_id}', [ReviewController::class, 'index']);
+
 Route::middleware('auth:sanctum')->group(function () {
     // CRUD для відгуків
-    Route::get('/reviews/{nanny_id}', [ReviewController::class, 'index']);
+    // Route::get('/reviews/{nanny_id}', [ReviewController::class, 'index']);
     Route::post('/reviews', [ReviewController::class, 'store']);
     Route::put('/reviews/{review_id}', [ReviewController::class, 'update']);
     Route::delete('/reviews/{review_id}', [ReviewController::class, 'destroy']);

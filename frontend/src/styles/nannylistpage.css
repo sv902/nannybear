@@ -1,56 +1,398 @@
-.profile-list-container {
-  background-color: #FFFAEE;
-  margin-left: 80px;
+/* nannylistpage.css */
+
+.profile-list-container {  
+  width: 100%;
+  max-width: 1301px;
+  margin: 0 auto;
 }
 
-.go-to-survey-button{
-  width: 100%;
-  max-width: 282px;
-  min-height: 42px;
-  top: 275px;
-  left: 70px;
-  border-radius: 30px;
-  border-width: 2px;
+.line-text-title-block{
+  display: flex;
+  justify-content: space-between;
+}
+
+.title-nanny {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: 100px;
+  line-height: 105%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+  color: #3A3B61;
+  text-align: left; 
+}
+
+.pagination-info {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: 64px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: right;
+  text-transform: uppercase;
+  color: #3A3B61;
+}
+
+.top-right {
+  justify-content: right;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;  
+  gap: 8px;
+  margin: 20px auto;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  background: none;  
+  padding: 5px 10px;
+  cursor: pointer;
+  border: none;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration-style: solid;
+  text-decoration-thickness: 0%;
+  text-decoration-skip-ink: auto;
+  color: #3A3B61;
+}
+
+.pagination-btn:hover {
+  color: #4DB3AE;
+}
+
+.pagination-page {
+  padding: 5px 10px; 
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
+  text-transform: uppercase;
+  color: #3A3B61;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: 0%;
+  text-decoration-skip-ink: auto;
+  cursor: pointer;
+  border: none;
+}
+.pagination-page:hover{
+  color: #4DB3AE;
+}
+
+.next-page-btn {
   background-color: #3A3B61;
   color: #FFFAEE;
-  font-family: "Comfortaa", sans-serif;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Comfortaa', sans-serif;
   font-weight: 600;
   font-size: 20px;
   line-height: 120%;
   letter-spacing: -2%;
   text-transform: uppercase;
+  max-width: 417px;
+  height: 42px;
+}
+
+.bottom-center{
+  justify-content: center;
+}
+
+.clear-filter-button {
+  background: none;
+  border: 1px solid #4DB3AE;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.btn-container-nanny{
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+/* Стиль для кнопки Терміновий виклик */
+.go-to-not-busy-btn-flash {
+  position: relative;
+  background-color: #FFFAEE;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
+  text-transform: uppercase;
+  border-radius: 30px;
+  border: 2px solid #3A3B61;
+  min-width: 306px;
+  height: 42px;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  color: #3A3B61;
+  transition: background-color 0.3s ease;
+  padding-left: 20px;
+}
+
+/* Кнопка Улюблені */
+.go-to-favorit-button {
+  position: relative;
+  background-color: #FFFAEE;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-transform: uppercase;
+  color: #3A3B61;
+  border-radius: 30px;
+  border: 2px solid #3A3B61;
+  max-width: 196px;
+  height: 42px;  
+  display: flex; 
+  justify-content: center;
+  align-items: center;  
+  transition: background-color 0.3s ease; 
+  padding-left: 50px;
+  padding-right: 20px;
+}
+
+.go-to-not-busy-btn-flash img {
+  position: absolute;
+  width: 19px;
+  height: 32px;
+  transition: filter 0.3s ease; 
+  transition: opacity 0.3s ease;
+  left: 15px; 
+}
+
+.go-to-favorit-button img {
+  position: absolute;
+  width: 23px;
+  height: 20px;
+  transition: filter 0.3s ease;
+  transition: opacity 0.3s ease; 
+  left: 15px;
+}
+
+/* Початковий стан іконок (темна іконка видна, світла прихована) */
+.go-to-not-busy-btn-flash .icon-dark, .go-to-favorit-button .icon-dark {
+  display: block;
+  opacity: 1;  /* темна іконка повністю видна */
+}
+
+.go-to-not-busy-btn-flash .icon-light, .go-to-favorit-button .icon-light {
+  display: block;
+  opacity: 0;  /* світла іконка прихована */
+}
+
+/* Стиль кнопки при наведенні */
+.go-to-not-busy-btn-flash:hover, .go-to-favorit-button:hover {
+  background-color: #3A3B61;  /* темний фон */
+}
+
+.go-to-not-busy-btn-flash:hover .icon-dark, .go-to-favorit-button:hover .icon-dark {
+  opacity: 0;  /* темна іконка ховається */
+}
+
+.go-to-not-busy-btn-flash:hover .icon-light, .go-to-favorit-button:hover .icon-light {
+  opacity: 1;  /* світла іконка з'являється */
+}
+
+/* Стиль кнопки при натисканні */
+.go-to-not-busy-btn-flash:active, .go-to-favorit-button:active {
+  background-color: #2E2F4C;
+}
+
+.go-to-not-busy-btn-flash:active .icon-dark, .go-to-favorit-button:active .icon-dark {
+  filter: brightness(0) invert(1);  /* робимо іконку світлою */
+}
+
+.go-to-not-busy-btn-flash:active .icon-light, .go-to-favorit-button:active .icon-light {
+  filter: brightness(0) invert(1);  /* робимо іконку темною */
+}
+
+.go-to-survey-button{
+  min-width: 282px;
+  height: 42px;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-transform: uppercase;
+  color: #FFFAEE;
+  background-color: #3A3B61;
+  border-radius: 30px;
+  border: 2px solid #3A3B61;
+}
+
+.sort-nanny-text{
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
+  text-transform: uppercase;
+  color: #3A3B61;
+  margin-top: 10px;  
+}
+
+.sort-nanny {
+  display: flex;
+  align-items: center;
+  align-items: flex-start;
+}
+
+.sort-nanny-text {
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.sort-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;   
+}
+
+.sort-input {
+  min-width: 306px;
+  height: 42px;
+  padding: 5px 10px;
+  border-radius: 30px;
+  border: 2px solid #3A3B61;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #FFFAEE;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  color: #3A3B61;
+}
+
+.arrow-down {
+  position: absolute;
+  right: 12px; 
+  font-size: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.arrow-down.rotate {
+  transform: rotate(180deg); 
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  min-width: 306px;
+  background-color: #FFFAEE;
+  border: 2px solid #3A3B61;
+  border-radius: 30px;
+  z-index: 10;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  color: #3A3B61;
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #3A3B61;
+  border-radius: 30px;
+  color: #FFFAEE;
+}
+
+.sort-info {
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+
+.clear-filter-button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #FBCDD4;
+  color: #3A3B61;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.clear-filter-button:hover,
+.go-to-survey-button:hover {
+  background-color: #FFFAEE;
+  color: #3A3B61;
+}
+
+.go-to-not-busy-btn-flash:hover,
+.go-to-favorit-button:hover{
+  background-color: #3A3B61;
+  color: #FFFAEE;
+}
+
+.active-filters {
+  background: #fff9f9;
+  border: 1px solid #fbcdd4;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.active-filters h3 {
+  margin-top: 0;
+  color: #3A3B61;
+}
+
+.active-filters ul {
+  padding-left: 20px;
 }
 
 .nanny-cards-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 30px;
-    width: 100%; 
-    max-width: 417px;  
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  justify-content: center;
+}
+
+@media (max-width: 992px) {
+  .nanny-cards-container {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .nanny-card {
-    color:  #3A3B61; 
-    border: 1px solid #3A3B61;
-    padding: 15px;
-    border-radius: 10px;
-    width: 300px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    font-family: "Comfortaa", sans-serif;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 120%;
-    letter-spacing: -2%;
+}
+
+@media (max-width: 600px) {
+  .nanny-cards-container {
+    grid-template-columns: 1fr;
   }
-  
-  .nanny-photo {  
-    width: 88px; 
-    height: 88px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 10px; 
-    object-fit: cover;
-    object-position: top center;
-  }
-  
+}
+
+.pagination + .pagination {
+  margin-top: 40px;
+}

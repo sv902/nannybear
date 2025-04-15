@@ -17,7 +17,7 @@ export const Header = ({ className, overlapGroupClassName }) => {
           <Hyperlink className="hyperlink-instance" text="ВІДГУКИ" />
         </div>
 
-        <Link className="logonannybear" to="/main">
+        <Link className="logonannybear" to="/">
           <div className="logonannybeargrid">
             <div className="logo-wrapper">
               <div className="logo">
