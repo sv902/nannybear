@@ -7,8 +7,8 @@ import NannyProfileForm from "./components/NannyProfile/NannyProfileForm.jsx";
 import RegistrationLogin from "./pages/RegistrationLogin.jsx";
 import EmailPasswordForm from "./pages/EmailPasswordForm.jsx";
 import EmailConfirmation from "./pages/EmailConfirmation.jsx";
-import ParentSurveyForm from "./components/ParentSurvey/ParentSurveyForm.jsx"
-import EmailVerified from "./pages/EmailVerified.jsx"
+import ParentSurveyForm from "./components/ParentSurvey/ParentSurveyForm.jsx";
+import EmailVerified from "./pages/EmailVerified.jsx";
 import Main from "./screens/Main/Main.jsx";
 import NannyProfilePage from "./pages/NannyProfilePage.jsx";
 import NannyListPage from "./pages/NannyListPage.jsx";
@@ -50,6 +50,7 @@ import NannyChangePasswordPage from "./components/NannySettingsPage/NannyChangeP
 import NannyBookingHistoryPage from "./components/NannySettingsPage/NannyBookingHistoryPage.jsx";
 import AddParentReviewPage from "./pages/AddParentReviewPage.jsx";
 import axios from "./axiosConfig";
+import About from "./screens/About/About.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -140,6 +141,8 @@ const router = createBrowserRouter([
       { path: "/nanny/profile/edit/support", element: <NannySupportPage />},
       { path: "/nanny/profile/edit/password", element: <NannyChangePasswordPage />},
       { path: "/nanny/profile/edit/history", element: <NannyBookingHistoryPage />},
+     
+       { path: "/about", element: <About />},
       { path: "*", element: <NotFoundPage /> },
     ],
     errorElement: <NotFoundPage />

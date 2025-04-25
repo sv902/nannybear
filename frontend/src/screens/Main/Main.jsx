@@ -8,9 +8,6 @@ import { MsgCard } from "../../components/MsgCard/MsgCard.jsx";
 import { PropertyDefault } from "../../components/PropertyDefault/PropertyDefault.jsx";
 import { StatCard } from "../../components/StatCard/StatCard.jsx";
 import { TypeCard } from "../../components/TypeCard/TypeCard.jsx";
-import { InstaIcon } from "../../icons/InstaIcon/InstaIcon.jsx";
-import { Property1Default } from "../../icons/Property1Default/Property1Default.jsx";
-import { Property1Default1 } from "../../icons/Property1Default1/Property1Default1.jsx";
 import { RoundAnimate } from "../../icons/RoundAnimate/RoundAnimate.jsx";
 import "./style.css";
 
@@ -42,7 +39,7 @@ export const Main = () => {
 
           <div className="text-wrapper-16">НАВЕДМІДЬ НА ПОВІДОМЛЕННЯ!</div>
 
-          <MsgCard className="msg-card-instance" property1="default" />
+          <MsgCard className="msg-card-1" property1="default" />
           <MsgCard className="msg-card-2" property1="default" />
           <MsgCard className="msg-card-3" property1="default" />
           <MsgCard className="msg-card-4" property1="default" />
@@ -52,9 +49,14 @@ export const Main = () => {
         <div className="overlap-3">
           <div className="overlap-4">
             <img
-              className="pexels-arina"
+              className="pexels-arina default-img"
               alt="Pexels arina"
               src="/assets/pexels-arina-krasnikova.png"
+            />
+            <img
+              className="pexels-arina ipad-img"
+              alt="iPad image"
+              src="/assets/pexels-arina-ipad.png"
             />
 
             <div className="overlap-5">
@@ -72,6 +74,7 @@ export const Main = () => {
                     КАНДИДАТІВ З ДЕТАЛЬНИМИ РЕЗЮМЕ <br />
                     ТА ВІДГУКАМИ.
                   </p>
+                  <img className="mobile-image" src="/assets/bear-phone.png" alt="Mobile visual"/>
                 </div>
 
                 <div className="overlap-7">
@@ -104,8 +107,7 @@ export const Main = () => {
             <br />
             <br />
             Переглядайте перевірені анкети, обирайте фахівця за відгуками та
-            досвідом, та бронюйте послуги <br />
-            за кілька кліків. Гнучкий графік, швидкий пошук і лише перевірені
+            досвідом, та бронюйте послуги за кілька кліків. Гнучкий графік, швидкий пошук і лише перевірені
             няні – усе для вашого спокою та комфорту дитини!
             <br />
             <br />
@@ -138,6 +140,8 @@ export const Main = () => {
                 <br />
                 БЕЗПЕКА
               </div>
+              
+              <img src="/assets/frame.png" alt="Banner Text" className="banner-text" />
 
               <PropertyDefault className="cta-button" /> {/* first button  */}
             </div>
@@ -152,7 +156,9 @@ export const Main = () => {
 
         <div className="instagram">НАШ INSTAGRAM</div>
 
-        <div className="text-wrapper-24">ВИДИ НЯНЬ</div>
+        <section id="nanny-types">
+          <div className="text-wrapper-24">ВИДИ НЯНЬ</div>
+        </section>
 
         <p className="text-wrapper-25">
           ДІЗНАЙТЕСЬ, ЯКА НЯНЯ НАЙКРАЩЕ ПІДХОДИТЬ ДЛЯ ВАШОЇ РОДИНИ.
@@ -257,9 +263,28 @@ export const Main = () => {
               </>
             }
           />
-          <InstaIcon className="insta-icon" color="#FFFAEE" />
-          <Property1Default1 className="tiktok-icon" color="#FFFAEE" />
-          <Property1Default className="facebook-icon" color="#FFFAEE" />
+
+          <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+          <div className="icon-hover insta-icon-wrapper">
+            <img src="/assets/insta-icon.png" alt="Instagram" className="insta-icon default" />
+            <img src="/assets/insta-icon-hover.png" alt="Instagram Hover" className="insta-icon hover" />
+          </div>
+          </a>
+
+          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
+          <div className="icon-hover tiktok-icon-wrapper">
+            <img src="/assets/tiktok-icon.png" alt="TikTok" className="tiktok-icon default" />
+            <img src="/assets/tiktok-icon-hover.png" alt="TikTok Hover" className="tiktok-icon hover" />
+          </div>
+          </a>
+
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+          <div className="icon-hover facebook-icon-wrapper">
+            <img src="/assets/facebook-icon.png" alt="Facebook" className="facebook-icon default" />
+            <img src="/assets/facebook-icon-hover.png" alt="Facebook Hover" className="facebook-icon hover" />
+          </div>
+          </a>
+
           <div className="group-wrapper">
             <div className="div-wrapper">
               <div className="logo-2">
@@ -284,7 +309,7 @@ export const Main = () => {
         <TypeCard className="type-card-instance" />
         <TypeCard
           className="type-card-2"
-          text="НЯНЯ ДЛЯ СУПРОВІД ЗА КОРДОН"
+          text="НЯНЯ СУПРОВІД ЗА КОРДОН"
           text1={
             <>
               Допомога та підтримка дитини <br />
@@ -332,6 +357,7 @@ export const Main = () => {
           className="h-hyperlink-instance"
           divClassName="h3-hyperlink-instance"
           text="@NANNY_BEAR"
+          to="https://www.instagram.com"
         />
         <PropertyDefault className="property-1-default" /> {/*third button*/}
         <Header

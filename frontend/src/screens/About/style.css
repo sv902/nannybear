@@ -1,0 +1,38 @@
+.nanny-bear-2 {
+    color: #3a3b61;
+    font-family: "Comfortaa", Helvetica;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: -0.36px;
+    line-height: 21.6px;
+  }
+
+.text-header {
+    color: #3a3b61;
+    font-family: "Oswald", Helvetica;
+    font-size: 100px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 105.0px;
+  }
+
+.about-page {
+    background-color: #FFFAEE;
+  }
+
+.about-info {
+    padding: 70px;
+}
+
+/*adaptation*/
+@media screen and (max-width: 1440px) {
+    .text-header {
+        font-size: 80px;
+        font-weight: 350;
+        letter-spacing: 0;
+        line-height: 85.0px;
+    }
+    .about-info {
+        padding: 40px;
+    }
+}
