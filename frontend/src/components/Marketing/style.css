@@ -1,37 +1,79 @@
 .marketing {
-    background-color: #3a3b61;
-    height: 29px;
-    position: relative;
-    width: 100%;
-  }
-  
-  .marketing .text-wrapper-13 {
-    color: #fffaee;
-    font-family: "Comfortaa", Helvetica;
-    font-size: 18px;
-    font-weight: 400;
-    left: 513px;
-    letter-spacing: -0.36px;
-    line-height: 21.6px;
-    position: absolute;
-    text-align: center;
-    top: 3px;
-    width: 415px;
-  }
-  
-  .marketing .waves {
-    height: 29px;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 502px;
-  }
-  
+  background-color: #3a3b61;
+  height: 29px;
+  position: relative;
+  width: 100%;
+}
+
+.marketing .text-wrapper-13 {
+  color: #fffaee;
+  font-family: "Comfortaa", Helvetica;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.36px;
+  line-height: 21.6px;
+  position: absolute;
+  text-align: center;
+  width: 415px;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 3px; 
+}
+
+.marketing .waves,
+.marketing .waves-2 {
+  height: 29px;
+  position: absolute;
+  top: 0;
+  flex: 1;
+}
+
+/* Left wave */
+.marketing .waves {
+  left: 0;
+  width: 30%;
+}
+
+/* Right wave */
+.marketing .waves-2 {
+  right: 0;
+  width: 30%;
+}
+
+/* Small screens (phones)*/
+@media (max-width: 412px) {
+  .marketing .waves,
   .marketing .waves-2 {
-    height: 29px;
-    left: 948px;
-    position: absolute;
-    top: 0;
-    width: 492px;
+    display: none;
   }
-  
+
+  .marketing .text-wrapper-13 {
+    font-size: 14px;
+    width: 95%;
+  }
+}
+
+/* iPad screens*/
+@media (min-width: 413px) and (max-width: 1440px) {
+  .marketing .waves,
+  .marketing .waves-2 {
+    display: block;
+    width: 30%;
+  }
+
+  .marketing .waves {
+    left: 0;
+  }
+
+  .marketing .waves-2 {
+    right: 0;
+  }
+
+  .marketing .waves {
+    clip-path: inset(0 50% 0 0); /* Show the left side of the wave */
+  }
+
+  .marketing .waves-2 {
+    clip-path: inset(0 0 0 50%); /* Show the right side of the wave */
+  }
+}

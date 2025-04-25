@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Ensure React Router is used
+import { Link } from "react-router-dom";
 import { Hyperlink } from "../Hyperlink/Hyperlink.jsx";
 import { PrimaryButton } from "../PrimaryButton/PrimaryButton.jsx";
 import { SecondaryButton } from "../SecondaryButton/SecondaryButton.jsx";
@@ -12,9 +12,13 @@ export const Header = ({ className, overlapGroupClassName }) => {
         <div className="menu">
           <PrimaryButton className="primary-button-instance" />
           <SecondaryButton className="secondary-button-instance" />
-          <Hyperlink className="h-hyperlink" text="ПРО НАС" />
-          <Hyperlink className="h3-hyperlink" text="ВИДИ НЯНЬ" />
-          <Hyperlink className="hyperlink-instance" text="ВІДГУКИ" />
+          
+          <div className="desktop-only">
+            <Hyperlink className="h-hyperlink" text="ПРО НАС" to="/about" />
+            <Hyperlink className="h3-hyperlink" text="ВИДИ НЯНЬ" to="/#nanny-types" />
+            <Hyperlink className="hyperlink-instance" text="ВІДГУКИ" to="/about" />
+          </div>
+          
         </div>
 
         <Link className="logonannybear" to="/">
