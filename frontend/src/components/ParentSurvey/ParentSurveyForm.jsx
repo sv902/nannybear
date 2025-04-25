@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import SurveyStep1 from "./SurveyStep1";
 import SurveyStep2 from "./SurveyStep2";
@@ -19,82 +19,55 @@ import axios from '../../axiosConfig';
 const ParentSurveyForm = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const tryRelogin = async () => {
-      try {
-        // Отримуємо CSRF cookie
-        await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
-  
-        const email = localStorage.getItem("email");
-        const password = localStorage.getItem("password");
-  
-        if (!email || !password) {
-          console.warn("❌ Email або пароль не знайдено в localStorage");
-          alert("Ваша сесія завершена. Будь ласка, увійдіть знову.");
-          navigate("/registrationlogin");
-          return;
-        }
-  
-        const loginRes = await axios.post(
-          '/api/login',
-          { email, password },
-          { withCredentials: true }
-        );
-  
-        const token = loginRes?.data?.token;
-        if (token) {
-          localStorage.setItem("authToken", token);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          console.log("🔑 Автологін успішний:", loginRes.data);
-        }
-      } catch (error) {
-        console.error("❌ Помилка автологіну:", error.response || error.message);
-        alert("Не вдалося автоматично увійти. Спробуйте увійти вручну.");
-        navigate("/registrationlogin");
-      }
-    };
-  
-    tryRelogin();
-  }, [navigate]);
-  
+  const tryRelogin = useCallback(async () => {
+    try {
+      await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
 
+      const email = localStorage.getItem("email");
+      const password = localStorage.getItem("password");
+
+      if (!email || !password) {
+        console.warn("❌ Email або пароль не знайдено в localStorage");
+        alert("Ваша сесія завершена. Будь ласка, увійдіть знову.");
+        navigate("/registrationlogin");
+        return;
+      }
+
+      const loginRes = await axios.post(
+        '/api/login',
+        { email, password },
+        { withCredentials: true }
+      );
+
+      const token = loginRes?.data?.token;
+      if (token) {
+        localStorage.setItem("authToken", token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        console.log("🔑 Автологін успішний:", loginRes.data);
+      }
+    } catch (error) {
+      console.error("❌ Помилка автологіну:", error.response || error.message);
+      alert("Не вдалося автоматично увійти. Спробуйте увійти вручну.");
+      navigate("/registrationlogin");
+    }
+  }, [navigate]);
+ 
   useEffect(() => {
-    const checkSessionOrLogin = async () => {
+    const init = async () => {
       try {
-        await axios.get("/api/parent/profile");
+        await axios.get("/api/parent/profile", { withCredentials: true });
         console.log("✅ Сесія активна");
       } catch (error) {
         if (error.response?.status === 401) {
-          try {
-            await axios.get('/sanctum/csrf-cookie');
-            const email = localStorage.getItem("email");
-            const password = localStorage.getItem("password");
-  
-            if (!email || !password) {
-              navigate("/registrationlogin");
-              return;
-            }
-  
-            const loginRes = await axios.post('/api/login', { email, password });
-            const token = loginRes?.data?.token;
-            if (token) {
-              localStorage.setItem("authToken", token);
-              axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-              console.log("🔁 Автологін успішний");
-              // повторно перевіримо сесію
-              await axios.get("/api/parent/profile");
-            }
-          } catch (loginErr) {
-            console.error("❌ Помилка при автологіні:", loginErr);
-            navigate("/registrationlogin");
-          }
+          await tryRelogin();
+        } else {
+          console.error("❌ Інша помилка при перевірці сесії:", error);
         }
       }
     };
   
-    checkSessionOrLogin();
-  }, [navigate]);
-  
+    init();
+  }, [navigate, tryRelogin]); 
 
   const [step, setStep] = useState(1);
   const [surveyData, setSurveyData] = useState({
@@ -154,7 +127,6 @@ const ParentSurveyForm = () => {
     }
   };
   
-
   const renderStep = () => {
     switch (step) {
         case 1:

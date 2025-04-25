@@ -1,17 +1,22 @@
-// components/ParentProfile/Step3.jsx
 import React from "react";
 import "../../styles/register.css";
 import "../../styles/profileStep.css";
 
 const Step3 = ({ formData, setFormData, onBack, onSubmit }) => {
-  const handleChange = (e) => {
-    setFormData(prev => ({
+  const updateAddressField = (field, value) => {
+    const updated = [...(formData.addresses || [{}])];
+    updated[0] = {
+      type: updated[0]?.type || "Дім", // тип адреси за замовчуванням
+      ...updated[0],
+      [field]: value,
+    };
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      addresses: updated,
     }));
   };
 
-  const { city} = formData;
+  const address = formData.addresses?.[0] || {};
 
   return (
     <div className="reg-form-container">
@@ -24,36 +29,34 @@ const Step3 = ({ formData, setFormData, onBack, onSubmit }) => {
       <p className="description-light">Будь ласка, вкажіть свою адресу для зручності.</p>
 
       <div className="step-form">
-      <div className="name-conteiner">
-        <p className="name-input-p left-label">МІСТО</p> 
-        <p className="required-field right-required">обов’язкове поле</p>
-      </div>
-      <input className="input-field-reg"
-        type="text"
-        name="city"
-        placeholder={city}
-        value={formData.city || ""}
-        onChange={handleChange}
-        required
-      />      
+        <div className="name-conteiner">
+          <p className="name-input-p left-label">МІСТО</p>
+          <p className="required-field right-required">обов’язкове поле</p>
+        </div>
+        <input
+          className="input-field-reg"
+          type="text"
+          placeholder="Ваше місто..."
+          value={address.city || ""}
+          onChange={(e) => updateAddressField("city", e.target.value)}
+          required
+        />
 
         <p className="name-input-p">РАЙОН</p>
         <input
           type="text"
-          name="district"
           placeholder="Ваш район..."
-          value={formData.district || ""}
-          onChange={handleChange}
+          value={address.district || ""}
+          onChange={(e) => updateAddressField("district", e.target.value)}
           className="input-field-reg"
         />
 
         <p className="name-input-p">АДРЕСА</p>
         <input
           type="text"
-          name="address"
           placeholder="Вулиця та номер будинку..."
-          value={formData.address || ""}
-          onChange={handleChange}
+          value={address.address || ""}
+          onChange={(e) => updateAddressField("address", e.target.value)}
           className="input-field-reg"
         />
 
@@ -62,10 +65,9 @@ const Step3 = ({ formData, setFormData, onBack, onSubmit }) => {
             <p className="name-input-p">ПОВЕРХ</p>
             <input
               type="text"
-              name="floor"
               placeholder="№ поверху..."
-              value={formData.floor || ""}
-              onChange={handleChange}
+              value={address.floor || ""}
+              onChange={(e) => updateAddressField("floor", e.target.value)}
               className="input-field-reg"
             />
           </div>
@@ -73,10 +75,9 @@ const Step3 = ({ formData, setFormData, onBack, onSubmit }) => {
             <p className="name-input-p">КВАРТИРА</p>
             <input
               type="text"
-              name="apartment"
               placeholder="№ квартири..."
-              value={formData.apartment || ""}
-              onChange={handleChange}
+              value={address.apartment || ""}
+              onChange={(e) => updateAddressField("apartment", e.target.value)}
               className="input-field-reg"
             />
           </div>

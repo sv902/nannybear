@@ -26,9 +26,10 @@ export const VariantHeader = ({setPreferences, setNannies, setCurrentPage, reset
   const navigate = useNavigate();
 
   useEffect(() => {
-    const role = localStorage.getItem("userRole");
+    const role = localStorage.getItem("userRole");   
+    console.log("Роль користувача з localStorage:", role);
     setUserType(role);
-  }, []);
+  }, []);  
 
   const handleButtonClick = (buttonType) => {
     setPressedButton(buttonType); 
@@ -50,12 +51,16 @@ export const VariantHeader = ({setPreferences, setNannies, setCurrentPage, reset
   }
 
   const getProfileUrl = () => {
+    const token = localStorage.getItem("authToken");
+  if (!token) {
+    return "/registrationlogin?section=login";
+  }
     if(userType === "parent"){
       return "/parent-profiles";
     } else if (userType === "nanny") {
       return "/nanny/profile";
     }
-    return "/profile";
+    return "/registrationlogin?section=login";
   }
 
   return (
@@ -92,7 +97,7 @@ export const VariantHeader = ({setPreferences, setNannies, setCurrentPage, reset
             onClick={() => {
               setSelectedButton("profile");
               handleButtonClick("profile");
-              window.location.href = getProfileUrl();
+              navigate(getProfileUrl());
             }}
             onMouseEnter={() => handleMouseEnter("profile")}
             onMouseLeave={handleMouseLeave}

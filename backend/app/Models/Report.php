@@ -8,10 +8,13 @@ class Report extends Model
 {
     protected $fillable = [
         'reported_user_id',
-        'submitted_by_id',
+        'reporter_user_id',
         'reason',
-        'details',
-        'status'
+        'details',      
+    ];
+
+    protected $casts = [
+        'reason' => 'array',
     ];
     
     public function reportedUser()
@@ -21,7 +24,7 @@ class Report extends Model
 
     public function submittedBy()
     {
-        return $this->belongsTo(User::class, 'submitted_by_id');
+        return $this->belongsTo(User::class, 'reporter_user_id');
     }
 
 }

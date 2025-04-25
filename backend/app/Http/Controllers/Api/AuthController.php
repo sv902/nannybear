@@ -284,6 +284,28 @@ class AuthController extends Controller
         }
     }
 
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'errors' => ['current_password' => 'Неправильний поточний пароль']
+            ], 422);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json(['message' => 'Пароль успішно змінено']);
+    }
+
+
         public function __construct()
     {
         $this->middleware('auth:sanctum')->except(['login', 'register', 'googleCallback', 'facebookCallback']);

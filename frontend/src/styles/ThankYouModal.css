@@ -1,0 +1,97 @@
+.thank-you-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(58, 59, 97, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .thank-you-modal {
+    position: relative;
+    background: #F9D8E0;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 638px;
+    padding: 60px 40px 40px;
+    text-align: center;
+    font-family: "Comfortaa", sans-serif;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  }
+  
+  /* Вушка */
+  .thank-you-modal::before,
+  .thank-you-modal::after {
+    content: "";
+    position: absolute;
+    top: -90px;
+    width: 198px;
+    height: 198px;
+    background: #F9D8E0;
+    border-radius: 50%;
+  }
+  
+  .thank-you-modal::before {
+    left: -90px;
+  }
+  
+  .thank-you-modal::after {
+    right: -90px;
+  }
+  
+  /* Хрестик */
+  .modal-close-rev {
+    z-index: 1;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: none;
+    border: none;
+    font-size: 36px;
+    color: #3a3b61;
+    cursor: pointer;
+  }
+  
+  .modal-title-rev {
+    color: #3a3b61;
+    margin-bottom: 20px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 100px;
+    line-height: 105%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+  }
+  
+  .modal-text-rev {
+    color: #3a3b61;
+    margin-bottom: 10px;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .modal-button-rev {
+    padding: 12px 24px;
+    background: #3a3b61;
+    color: #FFFAEE;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  

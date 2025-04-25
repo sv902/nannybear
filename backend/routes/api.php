@@ -20,6 +20,9 @@ use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\NannyPreferenceController;
 use App\Http\Controllers\Api\FavoriteNannyController;
 use App\Http\Controllers\Api\UserProfileController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\ParentReviewController;
+use App\Http\Controllers\Api\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +53,8 @@ Route::post('/register', [AuthController::class, 'register']); // Реєстра
 Route::post('/login', [AuthController::class, 'login'])->name('login'); // Вхід у систему
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); // Вихід
 
+Route::post('/change-password', [AuthController::class, 'changePassword']);
+
 /**
  *  АВТОРИЗАЦІЯ ЧЕРЕЗ GOOGLE
  */
@@ -79,6 +84,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/user/{id}', [UserController::class, 'update']); // Оновити користувача
     Route::delete('/user', [UserController::class, 'destroySelf']); // Видалити користувача
     });
+// routes/api.php
+Route::get('/nanny-profiles/user/{user_id}', function ($user_id) {
+    return \App\Models\NannyProfile::where('user_id', $user_id)->firstOrFail();
+});
 
 /**
  * АДМІНІСТРАТОР
@@ -99,6 +108,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // === БАТЬКИ ===
     Route::post('/parent/profile', [ProfileController::class, 'storeParentProfile']); // створити/оновити
+    Route::get('/parent/profile', [ProfileController::class, 'getParentProfile']); 
     Route::get('/parent-profiles', [ParentProfileController::class, 'index']); // всі
     Route::get('/parent-profiles/{id}', [ParentProfileController::class, 'show']); // один
 
@@ -117,8 +127,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/favorite-nannies/{id}', [FavoriteNannyController::class, 'destroy']); // Видалення з улюблених
     Route::get('/favorite-nannies', [FavoriteNannyController::class, 'index']); // Отримання списку улюблених
 
-    Route::get('/profile/{id}', [UserProfileController::class, 'show']);
+    Route::get('/profile/{id}', [UserProfileController::class, 'show']);    
 });
+
 
 // Скарга на профіль
 Route::middleware('auth:sanctum')->post('/reports', [ReportController::class, 'store']);
@@ -152,7 +163,34 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reviews', [ReviewController::class, 'store']);
     Route::put('/reviews/{review_id}', [ReviewController::class, 'update']);
     Route::delete('/reviews/{review_id}', [ReviewController::class, 'destroy']);
+    
+    Route::get('/reviews/parent/{user_id}', [ReviewController::class, 'getParentReviews']);
+    Route::get('/reviews/about-parent/{user_id}', [ParentReviewController::class, 'getReviewsAboutParent']);
+
+    Route::post('/parent-reviews', [ParentReviewController::class, 'store']);
+    Route::get('/reviews/parent/{userId}', [ParentReviewController::class, 'showByParent']);
 
     // Додаткова можливість - відповідь від няні
     Route::post('/reviews/{review_id}/reply', [ReviewController::class, 'reply']);
 });
+
+// бронювання
+Route::middleware('auth:sanctum')->group(function () {
+    
+    Route::get('/parent/bookings', [BookingController::class, 'index']);
+    // Створення нового бронювання
+    Route::post('/bookings', [BookingController::class, 'store']);
+
+    // Отримання бронювань для батька (історія замовлень)
+    Route::get('/bookings', [BookingController::class, 'index']);
+
+    // Оновлення бронювання
+    Route::put('/bookings/{id}', [BookingController::class, 'update']);
+
+    // Видалення бронювання
+    Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);
+
+    Route::get('/nanny/bookings', [BookingController::class, 'getBookingsForNanny']);
+
+});
+

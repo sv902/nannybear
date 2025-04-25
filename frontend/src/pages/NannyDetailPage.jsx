@@ -1,5 +1,5 @@
 // src/pages/NannyDetailPage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../axiosConfig";
 import "../styles/nannydetail.css";
@@ -9,8 +9,6 @@ import eye from "../icons/eye.png";
 import BearPlaceholder from "../components/BearPlaceholder/BearPlaceholder";
 import briefcaseIcon from "../assets/icons/briefcase.svg";
 import locationIcon from "../assets/icons/location.svg";
-import chatIcon from "../assets/icons/chat.svg";
-import calendarIcon from "../assets/icons/calendar.svg";
 import { useFavorites } from "../context/FavoritesContext";
 import VariantHeader from "../components/Header/VariantHeader";
 import Footer from "../components/Footer/Footer";
@@ -28,8 +26,28 @@ const NannyDetailPage = () => {
     const closeModal = () => setDiplomaPreviewUrl(null); 
     const [reviews, setReviews] = useState([]);   
 
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0); 
 
+    const [educationPage, setEducationPage] = useState(0);
+    const educationsPerPage = 2;
+    const totalEducationPages = useMemo(() => {
+      if (!nanny?.educations) return 1;
+      return Math.ceil(nanny.educations.length / educationsPerPage);
+    }, [nanny]);
+    
+    const startEduIndex = educationPage * educationsPerPage;
+    const visibleEducations = nanny?.educations
+    ? nanny.educations.slice(startEduIndex, startEduIndex + educationsPerPage)
+    : [];
+
+    const handlePrevEdu = () => {
+      setEducationPage((prev) => (prev > 0 ? prev - 1 : prev));
+    };
+
+    const handleNextEdu = () => {
+      setEducationPage((prev) => (prev < totalEducationPages - 1 ? prev + 1 : prev));
+    };
+  
     useEffect(() => {
       if (!nanny || !nanny.user_id) return;
     
@@ -90,11 +108,42 @@ const NannyDetailPage = () => {
   const handleNext = () => {
     setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev));
   };
+  const isValidPhoto =
+  nanny.photo &&
+  nanny.photo !== "null" &&
+  nanny.photo.trim() !== "";
 
   const startIndex = currentPage * reviewsPerPage;
   const visibleReviews = reviews.slice(startIndex, startIndex + reviewsPerPage);
 
- 
+  const renderStars = (rating, uniqueKey = "") => {
+    return [1, 2, 3, 4, 5].map((index) => {
+      const fillLevel = Math.min(Math.max(rating - index + 1, 0), 1);
+      const gradientId = `starGradient-${uniqueKey}-${index}`;
+  
+      return (
+        <div className="star-wrapper-det" key={index}>
+          <svg
+            viewBox="0 0 20 20"
+            className="star"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id={gradientId}>
+                <stop offset={`${fillLevel * 100}%`} stopColor="#CC8562" />
+                <stop offset={`${fillLevel * 100}%`} stopColor="#CC856280" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M12 2L14.9 8.62L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L9.1 8.62L12 2Z"
+              fill={`url(#${gradientId})`}
+            />
+          </svg>
+        </div>
+      );
+    });
+  };  
+  
   
   return (
     <div>
@@ -130,29 +179,21 @@ const NannyDetailPage = () => {
             />
           </svg>
         </button>       
-          <div className="photo-wrapper">
-            <img
-              src={nanny.photo ? `${baseUrl}/storage/${nanny.photo}` : "https://via.placeholder.com/150"}
-              alt="Фото няні"
-              className="nanny-photo-large"
-            />
-          </div>
+      
+        <div className="photo-wrapper">
+          <img
+            src={
+              isValidPhoto
+                ? `${baseUrl}/storage/${nanny.photo}`
+                : `${baseUrl}/storage/default-avatar.jpg`
+            }
+            alt="Фото няні"
+            className="nanny-photo-large"
+          />       
+        </div>
   
           <div className="rating-stars">
-            {[1, 2, 3, 4, 5].map(i => (
-              <svg
-                key={i}
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill={i <= averageRating ? "#CC8562" : "#CC856280"}
-                  d="M12 2L14.9 8.62L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L9.1 8.62L12 2Z"
-                />
-              </svg>
-            ))}
+          {renderStars(averageRating, "avg")}
           </div>
 
           <div className="client-info">
@@ -212,22 +253,20 @@ const NannyDetailPage = () => {
                 {Math.floor(nanny.hourly_rate)} ₴
               </div>
               <div className="actions-nanny">
-              <button className="chat-btn"
+              <button className="chat-btn-nanny-det"
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate(`/chat/${nanny.id}`);
                 }}
               >
-                <img src={chatIcon} alt="чат" className="icon-btn-card" />
-                 Чат</button>
+                <span className="icon-btn-chat" /> Чат</button>
               <button className="calendar-btn"
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate(`/booking/${nanny.id}`);
                 }}
               >
-                <img src={calendarIcon} alt="календар" className="icon-btn-card" />
-                 Запланувати</button>
+                 <span className="icon-btn-calendar" /> Запланувати</button>
             </div>
             </div>   
             </div> 
@@ -241,7 +280,8 @@ const NannyDetailPage = () => {
                   {nanny.educations.length} {getCertificateLabel(nanny.educations.length)}
                 </p>
               </div>
-              {nanny.educations.map((edu, idx) => (
+              <div className="education-content"> 
+              {visibleEducations.map((edu, idx) => (
                 <div key={idx} className="education-card">
                   <h4 className="institution">{edu.institution}</h4>
                   <p className="specialty">{edu.specialty}</p>
@@ -269,8 +309,8 @@ const NannyDetailPage = () => {
                     </div>
                   )}
                   {diplomaPreviewUrl && (
-                    <div className="modal-overlay" onClick={closeModal}>
-                      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                    <div className="modal-overlay-dipl" onClick={closeModal}>
+                      <div className="modal-content-dipl" onClick={(e) => e.stopPropagation()}>
                         <button className="close-button" onClick={closeModal}>✖</button>
                         <img
                           src={diplomaPreviewUrl}
@@ -283,6 +323,19 @@ const NannyDetailPage = () => {
                   </div>
                 </div>
               ))}
+              </div>
+
+              <div className="education-navigation">
+              <button className="nav-arrow left" onClick={handlePrevEdu} disabled={educationPage === 0}>
+                &#8592;
+              </button>
+              <span className="page-info">
+                {startEduIndex + 1}–{Math.min(startEduIndex + educationsPerPage, nanny.educations.length)} з {nanny.educations.length} документів
+              </span>
+              <button className="nav-arrow right" onClick={handleNextEdu} disabled={educationPage === totalEducationPages - 1}>
+                &#8594;
+              </button>
+              </div>
             </div>
           ) : (
             <div className="education-section empty-education">
@@ -377,8 +430,7 @@ const NannyDetailPage = () => {
               navigate(`/booking/${nanny.id}`);
             }}
           >
-            <img src={calendarIcon} alt="календар" className="icon-btn-card" />
-            Запланувати
+             <span className="icon-btn-calendar" /> Запланувати
           </button>
         </div>
         </div>
@@ -439,18 +491,11 @@ const NannyDetailPage = () => {
                     {reviews.length} {getreReviewsLabel(reviews.length)}
                   </span>
                   <span className="review-average">
-                    {averageRating.toFixed(1)}
-                    <span className="stars">
-                      {[...Array(5)].map((_, i) => (
-                        <span
-                          key={i}
-                          className={i < Math.round(averageRating) ? "star filled" : "star"}
-                        >
-                          &#9733;
-                        </span>
-                      ))}
-                    </span>
+                  {averageRating.toFixed(1)}
+                  <span className="stars">
+                  {renderStars(averageRating, "avg")}
                   </span>
+                </span>
                 </div>
               )}
             </div>
@@ -474,11 +519,7 @@ const NannyDetailPage = () => {
                         {review.parent_profile?.last_name?.charAt(0)}.
                       </strong>
                       <div className="stars">
-                        {[...Array(5)].map((_, i) => (
-                          <span key={i} className={i < review.rating ? "star filled" : "star"}>
-                            &#9733;
-                          </span>
-                        ))}
+                      {renderStars(review.rating, review.id || idx)}
                       </div>
                       <p className="coment-text">{review.comment}</p>
                     </div>

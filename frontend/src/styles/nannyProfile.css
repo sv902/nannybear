@@ -1,0 +1,118 @@
+.profile-header-nanny {
+    display: flex; 
+    width: 100%;
+    justify-content: right;
+    margin: 0px;
+  }
+
+  .nanny-edit-profile{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 40px;  
+    padding: 0 40px 0px 40px; 
+    font-family: 'Comfortaa', sans-serif;
+    background-color: #fff;
+    color: #3A3B61;
+    width: 100%;
+    /* max-width: 1440px; */
+    height: auto;
+    /* min-height: 1822px;    */
+  }
+
+   /* Відгуки */
+   .reviews-section-nanny {
+    position: relative;
+    width: 100%;
+    max-width: 1450px;
+    height: auto;
+    min-height: 439px;
+    background-color: #FFFAEE;
+    padding: 20px;
+    margin-left: 40px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #3A3B61;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    margin-bottom: 20px;
+  }
+
+  .bottom-details-row-nanny{
+    display: flex;
+    text-align: left;
+  }
+
+  .nanny-colom-color-prof{
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    position: relative;   
+    z-index: 1;
+    border-radius: 20px; 
+  }
+
+  .match-text-nanny-prof { 
+    color: #3A3B61;
+    margin-bottom: 6px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    text-align: left;
+  }
+  .nanny-inf-container{
+    min-width: 417px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+  }
+
+  .right-column-nanny {
+    width: 100%;     
+    height: auto;
+    position: relative;
+    border-radius: 20px;
+    margin-top: 20px;
+  }
+  .education-section-prof {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 100%;
+    height: auto;
+    min-height: 1042px;
+    border: 1px solid #3A3B61;
+    border-radius: 20px; 
+  }
+  .education-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  
+.education-navigation {
+    margin-top: auto; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .education-navigation .nav-arrow {
+    font-size: 33px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #3A3B61;
+  }
+  
+  .education-navigation .nav-arrow:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  

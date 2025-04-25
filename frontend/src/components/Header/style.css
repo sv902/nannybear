@@ -54,7 +54,7 @@
   .header .logonannybear {
     display: block;
     height: 50px;
-    left: 70px;
+    left: 40px;
     position: absolute;
     top: 4px;
     width: 154px;
@@ -96,4 +96,8 @@
     top: 11px;
     width: 98px;
   }
+  
+
+  /* ------ */
+
   

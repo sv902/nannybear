@@ -1,484 +1,521 @@
+// src/pages/NannyProfilePage.jsx
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "../axiosConfig";
-import "../styles/profile.css";
-import "../styles/register.css";
+import "../styles/nannydetail.css";
+import "../styles/nannycard.css";
+import "../styles/nannyProfile.css";
+import eye from "../icons/eye.png";
+
+import BearPlaceholder from "../components/BearPlaceholder/BearPlaceholder";
+import briefcaseIcon from "../assets/icons/briefcase.svg";
+import locationIcon from "../assets/icons/location.svg";
+import VariantNannyHeader from "../components/Header/VariantHederNanny";
+import Footer from "../components/Footer/Footer";
 
 const NannyProfilePage = () => {
-  console.log("🔄 Компонент змонтовано");
+    const [nanny, setNanny] = useState(null);   
+    const { id, user_id } = useParams();
+    const profileId = id || user_id;
+    const navigate = useNavigate();   
 
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+    const [isExpanded, setIsExpanded] = useState(false); 
+    const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+    
+    const [diplomaPreviewUrl, setDiplomaPreviewUrl] = useState(null);
+    const closeModal = () => setDiplomaPreviewUrl(null); 
+    const [reviews, setReviews] = useState([]);   
 
-  const [profile, setProfile] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [previewPhoto, setPreviewPhoto] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+     const [currentUser, setCurrentUser] = useState(null);
+     const [educationPage, setEducationPage] = useState(0);
 
-  const [diplomaPreviewUrl, setDiplomaPreviewUrl] = useState(null);
-  const closeModal = () => setDiplomaPreviewUrl(null);
+     useEffect(() => {
+      axios.get("/api/user") 
+        .then((res) => setCurrentUser(res.data))
+        .catch((err) => console.error("❌ Помилка при отриманні користувача:", err));
+    }, []);
 
-  const toggleEdit = () => setIsEditing(!isEditing);
+    useEffect(() => {
+      axios.get(`/api/nanny-profiles/${profileId}`)
+        .then((res) => {
+          setNanny(res.data);
+          console.log("Айді в NannyProfilePage:", profileId);
+        })
+        .catch((err) => {
+          console.error("Помилка завантаження профілю няні:", err);
+        });
+    }, [profileId]);
+    
 
-  const formatList = (arr) => Array.isArray(arr) && arr.length ? arr.join(", ") : "—";
-
-  const formatDate = (isoDate) => {
-    const date = new Date(isoDate);
-    return date.toLocaleDateString("uk-UA", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const translateGender = (gender) => {
-    switch (gender) {
-      case "female":
-        return "Жіноча";
-      case "male":
-        return "Чоловіча";
-      case "other":
-        return "Інша";
-      default:
-        return "Невідомо";
-    }
-  };
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get("/api/nanny/profile");  
-        setProfile(response.data.profile);
-        console.log("🎯 Отримано профіль:", response.data);
-      } catch (error) {
-        if (error.response?.status === 401) {
-          window.location.href = "/registrationlogin";
-        } else {
-          console.error("Не вдалося отримати профіль:", error);
+    useEffect(() => {
+      if (!nanny || !nanny.user_id) return;
+    
+      const fetchReviews = async () => {
+        try {
+          const response = await axios.get(`/api/reviews/${nanny.user_id}`);
+          console.log("Відгуки, які будуть рендеритись:", response.data);
+          setReviews(response.data);
+        } catch (error) {
+          console.error("Помилка при завантаженні відгуків:", error);
         }
-      }
-    };
+      };
+    
+      fetchReviews();
+    }, [nanny]);
+    
 
-    fetchProfile();
-  }, []);
-
-  const [newEducation, setNewEducation] = useState({
-    institution: "",
-    specialty: "",
-    years: "",
-    diploma_image: null,
-  });
+    useEffect(() => {    
+      axios.get(`/api/nanny-profiles/${id}`)
+        .then((res) => {
+          console.log("Профіль няні з API:", res.data); 
+          setNanny(res.data);
+        })
+        .catch((err) => console.error("Помилка завантаження профілю няні:", err));
+    }, [id]);
   
-  const handleAddEducation = () => {
-    if (newEducation.institution && newEducation.specialty && newEducation.years) {
-      setProfile({
-        ...profile,
-        educations: [...profile.educations, newEducation],
-      });
-      setNewEducation({
-        institution: "",
-        specialty: "",
-        years: "",
-        diploma_image: null,
-      });
-    } else {
-      alert("Будь ласка, заповніть всі поля.");
-    }
+    if (!nanny) return <div>Завантаження...</div>;
+        
+    const averageRating = reviews.length
+    ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
+    : 0;
+  
+  const clients = nanny.total_clients || 100; // placeholder
+  const hoursWorked = nanny.total_hours || 100; // placeholder
+  const genderClass = nanny.gender === "female" ? "female" : "male";
+ 
+
+const educationsPerPage = 2;
+const totalEducationPages = Math.ceil((nanny.educations?.length || 0) / educationsPerPage);
+
+const startEduIndex = educationPage * educationsPerPage;
+const visibleEducations = (nanny.educations || []).slice(startEduIndex, startEduIndex + educationsPerPage);
+
+const handlePrevEdu = () => {
+  setEducationPage((prev) => (prev > 0 ? prev - 1 : prev));
+};
+
+const handleNextEdu = () => {
+  setEducationPage((prev) => (prev < totalEducationPages - 1 ? prev + 1 : prev));
+};
+
+  const getCertificateLabel = (count) => {
+    if (count === 1) return "документ";
+    if (count >= 2 && count <= 4) return "документи";
+    return "документів";
   }; 
-      
-  const saveChanges = async () => {
-    const formData = new FormData();
-    formData.append("first_name", profile.first_name);
-    formData.append("last_name", profile.last_name);
-    formData.append("city", profile.city);
-    formData.append("district", profile.district);
-    formData.append("phone", profile.phone);
-    formData.append("birth_date", profile.birth_date);
-    formData.append("gender", profile.gender);
-    formData.append("experience_years", profile.experience_years);
-    formData.append("hourly_rate", profile.hourly_rate);
 
-    (profile.specialization || []).forEach((item, i) => {
-      formData.append(`specialization[${i}]`, item);
-    });
+  const getreReviewsLabel = (count) => {
+    if (count === 1) return "відгук";
+    if (count >= 2 && count <= 4) return "відгуки";
+    return "відгуків";
+  };
+   
+  const reviewsPerPage = 4;
 
-    (profile.work_schedule || []).forEach((item, i) => {
-      formData.append(`work_schedule[${i}]`, item);
-    });
+  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
 
-    (profile.languages || []).forEach((item, i) => {
-      formData.append(`languages[${i}]`, item);
-    });
-
-    (profile.additional_skills || []).forEach((item, i) => {
-      formData.append(`additional_skills[${i}]`, item);
-    });
-
-    (profile.availability || []).forEach((item, i) => {
-      formData.append(`availability[${i}]`, item);
-    });
-    if (profile.photo instanceof File) {
-      formData.append("photo", profile.photo);
-    }
-
-    if (profile.video instanceof File) {
-      formData.append("video", profile.video);
-    }
-  
-    if (Array.isArray(profile.educations)) {
-      profile.educations.forEach((edu, i) => {
-        formData.append(`education[${i}][institution]`, edu.institution);
-        formData.append(`education[${i}][specialty]`, edu.specialty);
-        formData.append(`education[${i}][years]`, edu.years);
-        if (edu.diploma_image instanceof File) {
-          formData.append(`education[${i}][diploma_image]`, edu.diploma_image);
-        } else if (typeof edu.diploma_image === "string") {
-          formData.append(`education[${i}][existing_diploma_image]`, edu.diploma_image);
-        }
-      });
-    }
-
-    try {
-      const response = await axios.post("/api/nanny/profile", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
-      console.log("👀 Отримані дані:", response.data);
-      setProfile(response.data.profile);
-      setPreviewPhoto(null);
-      setIsEditing(false);
-    } catch (error) {
-      if (error.response?.status === 422) {
-        console.error("⚠️ Валідаційна помилка:", error.response.data.errors);
-        alert("Помилка валідації: " + JSON.stringify(error.response.data.errors));
-      } else {
-        console.error("❌ Помилка збереження профілю:", error);
-      }
-    }
+  const handlePrev = () => {
+    setCurrentPage((prev) => (prev > 0 ? prev - 1 : prev));
   };
 
-  if (!profile || typeof profile !== 'object')  {
-    return (
-      <div className="reg-form-container">
-        <p className="description-light">Завантаження профілю няні...</p>
-      </div>
-    );
-  }
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev));
+  };
+  const isValidPhoto =
+  nanny.photo &&
+  nanny.photo !== "null" &&
+  nanny.photo.trim() !== "";
 
-  console.log("🧾 Профіль у return:", profile);
+  const startIndex = currentPage * reviewsPerPage;
+  const visibleReviews = reviews.slice(startIndex, startIndex + reviewsPerPage);
 
-  return (
-    <>
-    {diplomaPreviewUrl && (
-      <div className="modal-overlay" onClick={closeModal}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <button className="close-button" onClick={closeModal}>✖</button>
-          <img src={diplomaPreviewUrl} alt="Диплом" style={{ maxWidth: "100%", maxHeight: "80vh" }} />
+  const renderStars = (rating, uniqueKey = "") => {
+    return [1, 2, 3, 4, 5].map((index) => {
+      const fillLevel = Math.min(Math.max(rating - index + 1, 0), 1);
+      const gradientId = `starGradient-${uniqueKey}-${index}`;
+  
+      return (
+        <div className="star-wrapper-det" key={index}>
+          <svg
+            viewBox="0 0 20 20"
+            className="star"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient id={gradientId}>
+                <stop offset={`${fillLevel * 100}%`} stopColor="#CC8562" />
+                <stop offset={`${fillLevel * 100}%`} stopColor="#CC856280" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M12 2L14.9 8.62L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L9.1 8.62L12 2Z"
+              fill={`url(#${gradientId})`}
+            />
+          </svg>
         </div>
-      </div>
-    )} 
+      );
+    });    
+  };  
 
-    <div className="profile-container">
-      <h1 className="title-light">Профіль Няні</h1>
-      <div className="description-light">Перевірте та відредагуйте ваші дані нижче:</div>
+  
+  return (
+    <div>
+        <VariantNannyHeader />   
+        <div className="profile-header-nanny">     
+          {currentUser?.id === nanny.user_id && (
+            <div >
+              <button onClick={() => navigate('/nanny/profile/edit')} className="edit-profile-btn">
+                ✎ Редагувати профіль
+              </button>
+            </div>
+          )}          
+        </div> 
+    <div className="nanny-edit-profile"> 
+        {/* ЛІВИЙ СТОВПЕЦЬ */}
+        <div className="left-column"> 
+        <div className={`nanny-colom-color-prof ${genderClass}`}> 
+        <div className="photo-wrapper">
+          <img
+            src={
+              isValidPhoto
+                ? `${baseUrl}/storage/${nanny.photo}`
+                : `${baseUrl}/storage/default-avatar.jpg`
+            }
+            alt="Фото няні"
+            className="nanny-photo-large"
+          />       
+        </div>
+  
+          <div className="rating-stars">
+          {renderStars(averageRating, "avg")}
+          </div>
 
-      <div style={{ marginTop: "20px" }}>
-        <strong>Фото профілю:</strong><br />
-        {isEditing ? (
-          <>
-            <input
-              type="file"
-              accept="image/*"             
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file && file.size > 5 * 1024 * 1024) {
-                  alert("Файл перевищує 5MB. Завантажте менший файл.");
-                  return;
-                }
-                setPreviewPhoto(URL.createObjectURL(file));
-                setProfile({ ...profile, photo: file });
-              }}
-            />
-            {previewPhoto ? (
-              <img
-                src={previewPhoto}
-                alt="Прев’ю фото"
-                className="rounded-image"
-              />
-            ) : (
-              typeof profile.photo === "string" && profile.photo && (
-                <img
-                  src={`${baseUrl}/storage/${profile.photo}`}
-                  alt="Фото профілю"
-                  style={{ width: "150px", borderRadius: "10px" }}
-                />
-              )
-            )}
-          </>
-        ) : (
-          profile.photo && (
-            <img
-              src={`${baseUrl}/storage/${profile.photo}`}
-              alt="Фото профілю"
-              style={{ width: "150px", borderRadius: "10px" }}
-            />
-          )
-        )}
-      </div>
-      {isEditing ? (
-        <input
-          type="text"
-          value={profile.first_name}
-          onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
-        />
-      ) : (
-        <p><strong>Ім’я:</strong> {profile.first_name}</p>
-      )}
+          <div className="client-info">
+            <span>{clients}+ клієнтів</span>
+            <span>&bull;{hoursWorked}+ годин</span>
+          </div>
+        <div className="text-name-nanny">
+          <h1>{nanny.first_name} {nanny.last_name}</h1>
+          {/* <p className="goal">{nanny.goal}</p> */}
+        </div>
+   
+        <div className="nanny-inf-container">
+            <div className="bottom-details-row-nanny">
+              <div className="left-info">
+                <div >
+                  <img src={briefcaseIcon} alt="досвід" className="icon-card" />
+                  <span className="yers-city">{Math.floor(nanny.experience_years)}+ років </span>
+                  <span className="yers-city-text">досвіду</span>
+                </div>
+                <div >
+                  <img src={locationIcon} alt="локація" className="icon-card" />
+                  <span className="yers-city">{nanny.city}, </span>
+                  <span className="yers-city-text">{nanny.district}</span>
+                </div>
+              </div>              
+            </div>
+            <p className="match-text-nanny-prof">Оплата за годину</p>
+              <p style={{
+                fontFamily: "'Comfortaa', sans-serif",
+                fontWeight: 400,
+                fontSize: "14px",
+                lineHeight: "120%",
+                letterSpacing: "-2%",
+                color: "#3A3B61",               
+                paddingTop: "5px",
+                textAlign: "left",
+              }}>
+                середня оплата в місті Київ: 350 грн
+              </p>
+              <div className="rate">
+                {Math.floor(nanny.hourly_rate)} ₴
+              </div>             
+            </div>   
+            </div> 
 
-      {isEditing ? (
-        <input
-          type="text"
-          value={profile.last_name}
-          onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
-        />
-      ) : (
-        <p><strong>Прізвище:</strong> {profile.last_name}</p>
-      )}
-
-      {isEditing ? (
-        <input
-          type="text"
-          value={profile.city}
-          onChange={(e) => setProfile({ ...profile, city: e.target.value })}
-        />
-      ) : (
-        <p><strong>Місто:</strong> {profile.city}</p>
-      )}
-
-      {isEditing ? (
-              <input
-                type="text"
-                value={profile.district}
-                onChange={(e) => setProfile({ ...profile, district: e.target.value })}
-              />
-      ) : (
-        <p><strong>Район:</strong> {profile.district}</p>
-      )}
-
-      {isEditing ? (
-              <input
-                type="text"
-                value={profile.phone}
-                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-              />
-      ) : (
-        <p><strong>Телефон:</strong> {profile.phone}</p>
-      )}
-
-      {isEditing ? (
-              <input
-                type="text"
-                value={profile.birth_date}
-                onChange={(e) => setProfile({ ...profile, birth_date: e.target.value })}
-              />
-      ) : (
-        <p><strong>Дата народження:</strong> {formatDate(profile.birth_date)}</p>
-      )}
-      
-      {isEditing ? (
-              <input
-                type="text"
-                value={profile.gender}
-                onChange={(e) => setProfile({ ...profile, gender: e.target.value })}
-              />
-      ) : (
-        <p><strong>Стать:</strong> {translateGender(profile.gender)}</p>
-      )}
-      
-      {isEditing ? (
-              <input
-                type="text"
-                value={profile.experience_years}
-                onChange={(e) => setProfile({ ...profile, experience_years: e.target.value })}
-              />
-      ) : (
-        <p><strong>Досвід:</strong> {profile.experience_years} років</p>
-      )}
-      
-      {isEditing ? (
-              <input
-                type="text"
-                value={profile.hourly_rate}
-                onChange={(e) => setProfile({ ...profile, hourly_rate: e.target.value })}
-              />
-      ) : (
-        <p><strong>Ціна за годину:</strong> {profile.hourly_rate} грн</p>
-      )} 
-
-      {isEditing ? (
-        <textarea
-          value={profile.specialization?.join(", ")}
-          onChange={(e) =>
-            setProfile({ ...profile, specialization: e.target.value.split(",").map(s => s.trim()) })
-          }
-        />
-      ) : (
-        <p><strong>Спеціалізація:</strong> {profile.specialization?.join(", ")}</p>
-      )}     
-     
-     {isEditing ? (
-        <textarea
-          value={profile.work_schedule?.join(", ")}
-          onChange={(e) =>
-            setProfile({ ...profile, work_schedule: e.target.value.split(",").map(s => s.trim()) })
-          }
-        />
-      ) : (
-        <p><strong>Графік роботи:</strong> {formatList(profile.work_schedule)}</p>
-      )}       
-      
-      <p><strong>Освіта:</strong></p>
-      <ul>
-      {Array.isArray(profile.educations) && profile.educations.map((edu, idx) => (
-        <div key={idx}>
-          {isEditing ? (
-              <>
-                <input
-                  type="text"
-                  value={edu.institution}
-                  onChange={(e) => {
-                    const updated = [...profile.educations];
-                    updated[idx].institution = e.target.value;
-                    setProfile({ ...profile, educations: updated });
-                  }}
-                />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    if (file && file.size > 5 * 1024 * 1024) {
-                      alert("Файл перевищує 5MB. Завантажте менший файл.");
-                      return;
-                    }
-                    const updated = [...profile.educations];
-                    updated[idx].diploma_image = file;
-                    updated[idx].preview = URL.createObjectURL(file);
-                    setProfile({ ...profile, educations: updated });
-                  }}
-                />
-                {edu.preview && <img src={edu.preview} alt="Прев’ю" width="150" />}
-              </>
-            ) : (
-              <>
-              <li>{edu.institution}, {edu.specialty}, {edu.years}</li>
-              {edu.diploma_image && (
-                <p>
-                  📄 <button
-                    style={{ color: "blue", textDecoration: "underline", cursor: "pointer", background: "none", border: "none", padding: 0 }}
-                    onClick={() => setDiplomaPreviewUrl(`${baseUrl}/storage/${edu.diploma_image}`)}
-                  >
-                    Переглянути диплом
-                  </button>
+           {/* Виведення освіти */}
+           {Array.isArray(nanny.educations) && nanny.educations.length > 0 ? (
+            <div className="education-section-prof">
+              <div className="header-edu">
+                <h3 className="edu-title">Освіта</h3>
+                <p className="cert-count">
+                  {nanny.educations.length} {getCertificateLabel(nanny.educations.length)}
                 </p>
-              )}
+              </div>
+
+              <div className="education-list-wrapper">
+              {visibleEducations.map((edu, idx) => (
+                <div key={idx} className="education-card">
+                  <h4 className="institution">{edu.institution}</h4>
+                  <p className="specialty">{edu.specialty}</p>
+                  <div className="document-info">
+                    <div className="doc-text">
+                      <span className="document-title">Документ:</span>
+                      <span className="document-date">{edu.years}</span>
+                    </div>
+                    {edu.diploma_image && (
+                    <div className="document-image-wrapper">
+                      <img
+                        src={`${baseUrl}/storage/${edu.diploma_image}`}
+                        alt="Диплом"
+                        className="document-image"
+                      />
+                      <button
+                        className="view-diploma-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDiplomaPreviewUrl(`${baseUrl}/storage/${edu.diploma_image}`);
+                        }}
+                      >
+                        <img src={eye} alt="Переглянути диплом" />
+                      </button>
+                    </div>
+                  )}  
+                 
+                  {diplomaPreviewUrl && (
+                    <div className="modal-overlay-dipl" onClick={closeModal}>
+                      <div className="modal-content-dipl" onClick={(e) => e.stopPropagation()}>
+                        <button className="close-button" onClick={closeModal}>✖</button>
+                        <img
+                          src={diplomaPreviewUrl}
+                          alt="Диплом"
+                          style={{ maxWidth: "100%", maxHeight: "80vh" }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  </div>
+                 </div>
+                
+              ))}
+              </div>
+              <div className="education-navigation">
+                <button className="nav-arrow left" onClick={handlePrevEdu} disabled={educationPage === 0}>
+                  &#8592;
+                </button>
+                <span className="page-info">
+                  {startEduIndex + 1}–{Math.min(startEduIndex + educationsPerPage, nanny.educations.length)} з {nanny.educations.length} документів
+                </span>
+                <button className="nav-arrow right" onClick={handleNextEdu} disabled={educationPage === totalEducationPages - 1}>
+                  &#8594;
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="education-section empty-education">
+              <div className="header-edu">
+                <h3 className="edu-title">Освіта</h3>
+                <p className="cert-count">0 документів</p>
+              </div>                
+              <BearPlaceholder />
+            </div>
+          )}
+        </div>
+  
+        {/* ЦЕНТРАЛЬНИЙ СТОВПЕЦЬ */}
+        <div className="center-column">       
+            <div className="block">
+            <p className="title-text-nanny-detail">Про мене</p>
+            <p className="nanny-text"
+          style={{
+            maxHeight: isExpanded ? "none" : "132px", 
+            overflow: "hidden", 
+            transition: "max-height 0.3s ease" 
+          }}
+          >
+            {nanny.about_me && nanny.about_me.trim().length > 0
+              ? nanny.about_me
+              : " — "}
+          </p>
+          <div className="button-container">
+          <button
+            className="read-next-btn"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {isExpanded ? "Згорнути" : "Читати далі"}
+          </button>
+          </div>
+          </div>
+  
+          <div className="block">
+            <p className="title-text-nanny-detail">Мови спілкування</p>
+            <div className="tags-row">
+              {nanny.languages?.map((item, idx) => <span key={idx} className="pill">{item}</span>)}
+            </div>  
+          </div>
+
+          <div className="block">
+            <p className="title-text-nanny-detail">Графік роботи</p>
+            <div className="tags-row">
+              {nanny.work_schedule?.map((item, idx) => <span key={idx} className="pill">{item}</span>)}
+            </div>           
+          </div>
+            
+          <div className="block">
+            <p className="title-text-nanny-detail">Як проходить робота</p>
+            <p className="nanny-text"
+            style={{
+              maxHeight: isExpanded ? "none" : "132px", 
+              overflow: "hidden", 
+              transition: "max-height 0.3s ease" 
+            }}
+            >
+               {nanny.goat && nanny.goat.trim().length > 0
+                  ? nanny.goat
+                  : " — "}        
+            </p>
+            <div className="button-container">
+            <button
+              className="read-next-btn"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              {isExpanded ? "Згорнути" : "Читати далі"}
+            </button>
+            </div>
+          </div>
+          
+          <div className="block">
+          <p className="title-text-nanny-detail">Напрями роботи</p>
+            <div className="tags-row">
+              {nanny.specialization?.map((item, idx) => <span key={idx} className="pill">{item}</span>)}
+            </div>
+            </div>
+            
+            <div className="block">
+            <p className="title-text-nanny-detail">Додаткові навички</p>
+            <div className="tags-row">
+              {nanny.additional_skills?.map((item, idx) => <span key={idx} className="pill">{item}</span>)}
+            </div>           
+          </div>
+          
+        </div>
+  
+        {/* ПРАВИЙ СТОВПЕЦЬ */}
+        <div className="right-column-nanny">
+        {/* Відео секція */}
+        <div className="video-section">
+          <div className="video-wrapper">
+            {nanny.video ? (
+              <video width="417" height="740" style={{ borderRadius: "20px" }} controls>
+                <source src={`${baseUrl}/storage/${nanny.video}`} type="video/mp4" />
+                Ваш браузер не підтримує відео.
+              </video>
+            ) : (
+              <div className="bear-placeholder-video">
+                <BearPlaceholder />               
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Фото секція */}
+        <div className="photo-section">
+          <div className="photo-grid">
+            {Array.isArray(nanny.gallery) && nanny.gallery.length > 0 ? (
+              nanny.gallery.map((img, idx) => (
+                <div key={idx} className="photo-item">
+                  <img
+                    src={`${baseUrl}/storage/${img}`}
+                    alt={`Фото ${idx + 1}`}
+                    className="photo-item-img"
+                  />
+                </div>
+              ))
+            ) : (
+              <>
+              {[...Array(8)].map((_, idx) => (
+                <div key={idx} className="photo-item" />
+              ))}
+              <div className="bear-center-on-photos">
+                <BearPlaceholder />
+              </div>
             </>
             )}
           </div>
-        ))}
-      </ul>  
-      {isEditing && !profile.educations?.length && (
-  <div>
-    <h3>Додати освіту</h3>
-    <input
-      type="text"
-      placeholder="Навчальний заклад"
-      value={newEducation.institution}
-      onChange={(e) => setNewEducation({ ...newEducation, institution: e.target.value })}
-    />
-    <input
-      type="text"
-      placeholder="Спеціальність"
-      value={newEducation.specialty}
-      onChange={(e) => setNewEducation({ ...newEducation, specialty: e.target.value })}
-    />
-    <input
-      type="text"
-      placeholder="Рік закінчення"
-      value={newEducation.years}
-      onChange={(e) => setNewEducation({ ...newEducation, years: e.target.value })}
-    />
-    <input
-      type="file"
-      accept="image/*"
-      onChange={(e) => setNewEducation({ ...newEducation, diploma_image: e.target.files[0] })}
-    />
-    <button onClick={handleAddEducation}>Додати освіту</button>
-  </div>
-)}
-   
-      {isEditing ? (
-        <textarea
-          value={profile.languages?.join(", ")}
-          onChange={(e) =>
-            setProfile({ ...profile, languages: e.target.value.split(",").map(s => s.trim()) })
-          }
-        />
-      ) : (
-        <p><strong>Мови:</strong> {profile.languages?.join(", ")}</p>
-      )}
-
-      {isEditing ? (
-        <textarea
-          value={profile.additional_skills?.join(", ")}
-          onChange={(e) =>
-            setProfile({ ...profile, additional_skills: e.target.value.split(",").map(s => s.trim()) })
-          }
-        />
-      ) : (
-        <p><strong>Додаткові навички:</strong> {profile.additional_skills?.join(", ")}</p>
-      )}
-      
-      {isEditing ? (
-        <textarea
-          value={profile.availability?.join(", ")}
-          onChange={(e) =>
-            setProfile({ ...profile, availability: e.target.value.split(",").map(s => s.trim()) })
-          }
-        />
-      ) : (
-        <p><strong>Доступність:</strong> {profile.availability?.join(", ")}</p>
-      )}
-      {profile.video && (
-      <video width="400" height="300" controls style={{ borderRadius: "10px" }}>
-        <source src={`${baseUrl}/storage/${profile.video}`} type="video/mp4" />
-        Ваш браузер не підтримує відео.
-      </video>
-      )}
-      <input
-        type="file"
-        accept="video/*"
-        onChange={(e) => {
-          const file = e.target.files[0];
-          if (file && file.size > 20 * 1024 * 1024) {
-            alert("Відео перевищує 20MB. Завантажте менше.");
-            return;
-          }
-          setProfile({ ...profile, video: file });
-        }}
-      />
-      
-   
-      <div style={{ marginTop: "20px" }}>
-        {!isEditing ? (
-          <button className="option-pill" onClick={toggleEdit}>Редагувати</button>
-        ) : (
-          <>
-            <button className="option-pill" onClick={saveChanges}>Зберегти</button>
-            <button className="option-pill" onClick={toggleEdit}>Скасувати</button>
-          </>
-        )}
+        </div>
+      </div>          
       </div>
-    </div>
-    </>
-  );
-};
+           
+         {/* Відгуки секція */}
+          <div className="reviews-section-nanny">
+            <div className="review-header">
+              <h3>Відгуки</h3>
+              {reviews.length > 0 && (
+                <div className="review-summary">
+                  <span className="review-count">
+                    {reviews.length} {getreReviewsLabel(reviews.length)}
+                  </span>
+                  <span className="review-average">
+                  {averageRating.toFixed(1)}
+                  <span className="stars">
+                  {renderStars(averageRating, "avg")}
+                  </span>
+                </span>
+                </div>
+              )}
+            </div>
+
+            <div className="reviews-slider">
+              {visibleReviews.length > 0 ? (
+                  visibleReviews.map((review, idx) => (
+                    <div key={idx} className="review-item">
+                      <img
+                        src={
+                          review.parent_profile?.photo
+                            ? `${baseUrl}/storage/${review.parent_profile.photo}`
+                            : `${baseUrl}/storage/default-avatar.jpg`
+                        }
+                        alt="Аватар"
+                        className="review-avatar"
+                      />
+                    <div className="review-text">
+                      <strong className="name-parent-rev">
+                        {review.parent_profile?.first_name}{" "}
+                        {review.parent_profile?.last_name?.charAt(0)}.
+                      </strong>
+                      <div className="stars">
+                      {renderStars(review.rating, review.id || idx)}
+                      </div>
+                      <p className="coment-text">{review.comment}</p>
+                    </div>
+                    <div className="review-date">
+                      {new Date(review.created_at).toLocaleDateString("uk-UA", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric"
+                      })}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="bear-placeholder-reviews">
+                  <BearPlaceholder />
+                </div>
+              )}
+            </div>
+
+            {/* Напис внизу */}
+            {reviews.length > 0 && (
+              <div className="review-footer">               
+                <div className="review-navigation">
+                <button className="nav-arrow left" onClick={handlePrev} disabled={currentPage === 0}>
+                  &#8592;
+                </button>
+                <span className="page-info">
+                  {startIndex + 1}-{Math.min(startIndex + reviewsPerPage, reviews.length)} з {reviews.length} відгуків
+                </span>
+                <button className="nav-arrow right" onClick={handleNext} disabled={currentPage === totalPages - 1}>
+                  &#8594;
+                </button>
+              </div>
+              </div>
+            )}
+          </div>
+        
+          <Footer/>
+      </div>
+    );
+  };
 
 export default NannyProfilePage;

@@ -69,9 +69,13 @@ const AllNanniesPage = () => {
         case "За стажем":
           filtered = [...filtered].sort((a, b) => b.experience_years - a.experience_years);
           break;
-        case "За відгуками":
-          filtered = [...filtered].sort((a, b) => b.rating - a.rating);
-          break;
+          case "За відгуками":
+            filtered = [...filtered].sort((a, b) => {
+              const ratingA = a.reviews_avg_rating ?? 0;
+              const ratingB = b.reviews_avg_rating ?? 0;
+              return ratingB - ratingA;
+            });
+            break;          
         default:
           break;
       }
@@ -140,10 +144,26 @@ const AllNanniesPage = () => {
       }, [fetchAllNannies]);
        
     
-    const handleGoToSurvey = () => {
-      navigate("/registration/parent/survey?from=nanny-list");
-    };
-   
+      const handleGoToSurvey = async () => {
+        const token = localStorage.getItem("authToken");
+      
+        if (!token) {
+          alert("Сесія завершена. Увійдіть знову.");
+          navigate("/registrationlogin");
+          return;
+        }
+      
+        // Опціонально перевірка, чи токен ще дійсний
+        try {
+          await axios.get("/api/parent/profile", { withCredentials: true });
+          navigate("/registration/parent/survey?from=nanny-list");
+        } catch (error) {
+          console.warn("Сесія неактивна:", error);
+          alert("Сесія завершена. Увійдіть знову.");
+          navigate("/registrationlogin");
+        }
+      };      
+        
   
     if (loading) {
       return <p>Завантаження...</p>
@@ -290,7 +310,7 @@ const AllNanniesPage = () => {
               />
             ))
           ) : (
-            <p>Нянь не знайдено</p>
+            <p className="description-dark">Нянь не знайдено</p>        
           )}
         </div>   
   

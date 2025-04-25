@@ -1,0 +1,279 @@
+.booking-container {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .booking-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;   
+  }
+
+  .back-and-step {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .step-indicator {
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 16px;
+    color: #3A3B61;
+    font-weight: 500;
+    margin-left: auto;
+    margin-top: -20px;
+    margin-right: 20px;  
+  }
+
+  .btn-next-booking {
+    display: flex;
+  align-items: center;
+  }
+
+  .booking-header-row {
+    display: flex; 
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  .nanny-profile-preview-edit-booking {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .nanny-booking-avatar-edit {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .booking-title{
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 100px;
+    line-height: 105%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;
+  }
+
+  .booking-subtitle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .booking-subtitle {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;
+  }
+  .booking-description {
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 14px;  
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: right;
+    color: #3A3B61;
+    margin-right: 20px;
+  }
+  
+  .date-selector {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; 
+  }
+  
+  .date-button {
+    background: #fff;    
+    padding: 12px 16px;   
+    cursor: pointer;
+    font-family: 'Comfortaa', sans-serif;
+    width: 196;
+    height: 100;
+    border-radius: 20px;
+    border: 1px solid var(--Color-2, #3A3B61);
+    color: #3A3B61;
+    width: 196px;
+    height: 100px;
+    margin: 0 auto; 
+  }
+  
+  .date-button.active {
+    background: var(--Color-6, #CC8562);
+    color: #FFFAEE;
+    font-weight: bold;
+  }
+
+  .date-button:hover {
+    background: var(--Color-2, #3A3B61);
+    color: #FFFAEE;
+  }
+
+  .day-label {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 10px;   
+  }
+  .date-labe {
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: center;
+  }
+
+  .date-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .nav-arrow-booking {
+    font-size: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #3a3b61;
+    font-weight: bold;    
+    margin-bottom: 20px;
+  }
+  
+  .nav-arrow-booking:disabled {
+    font-size: 25px;
+    color: #3A3B61;
+    cursor: default;
+    pointer-events: none;
+  }
+  
+.timezone-label {
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;
+    text-align: left; 
+}  
+.time-container{  
+    display: block;
+    width: 100%;
+    max-width: 1080px; 
+    margin: 0 auto; 
+    text-align: left;
+    padding-left: 20px;
+}
+
+  .time-slot-grid {
+    display: grid;
+    justify-content: start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .timezone-label {
+    color: #3a3b61;
+    margin-bottom: 8px;
+    font-family: 'Comfortaa', sans-serif;  
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;    
+}
+  
+  .time-slot {
+    padding: 10px 18px;
+    background:  #F9D8E080;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid var(--Color-2, #3A3B61);
+    width: 196px;
+    height: 50px;
+  }
+  
+  .time-slot.selected {
+    background: #3a3b61;
+    color: #fff;
+  }
+  .time-slot:hover {
+    background-color: var(--Color-dark, #E5C7CE);
+    color: #3A3B61;
+  }
+  
+  .next-button {
+    background: #44c4b8;
+    border: none;
+    color: #FFFAEE;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 105%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: uppercase;   
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .next-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  } 
+
+  .next-button:hover {
+    border: 2px solid #44c4b8;
+    color: #44c4b8;
+  }
+  .next-button:active{
+    background-color: #3A3B61;
+    color: #FFFAEE;
+  }
+
+  
+  @media (max-width: 600px) {
+    .nanny-profile-preview-edit-booking {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  @media (max-width: 600px) {
+    .booking-subtitle-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  }
+  

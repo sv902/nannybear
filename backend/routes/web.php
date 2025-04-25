@@ -41,9 +41,9 @@ Route::get('/reset-password/{token}', function () {
 })->where('token', '.*');
 
 
-Route::middleware(['auth', 'profile.complete'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});
+// Route::middleware(['auth', 'profile.complete'])->group(function () {
+//     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// });
 
 // Адмін-панель (лише для адмінів)
 // Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {

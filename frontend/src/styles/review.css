@@ -1,0 +1,334 @@
+.review-page-container {
+    max-width: 1450px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Comfortaa', sans-serif;
+  }
+  
+  .review-page-title {
+    font-family: 'Oswald', sans-serif;   
+    font-weight: 400;
+    font-size: 100px;
+    line-height: 105%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  .review-content {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .nanny-colom-color {
+    flex: 1 1 350px;
+    background-color: #FFF5F2;
+    border-radius: 24px;
+    padding: 20px;
+    text-align: center;
+    color: #3A3B61;
+    max-width: 417px;
+  }
+  
+  .female {
+    background-color: #F9D8E080;
+  } 
+
+  .male {
+    background-color: #ADD1F580;
+  }
+  
+  .nanny-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .stars-row .star {
+    color: #CC8562;
+    font-size: 20px;
+    margin: 0 1px;
+  }
+  
+  .nanny-name {
+    font-weight: 700;
+    font-size: 20px;
+    margin: 10px 0;
+  }
+  .title-text-nanny-rev{
+    font-family: 'Oswald', sans-serif; 
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;
+    text-align: left;
+    padding-left: 20px;
+  }
+  
+  .match-bar-label {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+  }
+  
+  .match-bar {
+    background: #E0E0E0;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .match-fill {
+    background: #66c0a0;
+    height: 100%;
+    color: white;
+    font-size: 13px;
+    line-height: 20px;
+  }
+  
+  .info-row {
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .rate-label {
+    font-weight: 700;
+    font-size: 16px;
+  }
+  
+  .rate-note {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .rate-price {
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 5px;
+  }
+  
+  .buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .chat-btn, .book-btn {
+    background: white;
+    border: 1px solid #3A3B61;
+    color: #3A3B61;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+    /*  */
+    .icon-btn-chat,
+    .icon-btn-calendar {
+      width: 28px;
+      height: 28px;
+      margin-right: 10px; 
+      display: inline-block;
+      background-repeat: no-repeat;
+      background-size: contain;
+      vertical-align: middle;
+    }
+    
+    .icon-btn-chat {
+      background-image: url("../assets/icons/chat.svg");
+    }
+    
+    .chat-btn:hover .icon-btn-chat {
+      background-image: url("../assets/icons/chat-dark.svg");
+    }
+    
+    .icon-btn-calendar {
+      background-image: url("../assets/icons/calendar.svg");
+    }
+    
+    .calendar-btn:hover .icon-btn-calendar {
+      background-image: url("../assets/icons/calendar-dark.svg");
+    }
+    
+    /*  */
+  
+  .review-form-block {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    /* gap: 10px; */
+  }
+
+  .star-container{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin-bottom: 10px;
+  }
+  
+  .review-subtitle {
+    font-family: 'Oswald', sans-serif;   
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;
+  }
+  
+  .rating-stars-rev {
+    display: flex;
+    gap: 5px;  
+  }
+  
+  .star-btn-rev {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ccc; 
+    font-size: 32px;   
+  }
+  
+  .star-btn-rev.active {
+    color: #CC8562;
+  }
+  
+  .review-comment-label {
+    font-size: 20px;
+    font-family: 'Oswald', sans-serif; 
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;    
+  }
+  
+  .review-hint {
+    font-size: 14px;
+    color: #444;
+    max-width: 600px;
+  }
+  .textarea-wrapper {    
+    position: relative;
+    margin: 0;
+  }
+
+ .review-textarea {
+  width: 100%;
+  min-height: 512px;
+  border-radius: 20px;
+  border: none;
+  background: #EBE6DB;
+  padding: 15px;
+  resize: none;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  box-sizing: border-box;
+  display: block;
+}
+  
+  .review-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;  
+  } 
+   
+  .char-counter {    
+    text-align: right;    
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #3A3B61CC;
+    position: absolute;
+    right: 20px;
+    bottom: 55px;
+    }
+
+    .anon-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #3A3B61;
+      font-family: 'Comfortaa', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 120%;
+      letter-spacing: -2%;
+      text-transform: uppercase;  
+      margin-top: -20px;
+      margin-bottom: 20px;
+    }
+ 
+.custom-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #fff;
+  border: 2px solid #3A3B61;
+  padding: 0;
+  margin: 0;
+  width: 16px;
+  height:16px;
+  border-radius: 50%; 
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.custom-checkbox:checked::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #3A3B61; 
+}
+   
+  .submit-review-btn {
+    align-self: flex-start;
+    background: #44c4b8;
+    color: #FFFAEE;   
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    height: 50px;
+    font-family: 'Oswald', sans-serif; 
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 105%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: uppercase;
+    min-width: 307px;
+    margin-left: 55px;
+  }
+  .submit-review-btn:hover{
+    background-color: #FFFAEE;
+    color: #44c4b8;
+    border: 2px solid #44c4b8;
+  }
+  .error-text {
+    color: #44c4b8;
+    font-size: 14px;
+    align-self: start;
+  }

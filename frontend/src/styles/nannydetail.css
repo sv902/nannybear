@@ -16,7 +16,8 @@
   .left-column {
     display: flex;
     flex-direction: column;
-    align-items: center;      
+    align-items: center;  
+     min-height: 1822px;       
   }
 
   .nanny-colom-color{
@@ -138,7 +139,48 @@
     margin: 10px 20px 20px 20px;
   }
 
+  .chat-btn-nanny-det {
+    font-family: Comfortaa;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    color: #3A3B61;
+    border: 2px solid #3A3B61;
+    background: #FFFAEE;
+    border-radius: 30px;
+    height: 42px;
+    min-width: 119px;
+  }
+
+  .chat-btn-nanny-det:hover {
+    background-color: #3A3B61;
+    color:#FFFAEE;
+  }
+
+   /*  */
+   .icon-btn-chat{
+     width: 28px;
+     height: 28px;
+     margin-right: 10px; 
+     display: inline-block;
+     background-repeat: no-repeat;
+     background-size: contain;
+     vertical-align: middle;
+   }
+   
+   .icon-btn-chat {
+     background-image: url("../assets/icons/chat.svg");
+   }
+   
+   .chat-btn-nanny-det:hover .icon-btn-chat {
+     background-image: url("../assets/icons/chat-dark.svg");
+   }
+    
   .education-section {
+    display: flex;
+    flex-direction: column;
     margin-top: 20px;
     width: 100%;
     /* max-width: 417px; */
@@ -146,6 +188,12 @@
     min-height: 1042px;
     border: 1px solid #3A3B61;
     border-radius: 20px; 
+  }
+
+  .education-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
 
   .header-edu{
@@ -279,7 +327,7 @@
     height: 17px;
   }
 
-  .modal-overlay {
+  .modal-overlay-dipl {
     position: fixed;
     top: 0;
     left: 0;
@@ -292,7 +340,7 @@
     z-index: 999;
   }
   
-  .modal-content {
+  .modal-content-dipl {
     position: relative;
     background-color: white;
     padding: 20px;
@@ -717,7 +765,7 @@
     gap: 10px;   
   }
   
-  .stars {
+  /* .stars {
     display: inline-flex;
     gap: 4px;     
   }
@@ -732,6 +780,33 @@
     
   .complaint-button {
     margin-top: 20px;
+  } */
+
+  .star-wrapper-det {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    margin-right: 2px;
+  }
+  
+  .star-bg,
+  .star-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+  }
+  
+  .star-fill-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   .review-date {
@@ -774,6 +849,26 @@
     align-items: center;
     margin-top: 24px;
     padding: 0 10px;
+  }
+
+  .review-navigation button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px 10px;
+    color: #3A3B61;
+    transition: color 0.2s ease;
+  }
+  
+  .review-navigation button:disabled {
+    color: #ccc;
+    cursor: default;
+  }
+  
+  .review-navigation button:hover:not(:disabled) {
+    color: #3A3B61;
+    font-size: 25px;
   }
   
   .nav-arrow {    

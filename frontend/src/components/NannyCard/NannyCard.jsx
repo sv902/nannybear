@@ -1,11 +1,11 @@
-import React, {useMemo, useState} from "react";
+import React, { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/nannycard.css";
 import briefcaseIcon from "../../assets/icons/briefcase.svg";
 import locationIcon from "../../assets/icons/location.svg";
-import chatIcon from "../../assets/icons/chat.svg";
-import calendarIcon from "../../assets/icons/calendar.svg";
+
 import { useFavorites } from "../../context/FavoritesContext";
+import axios from "../../axiosConfig";
 
 
 const NannyCard = ({ nanny }) => {
@@ -17,13 +17,37 @@ const NannyCard = ({ nanny }) => {
   const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
   const genderClass = nanny.gender === "female" ? "female" : "male";
-  const avatar = nanny.photo ? `${baseUrl}/storage/${nanny.photo}` : "https://via.placeholder.com/100";
+  const avatar = nanny.photo ? `${baseUrl}/storage/${nanny.photo}` : `${baseUrl}/storage/default-avatar.jpg`;
+  const [reviews, setReviews] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);  
 
-  const averageRating = useMemo(() => Math.round(nanny.average_rating) || 3.5, [nanny.average_rating]);// placeholder
-  const reviewsCount = nanny.reviews_count || 100; // placeholder
+  const averageRating =
+  reviews.length > 0
+    ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
+    : 3.5;
+
+  const reviewsCount = reviews.length || 100;// placeholder
+  
   const clients = nanny.total_clients || 100; // placeholder
   const hoursWorked = nanny.total_hours || 100; // placeholder
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!nanny || !nanny.user_id) return;
+  
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get(`/api/reviews/${nanny.user_id}`);
+        setReviews(response.data);
+        setIsLoaded(true); 
+      } catch (error) {
+        console.error("Помилка при завантаженні відгуків:", error);
+        setIsLoaded(true);
+      }
+    };
+  
+    fetchReviews();
+  }, [nanny]);
 
   return (
     <div className={`nanny-card`} onClick={() => navigate(`/nanny/${nanny.id}`)}>
@@ -34,7 +58,7 @@ const NannyCard = ({ nanny }) => {
           
           <div className="nanny-name-reviews">
           <h3 className="nanny-name">{nanny.first_name || "Без імені"}</h3>
-              <span className="reviews">{reviewsCount}+ відгуків</span> 
+              <span className="reviews"> {isLoaded ? `${reviewsCount}+ відгуків` : "Завантаження..."}</span> 
               <div className="client-info">
               <span>{clients}+ клієнтів</span>
               <span>&bull;{hoursWorked}+ годин</span>
@@ -69,8 +93,11 @@ const NannyCard = ({ nanny }) => {
           </button>
 
           <div className="rating-stars-card">
-            {[1, 2, 3, 4, 5].map((i) => {
-              const fillLevel = Math.min(Math.max(averageRating - i + 1, 0), 1); // від 0 до 1
+          {[1, 2, 3, 4, 5].map((i) => {
+    const fillLevel = averageRating
+      ? Math.min(Math.max(averageRating - i + 1, 0), 1)
+      : 0.7; // placeholder
+
               return (
                 <div className="star-wrapper" key={i}>
                   <svg
@@ -79,14 +106,14 @@ const NannyCard = ({ nanny }) => {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <defs>
-                      <linearGradient id={`starGradient-${i}`}>
+                      <linearGradient id={`starGradient-${nanny.id}-${i}`}>
                         <stop offset={`${fillLevel * 100}%`} stopColor="#CC8562" />
                         <stop offset={`${fillLevel * 100}%`} stopColor="#CC856280" />
                       </linearGradient>
                     </defs>
                     <path
                       d="M12 2L14.9 8.62L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L9.1 8.62L12 2Z"
-                      fill={`url(#starGradient-${i})`}
+                      fill={`url(#starGradient-${nanny.id}-${i})`}
                     />
                   </svg>
                 </div>
@@ -148,16 +175,15 @@ const NannyCard = ({ nanny }) => {
             navigate(`/chat/${nanny.id}`);
           }}
         >
-          <img src={chatIcon} alt="чат" className="icon-btn-card" />
-           Чат</button>
+                   <span className="icon-btn-chat" /> Чат
+                  </button>
         <button className="calendar-btn"
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/booking/${nanny.id}`);
           }}
         >
-          <img src={calendarIcon} alt="календар" className="icon-btn-card" />
-           Запланувати</button>
+          <span className="icon-btn-calendar" /> Запланувати</button>
       </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use App\Models\Booking;
 
 class ReviewController extends Controller
 {
@@ -52,6 +53,16 @@ class ReviewController extends Controller
 
             if ($existingReview) {
                 return response()->json(['error' => 'Ви вже залишили відгук для цієї няні'], 400);
+            }
+
+            // Перевірити, чи існує бронювання між цим батьком і нянею
+            $bookingExists = Booking::where('parent_id', $user->id)
+            ->where('nanny_id', $validated['nanny_id'])
+            ->whereDate('date', '<=', now())
+            ->exists();
+
+            if (!$bookingExists) {
+            return response()->json(['error' => 'Ви можете залишити відгук лише після зустрічі з нянею'], 403);
             }
 
             $review = Review::create([
@@ -152,4 +163,20 @@ class ReviewController extends Controller
             return response()->json(['errors' => $e->errors()], 422);
         }
     }
+    
+    public function getParentReviews($user_id)
+    {
+        $reviews = Review::with('nanny_profile') // якщо є зв’язок
+            ->where('parent_profile_id', function ($q) use ($user_id) {
+                $q->select('id')
+                ->from('parent_profiles')
+                ->where('user_id', $user_id)
+                ->limit(1);
+            })
+            ->latest()
+            ->get();
+
+        return response()->json($reviews);
+    }
+
 }

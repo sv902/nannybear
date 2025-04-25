@@ -9,14 +9,17 @@ class UserProfileController extends Controller
 {
     public function show($id)
     {
+        \Log::info("Перевірка профілю для user_id: $id");
+
         $user = User::with(['nannyProfile', 'parentProfile'])->find($id);
     
         if (!$user) {
+            \Log::warning("❌ Користувача не знайдено: $id");
             return response()->json(['message' => 'Користувача не знайдено'], 404);
         }
     
         // Визначити роль (вона є в users.role)
-        $role = $user->role;
+        $role = $user->role->name;
     
         // Ім'я та прізвище — беремо з профілю залежно від ролі
         if ($role === 'nanny' && $user->nannyProfile) {
@@ -36,5 +39,20 @@ class UserProfileController extends Controller
             'role' => $role,
         ]);
     }    
+
+    public function showByParent($userId)
+    {
+        $reviews = \App\Models\ParentReview::with([
+            'nanny.user',       // дані про няню, включаючи ім’я, прізвище
+            'parent.user',      // дані про батька (для перевірки ролі або фото)
+        ])
+        ->whereHas('parent', function ($q) use ($userId) {
+            $q->where('user_id', $userId);
+        })
+        ->orderByDesc('created_at')
+        ->get();
+
+        return response()->json($reviews);
+    }
 
 }
