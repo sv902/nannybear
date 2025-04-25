@@ -15,15 +15,17 @@ const SurveyStep1 = ({onNext}) => {
 
   const handleBack = () => {
     if (from === "nanny-list") {
-      navigate("/nanny-profiles"); 
+      navigate("/nanny-profiles");
     } else if (from === "settings") {
-      navigate("/parent-profiles"); 
+      navigate("/parent-profiles");
+    } else if (from === "edit") {
+      navigate("/parent/profile/edit");
     } else {
-      navigate("/registration/parent/profile?step=3"); 
+      navigate("/registration/parent/profile?step=3");
     }
   };
 
-  return <div>
+  return <div className="survey-container-global">
      <button onClick={handleBack} className="back-button-dark">
         <span className="back-text">НАЗАД</span>
         <span className="back-arrow-dark"></span>
@@ -50,10 +52,24 @@ const SurveyStep1 = ({onNext}) => {
     </div>
 
     <p className="description-light-leter">
-      <a href="/parent-profiles" style={{ textDecoration: "underline", color: "#3A3B61" }}>
+      <span
+        onClick={() => {
+          if (from === "nanny-list") {
+            navigate("/nanny-profiles");
+          } else if (from === "settings") {
+            navigate("/parent-profiles");
+          } else if (from === "edit") {
+            navigate("/parent/profile/edit");
+          } else {
+            navigate("/"); // або інша логіка за замовчуванням
+          }
+        }}
+        style={{ textDecoration: "underline", color: "#3A3B61", cursor: "pointer" }}
+      >
         Заповнити пізніше
-      </a>
+      </span>
     </p>
+
   </div>;
 };
 

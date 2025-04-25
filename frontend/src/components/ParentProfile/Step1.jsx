@@ -19,9 +19,22 @@ const Step1 = ({ formData, setFormData, onNext }) => {
     setErrors({}); 
   };
 
+  const updateNestedAddress = (field, value) => {
+    const updatedAddresses = [...(formData.addresses || [{}])];
+    updatedAddresses[0][field] = value;
+    setFormData((prev) => ({
+      ...prev,
+      addresses: updatedAddresses,
+    }));
+  };
+
   const handleNextClick = () => {
     let newErrors = {};
-    const requiredFields = ["firstName", "city", "phone", "birthDay", "birthMonth", "birthYear"];
+    const requiredFields = ["firstName", "phone", "birthDay", "birthMonth", "birthYear"];
+
+    if (!formData.addresses?.[0]?.city) {
+      newErrors.city = "Це поле обов’язкове";
+    }
     
     requiredFields.forEach(field => {
       if (!formData[field]) {
@@ -79,8 +92,8 @@ const Step1 = ({ formData, setFormData, onNext }) => {
         type="text"
         name="city"
         placeholder="Ваше місто..."
-        value={formData.city || ""}
-        onChange={handleChange}
+        value={formData.addresses?.[0]?.city || ""}
+        onChange={(e) => updateNestedAddress("city", e.target.value)}
         required
       />
       <div className="name-conteiner">

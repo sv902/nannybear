@@ -56,8 +56,7 @@ class NannyProfile extends Model
     }
 
     public function reviews()
-    {
-        // return $this->hasMany(Review::class, 'nanny_id');
+    {        
         return $this->hasMany(Review::class, 'nanny_id', 'user_id');
     }
 
@@ -71,4 +70,10 @@ class NannyProfile extends Model
     {
         return $this->hasMany(FavoriteNanny::class);
     }
+
+    public function parentReviews()
+    {
+        return $this->hasMany(\App\Models\ParentReview::class);
+    }
+
 }

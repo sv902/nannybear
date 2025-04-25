@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reported_user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('submitted_by_id')->constrained('users')->onDelete('cascade');
-            $table->string('reason');
-            $table->text('details')->nullable();
-            $table->enum('status', ['new', 'in_review', 'resolved'])->default('new');
+            $table->unsignedBigInteger('reported_user_id');
+            $table->unsignedBigInteger('reporter_user_id')->nullable(); // той хто скаржиться
+            $table->json('reason');
+            $table->text('details');
             $table->timestamps();
+        
+            $table->foreign('reported_user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('reporter_user_id')->references('id')->on('users')->onDelete('set null');
         });
         
     }

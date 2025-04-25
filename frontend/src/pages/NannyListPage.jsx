@@ -87,8 +87,12 @@ const NannyListPage = () => {
         filtered = [...filtered].sort((a, b) => b.experience_years - a.experience_years);
         break;
       case "За відгуками":
-        filtered = [...filtered].sort((a, b) => b.rating - a.rating);
-        break;
+          filtered = [...filtered].sort((a, b) => {
+            const ratingA = a.reviews_avg_rating ?? 0;
+            const ratingB = b.reviews_avg_rating ?? 0;
+            return ratingB - ratingA;
+          });
+          break; 
       default:
         break;
     }
@@ -352,7 +356,7 @@ const NannyListPage = () => {
             />
           ))
         ) : (
-          <p>Нянь не знайдено</p>
+          <p className="description-dark">Нянь не знайдено</p>
         )}
       </div>
 

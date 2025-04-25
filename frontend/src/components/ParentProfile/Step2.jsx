@@ -8,8 +8,8 @@ const Step2 = ({ formData, setFormData, onNext, onBack }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const addChild = () => {
-    if (children.length >= 10) {
-      alert("Максимальна кількість дітей — 10");
+    if (children.length >= 14) {
+      alert("Максимальна кількість дітей — 14");
       return;
     }
   

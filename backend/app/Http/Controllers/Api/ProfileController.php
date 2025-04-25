@@ -18,12 +18,16 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         if ($user->role?->name === 'parent' && !$user->parentProfile) {
-            $user->parentProfile()->create();
+            $user->parentProfile()->create([
+                'photo' => 'default-avatar.jpg',
+            ]);
             return response()->json(['message' => 'Профіль батька створено']);
         }
 
         if ($user->role?->name === 'nanny' && !$user->nannyProfile) {
-            $user->nannyProfile()->create();
+            $user->nannyProfile()->create([
+                'photo' => 'default-avatar.jpg',
+            ]);
             return response()->json(['message' => 'Профіль няні створено']);
         }
 
@@ -44,12 +48,16 @@ class ProfileController extends Controller
         // Спочатку валідація
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'city' => 'required|string|max:100',
-            'district' => 'nullable|string|max:100',
-            'address' => 'nullable|string|max:255',           
-            'floor' => 'nullable|integer|min:1',
-            'apartment' => 'nullable|string|max:10',
+            'last_name' => 'nullable|string|max:255',          
+
+            'addresses' => 'nullable|array',
+                'addresses.*.type' => 'required|string|max:50',
+                'addresses.*.city' => 'required|string|max:100',
+                'addresses.*.district' => 'nullable|string|max:100',
+                'addresses.*.address' => 'nullable|string|max:255',
+                'addresses.*.floor' => 'nullable|integer|min:0',
+                'addresses.*.apartment' => 'nullable|string|max:10',
+                    
             'phone' => 'required|string|min:10|max:15|unique:parent_profiles,phone,' . $user->id . ',user_id',
             'birth_date' => 'required|date|before:today',
             'children' => 'nullable|array',
@@ -72,26 +80,37 @@ class ProfileController extends Controller
         
             // Зберігаємо фото з постійним іменем (без uniqid)
             $validated['photo'] = $request->file('photo')->storeAs('photos/parents', $filename, 'public');
+       }        
+      
+        if (isset($validated['birth_date'])) {
+            // Примусово встановлюємо час на полудень, щоб уникнути зміщення
+            $validated['birth_date'] = \Carbon\Carbon::parse($validated['birth_date'])->setTime(12, 0, 0);
         }
-              
 
-        // Якщо профіль ще не створений — створюємо з validated
-        if (!$user->parentProfile) {
+         // Якщо профіль ще не створений — створюємо з validated
+         if (!$user->parentProfile) {
             $profile = $user->parentProfile()->create($validated);
         } else {
             $profile = $user->parentProfile;
             $profile->update($validated);
         }
-
+       
+        if (isset($validated['addresses'])) {
+            $profile->addresses()->delete(); // Очистити старі
+            $profile->addresses()->createMany($validated['addresses']); // Зберегти нові
+        }      
+       
         // Оновлення дітей (якщо є)
         if (isset($validated['children'])) {
             $profile->children()->delete();
             $profile->children()->createMany($validated['children']);
         }
 
+        \Log::info('Отримані дані профілю:', $request->all());
+
         return response()->json([
             'message' => 'Профіль батька збережено',
-            'profile' => $profile->load('children'),
+            'profile' => $profile->load(['children', 'addresses']),
         ]);
     }
     
@@ -137,6 +156,11 @@ class ProfileController extends Controller
             'about_me' => 'nullable|string',
         ]);
 
+        if (isset($validated['birth_date'])) {
+            // Примусово встановлюємо час на полудень, щоб уникнути зміщення
+            $validated['birth_date'] = \Carbon\Carbon::parse($validated['birth_date'])->setTime(12, 0, 0);
+        }
+        
         // Якщо є нове фото, зберігаємо його
         if ($request->hasFile('photo')) {
             // Видаляємо старе фото, якщо є
@@ -148,9 +172,13 @@ class ProfileController extends Controller
             $lastName = $validated['last_name'] ?? '';
         
             $extension = $request->file('photo')->getClientOriginalExtension();
-            $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar') . '.' . $extension;
-        
+            $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
+
             $validated['photo'] = $request->file('photo')->storeAs('photos/nannies', $filename, 'public');
+            // Якщо не надіслано нове фото і в базі немає фото
+            if (empty($validated['photo']) && (!$profile->photo ?? true)) {
+                $validated['photo'] = 'default-avatar.jpg';
+            }
         }
 
         // Створюємо або оновлюємо профіль
@@ -191,9 +219,15 @@ class ProfileController extends Controller
                 if ($request->hasFile("education.$index.diploma_image")) {
                     $file = $request->file("education.$index.diploma_image");
         
-                    $firstName = $validated['first_name'] ?? $user->first_name ?? 'nanny';
-                    $lastName = $validated['last_name'] ?? $user->last_name ?? '';
-                    $filename = Str::slug($firstName . '_' . $lastName . '_' . $eduData['institution'] . '_diploma') . '.' . $file->getClientOriginalExtension();
+                    $firstName = $validated['first_name']
+                        ?? ($profile->first_name ?? $user->first_name)
+                        ?? 'nanny';
+
+                    $lastName = $validated['last_name']
+                        ?? ($profile->last_name ?? $user->last_name)
+                        ?? '';
+
+                    $filename = Str::slug($firstName . '_' . $lastName . '_' . $eduData['institution'] . '_diploma_' . uniqid()) . '.' . $file->getClientOriginalExtension();
         
                     $diplomaPath = $file->storeAs('diplomas', $filename, 'public');
                 } else {
@@ -223,16 +257,35 @@ class ProfileController extends Controller
             if ($profile->video) {
                 \Storage::disk('public')->delete($profile->video);
             }
+        
+            $firstName = $validated['first_name']
+                ?? ($profile->first_name ?? $user->first_name)
+                ?? 'nanny';
+        
+            $lastName = $validated['last_name']
+                ?? ($profile->last_name ?? $user->last_name)
+                ?? '';
+        
+            $filename = Str::slug($firstName . '_' . $lastName . '_video_' . uniqid()) . '.' . $request->file('video')->getClientOriginalExtension();
 
-            $filename = Str::slug(($validated['first_name'] ?? 'nanny') . '_video') . '.' . $request->file('video')->getClientOriginalExtension();
             $validated['video'] = $request->file('video')->storeAs('videos/nannies', $filename, 'public');
         }
+        
 
         // Оновлення галереї фото
         $galleryPaths = [];
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $index => $image) {
-                $filename = Str::slug(($validated['first_name'] ?? 'nanny') . '_gallery_' . $index) . '.' . $image->getClientOriginalExtension();
+                $firstName = $validated['first_name']
+                    ?? ($profile->first_name ?? $user->first_name)
+                    ?? 'nanny';
+
+                $lastName = $validated['last_name']
+                    ?? ($profile->last_name ?? $user->last_name)
+                    ?? '';
+
+                $filename = Str::slug($firstName . '_' . $lastName . '_gallery_' . $index . '_' . uniqid()) . '.' . $image->getClientOriginalExtension();
+
                 $path = $image->storeAs('gallery/nannies', $filename, 'public');
                 $galleryPaths[] = $path;
             }
@@ -241,6 +294,7 @@ class ProfileController extends Controller
 
         // Оновлення профілю в базі даних
         $profile->update($validated);
+        $profile->save();
 
         return response()->json([
             'message' => 'Профіль няні оновлено',
@@ -287,6 +341,20 @@ class ProfileController extends Controller
         return response()->json([
             'profile' => $user->nannyProfile->load('educations')
         ]);
+    }
+
+    public function getParentProfile()
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->parentProfile) {
+            return response()->json(['error' => 'Профіль батька не знайдено'], 404);
+        }
+
+        return response()->json([
+            'profile' => $user->parentProfile->load(['children', 'addresses', 'reviewsFromNannies']),
+        ]);
+        
     }
 
 }

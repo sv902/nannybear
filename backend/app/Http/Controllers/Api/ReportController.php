@@ -12,17 +12,21 @@ class ReportController extends Controller
     {
         $request->validate([
             'reported_user_id' => 'required|exists:users,id',
-            'reason' => 'required|string|max:255',
-            'details' => 'nullable|string',
+            'reason' => 'required|array|min:1',
+            'details' => 'required|string|max:1100',
         ]);
-    
+
         $report = Report::create([
             'reported_user_id' => $request->reported_user_id,
-            'submitted_by_id' => $request->user()->id,
-            'reason' => $request->reason,
+            'reason' => json_encode($request->reason),
             'details' => $request->details,
+            'reporter_user_id' => auth()->id(), 
         ]);
-    
-        return response()->json(['message' => 'Скаргу успішно надіслано'], 201);
-    }
+
+        return response()->json([
+            'message' => 'Скаргу успішно надіслано',
+            'report' => $report,
+        ], 201);
+    }    
+       
 }

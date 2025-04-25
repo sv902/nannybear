@@ -55,5 +55,248 @@
     font-size: 24px;
     cursor: pointer;
   }
+
+  /* ParentProfilePage */
+  .profile-columns {
+    display: flex;    
+  }
+
+  .profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* padding: 20px; */
+    width: 100%;
+  }
+  
+  .left-header,
+  .right-header {
+    display: flex;
+    align-items: center;
+  }
+  
+  .edit-profile-btn {   
+    color: #3A3B61;
+    border: none;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: center;
+    text-transform: uppercase;
+    padding-right: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-profile-btn:hover {
+    color: #2c2d4f;
+    /* font-size: 21px; */
+  }  
+  
+  .left-column-parent-prof  {
+    display: flex;  
+    max-height: 485px;
+    min-width: 417px;
+    border-radius: 20px;
+    background-color: #F9D8E080;  
+    flex-direction: column;
+    margin: 20px 20px 20px 40px; 
+    padding-bottom: 20px;  
+  }
+
+  .photo-wrapper{
+    margin-top: 20px;
+    justify-items: center;
+  }
+
+  .photo-wrapper img {
+    margin-bottom: -15px;
+  }
+
+  .parent-name-prof{
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-align: center;
+    text-transform: uppercase;
+    color: #3A3B61;
+  }
+
+  .booking-total{
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;
+    margin-left: 10px;
+    margin-top: 8px; 
+  }
+  .location-parent-profile {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    text-align: left;  
+    width: 100%;
+    margin: 10px 0 10px 20px; 
+  }
+
+  .city-parent-prof{
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    color: #3A3B61;
+    margin: 0;
+    gap: 10px;
+  }
+
+  .dist-parent-prof {    
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;
+    text-transform: initial;
+  }
+  .icon-btn-card {
+    margin: 0;
+    justify-content: left;
+  }
+  .chat-btn-parent-prof {
+    display: flex;
+    min-width: 119px;
+    height: 42px;
+    border-radius: 30px;
+    border: 2px solid #3A3B61;
+    background-color: #FFFAEE;
+    padding-top: 5px;
+    padding-left: 10px;
+    align-self: center;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .chat-btn-parent-prof:hover {
+    background-color: #2c2d4f;
+    color: #FFFAEE;
+  }
     
+  .right-column-parent-prof { 
+    display: flex;
+    width: 100%;
+    max-width: 1010px;
+    height: auto;
+    border-radius: 20px;
+    border: 1px solid #3A3B61;
+    margin-top: 20px;
+    margin-bottom: 20px;
+   flex-direction: column;
+  }
+  .right-column-parent-prof h3 {    
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;   
+  }
+
+  .children-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 10px;
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: right;
+    text-transform: uppercase;
+    color: #3A3B61;
+    margin: 20px;
+  }
+
+  .children-container {  
+    border-radius: 30px;
+    width: 100%;   
+    margin: 10px auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 20px;
+  }
+  
+  .children-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    max-width: 50%;
+  }
+  
+  .child-info {
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    color: #3A3B61;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background-color: #E3CA9380;
+    border-radius: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .review-text .stars {
+    display: flex;
+    gap: 4px; 
+    align-items: center;
+    margin-top: 4px;
+    margin-bottom: 10px;
+  }
+
+  .review-text {
+    font-family: 'Comfortaa', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;    
+  }
+
+  .stars-inline {
+    display: inline-flex;
+    gap: 4px;
+    margin-left: 5px;
+    vertical-align: middle;
+    margin-bottom: 10px;
+  }
+  
+  .review-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .reviews-section{
+    margin-bottom: 20px;
+  }
   

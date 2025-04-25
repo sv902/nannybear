@@ -63,4 +63,24 @@ class ParentProfile extends Model
         return $this->hasOne(\App\Models\NannyPreference::class, 'parent_id');
     }
 
+    public function addresses()
+    {
+        return $this->hasMany(ParentAddress::class);
+    }
+
+    public function reviewsFromNannies()
+    {
+        return $this->hasMany(ParentReview::class);
+    }
+
+    public function parentReviews()
+    {
+        return $this->hasMany(ParentReview::class);
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'parent_id');
+    }
+
 }

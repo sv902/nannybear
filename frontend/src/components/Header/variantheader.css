@@ -1,7 +1,7 @@
 .header {
     height: 58px;
     width: 100%;
-    max-width: 1440px;
+    max-width: 1490px;
     border-bottom: none;
   }
   
@@ -22,7 +22,7 @@
   .header .primary-button-instance {
     left: auto;  
     /*right: 20px; */
-    left: 1285px;
+    left: 1385px;   
     position: absolute !important;
     top: 8px !important;
   }
@@ -30,7 +30,7 @@
   .header .secondary-button-instance {
     left: auto;
     /*right: 140px;*/
-    left: 1102px;
+    left: 1202px;
     position: absolute !important;
     top: 8px !important;
   }
@@ -82,7 +82,7 @@
   .header .logonannybear {
     display: block;
     height: 50px;
-    left: 70px;
+    left:40px;
     position: absolute;
     top: 4px;
     width: 154px;
@@ -171,15 +171,15 @@
     transition: transform 0.3s ease, filter 0.3s ease;
   }
   
-  .icon-button.selected img {
+  /* .icon-button.selected img {
     filter: brightness(0) saturate(100%) invert(35%) sepia(95%) saturate(6719%) hue-rotate(145deg) brightness(89%) contrast(96%);
-    transform: rotate(15deg); /* Обертання при виборі */
-  }
+    transform: rotate(15deg); /* Обертання при виборі 
+  } */
   
-  .icon-button.pressed img {
+  /* .icon-button.pressed img {
     filter: brightness(0) saturate(100%) invert(35%) sepia(95%) saturate(6719%) hue-rotate(145deg) brightness(55%) contrast(96%);
-    transform: rotate(-15deg); /* Обертання при натисканні */
-  }
+    transform: rotate(-15deg); /* Обертання при натисканні 
+  } */
   
   .icon-button img {
     transform: rotate(0deg); /* Стандартний стан */

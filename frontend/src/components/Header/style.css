@@ -74,9 +74,10 @@
   .logonannybear {
     left: 20px !important;
   }
-
+  
   .desktop-only {
     display: none;
+
   }
 }
 
@@ -105,6 +106,7 @@
   .logo img {
     content: url('/public/assets/LogoNannyBearMobile.png');
   }
+
 }
 
 .header .logonannybear {
@@ -152,3 +154,4 @@
   top: 11px;
   width: 98px;
 }
+

@@ -1,3 +1,15 @@
+.survey-container-global{
+  display: flex;
+  width: 100%;
+  height: auto;
+  flex-direction: column;
+  justify-items: center;
+  align-self: center;
+  margin-top: 20px;
+}
+
+
+
 .hide-menu .menu {
     display: none !important;
     border: none;
@@ -24,15 +36,15 @@
 }
 
 .back-button-dark {
-    background: none;
+  background: none;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   padding: 0;
   position: absolute;
-  top: 112px;
-  left: 71px;
+  /* top: 112px;
+  left: 71px; */
   text-decoration: none;
   font-family: 'Comfortaa', sans-serif;
   font-size: 16px;
@@ -43,7 +55,7 @@
   flex-direction: column;
   align-items: center;
   gap: 5px; 
-  padding-top: 20px;
+  padding-top: 30px;
 }
 
 .back-arrow-dark {
@@ -70,7 +82,8 @@
     width: 100%;
     max-width: 637px; 
     margin-bottom: 20px;
-    margin-top: 20px;  
+    margin-top: 20px; 
+   margin: auto;
 }
 
 .title-dark-survey {   

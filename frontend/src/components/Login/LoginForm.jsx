@@ -42,10 +42,23 @@ const LoginForm = () => {
         axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
   
         const userRole = response.data.user.role?.name;
+
+        localStorage.setItem("userRole", userRole);
   
         // 🎯 Редірект залежно від ролі
         if (userRole === "nanny") {
-          return navigate("/nanny/profile");
+          const userId = response.data.user.id;
+
+          try {
+            const nannyProfileResponse = await axios.get(`/api/nanny-profiles/user/${userId}`);
+            const nannyId = nannyProfileResponse.data.id;
+        
+            // редірект до конкретного профілю няні
+            return navigate(`/nanny-profiles/${nannyId}`);
+          } catch (profileError) {
+            console.error("Помилка отримання профілю няні:", profileError);
+            setError("Не вдалося завантажити профіль няні.");
+          }
         } else if (userRole === "parent") {
           return navigate("/nanny-profiles");
         } else if (userRole === "admin") {
