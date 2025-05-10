@@ -20,9 +20,6 @@ const BookingDetailModalNanny = ({ booking, onClose }) => {
     });
   };
 
-  const formatTime = (start, end) => {
-    return `${start?.slice(0, 5)} - ${end?.slice(0, 5)}`;
-  };
 
   useEffect(() => {
     const parentUserId = booking?.parent?.user?.id;
@@ -49,7 +46,33 @@ const BookingDetailModalNanny = ({ booking, onClose }) => {
     
       navigate("/add-parent-review", { state: { booking } });
     };
+
+    const totalHours = booking.booking_days?.reduce((sum, day) => {
+      const start = new Date(`1970-01-01T${day.start_time}`);
+      const end = new Date(`1970-01-01T${day.end_time}`);
+      return sum + (end - start) / 3600000;
+    }, 0);
+   
+    const getDateLabel = (dateStr) => {
+      const today = new Date();
+      const date = new Date(dateStr);
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
     
+      if (date.toDateString() === today.toDateString()) return "СЬОГОДНІ";
+      if (date.toDateString() === tomorrow.toDateString()) return "ЗАВТРА";
+    
+      return date.toLocaleDateString("uk-UA", { weekday: "long" }).toUpperCase(); // Наприклад: "СЕРЕДА"
+    };
+
+    const formatDateperiod = (dateStr) => {
+      const date = new Date(dateStr);
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}.${month}.${year} р.`;
+    };
+       
   return (
     <>
     <div className="modal-overlay-container">
@@ -57,54 +80,94 @@ const BookingDetailModalNanny = ({ booking, onClose }) => {
         <button className="modal-close" onClick={onClose}>
           ✖
         </button>     
-        <p className="modal-date">{formatDate(booking.date)}</p>       
-     
+        <p className="modal-date">
+          {booking.start_date === booking.end_date ? (
+            formatDate(booking.start_date)
+          ) : (
+            <>
+              {formatDate(booking.start_date)} – {formatDate(booking.end_date)}
+            </>
+          )}
+        </p>    
+        {booking.booking_days && booking.booking_days.length > 0 && (() => {
+      const uniqueDates = new Set(booking.booking_days.map(d => d.date));
+ 
+      const meetingCount = new Set(booking.booking_days.map(d => d.booking_id)).size;
+
+  
+          if (uniqueDates.size === 1) {
+            const sortedStarts = [...booking.booking_days].map(t => t.start_time).sort();
+            const sortedEnds = [...booking.booking_days].map(t => t.end_time).sort();
+
+            return (
+              <p className="modal-count">
+                {sortedStarts[0].slice(0, 5)} – {sortedEnds[sortedEnds.length - 1].slice(0, 5)}
+                {" · "}
+                {meetingCount} зустріч{meetingCount > 1 ? "і" : ""}
+                {" · "}
+                {totalHours.toFixed(0)} год.
+              </p>
+            );
+          } else {
+            return (
+              <p className="modal-count">
+                {uniqueDates.size} дн. · {meetingCount} зустріч{meetingCount > 1 ? "і" : ""} · {totalHours.toFixed(0)} год.
+              </p>
+            );
+          }
+        })()}
         
         <div className="modal-profile">
         
         {/* Ліва частина: фото + ім’я + зірки */}
-        {booking.parent && (  
-          <div className="profile-left">
-            <img
-            src={
-                booking.parent?.photo
-                ? `${baseUrl}/storage/${booking.parent.photo}`
-                : `${baseUrl}/storage/default-avatar.jpg`
-            }
-            alt="Няня"
+        <div
+          className="profile-left clickable-parent-profile"
+          onClick={() => navigate(`/parent-profiles/${booking.parent.id}`)}
+        >
+          <img
+            src={booking.parent?.photo ? `${baseUrl}/storage/${booking.parent.photo}` : `${baseUrl}/storage/default-avatar.jpg`}
+            alt="Батько"
             className="nanny-booking-avatar"
-            />
-            <div>
-            <h2 className="nanny-booking-name">
-                {booking.parent?.first_name} <br /> {booking.parent?.last_name}
-            </h2>
-            <div className="rating-stars-card-booking">
+          />
+          <div>
+          <h2
+            className="nanny-booking-name"
+            onClick={() => {
+              onClose();
+              navigate(`/parent-profiles/${booking.parent.user_id}`);
+            }}
+            style={{ cursor: "pointer" }}
+          >
+            {booking.parent?.first_name} <br /> {booking.parent?.last_name}
+          </h2>
+              <div className="rating-stars-card-booking">
                 {[1, 2, 3, 4, 5].map((i) => {
-                const fillLevel = averageRating
-                    ? Math.min(Math.max(averageRating - i + 1, 0), 1)
-                    : 0.7;
-
-                return (
+                 const numericRating = parseFloat(averageRating);
+                 const fillLevel = !isNaN(numericRating)
+                   ? Math.min(Math.max(numericRating - i + 1, 0), 1)
+                   : 0.7;
+                 
+                  return (
                     <div className="star-wrapper" key={i}>
-                    <svg viewBox="0 0 20 20" className="star" xmlns="http://www.w3.org/2000/svg">
+                      <svg viewBox="0 0 20 20" className="star" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                        <linearGradient id={`starGradient-${booking.parent?.id || 'unknown'}-${i}`}>
+                          <linearGradient id={`starGradient-${booking.parent?.id || 'unknown'}-${i}`}>
                             <stop offset={`${fillLevel * 100}%`} stopColor="#CC8562" />
                             <stop offset={`${fillLevel * 100}%`} stopColor="#CC856280" />
-                        </linearGradient>
+                          </linearGradient>
                         </defs>
                         <path
-                        d="M12 2L14.9 8.62L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L9.1 8.62L12 2Z"
-                        fill={`url(#starGradient-${booking.parent.id}-${i})`}
+                          d="M12 2L14.9 8.62L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L9.1 8.62L12 2Z"
+                          fill={`url(#starGradient-${booking.parent?.id}-${i})`}
                         />
-                    </svg>
+                      </svg>
                     </div>
-                );
+                  );
                 })}
+              </div>
             </div>
-            </div>
-        </div>
-        )}
+          </div>
+
         {/* Права частина: оплата + чат */}
         <div className="profile-right">
             <div className="modal-price-booking">{booking.total_price} грн</div>
@@ -124,19 +187,35 @@ const BookingDetailModalNanny = ({ booking, onClose }) => {
         <div className="modal-strip">
         <div className="strip-item dark with-left-ear-booking">
         <div className="ear-booking left-ear-booking"></div>
-            <p className="inf-text">Дата</p>
-            <span className="inf-data-booking">{formatDate(booking.date)}</span>
+        <p className="inf-text">
+                {booking.start_date === booking.end_date
+                  ? getDateLabel(booking.start_date)
+                  : "ПЕРІОД"}
+              </p>
+              <span className="inf-data-booking">
+                {booking.start_date === booking.end_date
+                  ? formatDate(booking.start_date)
+                  : `${formatDateperiod (booking.start_date)} – ${formatDateperiod (booking.end_date)}`}
+              </span>
           </div>
-          <div className="strip-item pink">
-            <p className="inf-text">{formatTime(booking.start_time, booking.end_time)}</p>
-            <span className="inf-data-booking">
-              {(
-                (new Date(`1970-01-01T${booking.end_time}`) -
-                  new Date(`1970-01-01T${booking.start_time}`)) /
-                3600000
-              ).toFixed(0)}{' '}годин
-            </span>
-          </div>
+ 
+            {booking.booking_days && new Set(booking.booking_days.map(d => d.date)).size === 1 ? (() => {
+              const sortedStarts = booking.booking_days.map(d => d.start_time).sort();
+              const sortedEnds = booking.booking_days.map(d => d.end_time).sort();
+
+              return (
+                <div className="strip-item pink">
+                  <p className="inf-text"> {sortedStarts[0].slice(0, 5)} – {sortedEnds[sortedEnds.length - 1].slice(0, 5)}</p>
+                  <span className="inf-data-booking">{totalHours.toFixed(0)} годин</span>
+                </div>
+              );
+            })() : (
+              <div className="strip-item pink">
+                <p className="inf-text">Всього</p>
+                <span className="inf-data-booking">{totalHours.toFixed(0)} годин</span>
+              </div>
+            )}
+
           <div className="strip-item blue">
             <p className="inf-text">ОПЛАТА НЯНІ</p>
             <span className="inf-data-booking">{booking.hourly_rate} грн / год.</span>
@@ -163,31 +242,7 @@ const BookingDetailModalNanny = ({ booking, onClose }) => {
         </div>
       </div>
     </div>
-    
-      {/* {showAlreadyReviewedModal && (
-        <div className="error-overlay">
-          <div className="error-modal">
-            <button className="modal-close-err" onClick={() => setShowAlreadyReviewedModal(false)}>✖</button>
-            <h2>Помилка!</h2>
-            <p>Ми вже отримали Ваш відгук.</p>
-            <p>Дякуємо, що ділитеся своєю думкою!</p>
-            <button className="error-modal-btn-ok" onClick={() => setShowAlreadyReviewedModal(false)}>Добре</button>
-          </div>
-        </div>
-      )}
-
-
-          {showBeforeMeetingModal && (
-            <div className="error-overlay">
-              <div className="error-modal">
-                <button className="modal-close-err" onClick={() => setShowBeforeMeetingModal(false)}>✖</button>
-                <h2>Помилка!</h2>
-                <p>Зустріч має відбутися, перш ніж Ви <br/> зможете оцінити няню.</p>
-                <p>Поверніться після завершення зустрічі!</p>
-                <button className="error-modal-btn-ok" onClick={() => setShowBeforeMeetingModal(false)}>Добре</button>
-              </div>
-            </div>
-          )} */}
+        
     </>
   );
 };

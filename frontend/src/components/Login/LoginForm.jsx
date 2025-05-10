@@ -33,9 +33,9 @@ const LoginForm = () => {
       const response = await axios.post("/api/login", { email, password });
   
       if (response.data.token) {
-        // Збереження токену в localStorage
-        localStorage.setItem("authToken", response.data.token);
-        console.log("Токен знайдено:", response.data.token);
+        const token = response.data.token;
+        localStorage.setItem("authToken", token);
+        console.log("Токен знайдено:", token);
         localStorage.setItem("email", email);
   
         // Додавання токену в заголовки для всіх подальших запитів
@@ -46,26 +46,26 @@ const LoginForm = () => {
         localStorage.setItem("userRole", userRole);
   
         // 🎯 Редірект залежно від ролі
-        if (userRole === "nanny") {
-          const userId = response.data.user.id;
-
-          try {
-            const nannyProfileResponse = await axios.get(`/api/nanny-profiles/user/${userId}`);
-            const nannyId = nannyProfileResponse.data.id;
-        
-            // редірект до конкретного профілю няні
-            return navigate(`/nanny-profiles/${nannyId}`);
-          } catch (profileError) {
-            console.error("Помилка отримання профілю няні:", profileError);
-            setError("Не вдалося завантажити профіль няні.");
-          }
-        } else if (userRole === "parent") {
-          return navigate("/nanny-profiles");
-        } else if (userRole === "admin") {
-          return navigate("/admin");
-        } else {
-          return navigate("/");
+       // для няні:
+       if (userRole === "nanny") {
+        try {
+          const nannyProfileResponse = await axios.get("/api/nanny/profile");
+          const nannyId = nannyProfileResponse.data.profile.id;
+          return navigate(`/nanny/profile/${nannyId}`);         
+        } catch (profileError) {
+          console.error("Помилка отримання профілю няні:", profileError);
+          setError("Не вдалося завантажити профіль няні.");
         }
+      
+      
+      } else if (userRole === "parent") {
+        return navigate("/nanny-profiles");
+      } else if (userRole === "admin") {
+        return navigate("/admin");
+      } else {
+        return navigate("/");
+      }
+      
       }
     } catch (err) {
       setError("Невірний email або пароль!");

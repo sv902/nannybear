@@ -1,0 +1,57 @@
+.disclaimer-container {
+    padding: 40px ;
+    background: #fffbe9;
+    color: #333;
+    font-family: "Arial", sans-serif;
+  }
+  
+  .disclaimer-banner {
+    background: #24324d;
+    color: white;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  .disclaimer-content h1 {
+    font-family: Oswald;
+    font-weight: 400;
+    font-size: 100px;
+    line-height: 105%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #3A3B61;
+    margin-bottom: 20px;
+  }
+
+  .update-date{
+    font-family: Comfortaa;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;
+    margin-bottom: 20px;
+  }
+
+  .support-text{
+    font-family: Comfortaa;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-transform: uppercase;
+    color: #3A3B61;
+  }
+  .support-adress{
+    font-family: Comfortaa;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    color: #3A3B61;
+  }
+  .support-list li {
+    margin-bottom: 10px; 
+    color: #3A3B61;
+  }
+  

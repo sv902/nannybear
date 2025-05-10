@@ -28,7 +28,7 @@ class ParentProfileController extends Controller
      */
     public function show($id)
     {
-        $profile = ParentProfile::with('user')->findOrFail($id);
+        $profile = \App\Models\ParentProfile::with(['user', 'children', 'addresses'])->findOrFail($id);
         return response()->json($profile);
-    }   
+    }  
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import VariantHeader from "../../components/Header/VariantHeader";
+import VariantHeaderNanny from "../../components/Header/VariantHeaderNanny";
 import Footer from "../../components/Footer/Footer";
 import "../../styles/settings.css";
 
@@ -18,7 +18,7 @@ const NannySupportPage = () => {
 
   return (
     <div>
-      <VariantHeader />
+      <VariantHeaderNanny />
       <div className="edit-page-container">
         <button onClick={() => navigate(-1)} className="back-button-dark">
           <span className="back-text">НАЗАД</span>

@@ -154,4 +154,26 @@
   top: 11px;
   width: 98px;
 }
+.hyperlink-instance {
+  margin-left: 70px;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
+  text-transform: uppercase;
+  color: #3A3B61;
+  border: none;
+  text-decoration: none; /* ⛔️ Забираємо підкреслення за замовчуванням */
+}
+
+.hyperlink-instance:hover {
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: 2px; /* або 1px — регулюй */
+  text-underline-offset: 4px; /* відступ підкреслення від тексту */
+}
+
+
 

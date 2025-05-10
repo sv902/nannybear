@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../axiosConfig";
 import { useNavigate } from "react-router-dom";
-import VariantHeader from "../../components/Header/VariantHeader";
+import VariantHeaderNanny from "../../components/Header/VariantHeaderNanny";
 import Footer from "../../components/Footer/Footer";
 import "../../styles/settings.css";
 import Modal from "../../components/Modal/BookingDetailModalNanny"; // окремий модал
 
-const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString("uk-UA", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
-
-const formatTime = (start, end) => `${start?.slice(0, 5)} - ${end?.slice(0, 5)}`;
 
 const NannyBookingHistoryPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -30,7 +23,7 @@ const NannyBookingHistoryPage = () => {
   const filterBookings = (bookings) => {
     const now = new Date();
     return bookings.filter((booking) => {
-      const date = new Date(booking.date);
+      const date = new Date(booking.start_date);
       if (activeFilter === "УСІ") return true;
       if (activeFilter === "ЦЕЙ ТИЖДЕНЬ") {
         const start = new Date(now);
@@ -47,7 +40,7 @@ const NannyBookingHistoryPage = () => {
 
   return (
     <div>
-      <VariantHeader />
+      <VariantHeaderNanny />
       <div className="edit-page-container">
         <button onClick={() => navigate(-1)} className="back-button-dark">
           <span className="back-text">НАЗАД</span>
@@ -64,9 +57,28 @@ const NannyBookingHistoryPage = () => {
         </div>
 
         <div className="booking-cantainer">
-          {filterBookings(bookings).map((booking, i) => (
+          <div className="booking-card-cantainer">
+          {filterBookings(bookings)
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .map((booking, i) => (
             <div key={i} className="booking-card" onClick={() => setSelectedBooking(booking)}>
-              <p className="booking-date">{formatDate(booking.date)}</p>
+
+              <p className="booking-date">               
+                  {booking.start_date === booking.end_date
+                  ? `${new Date(booking.start_date).toLocaleDateString("uk-UA", {
+                      day: "numeric",
+                      month: "long"
+                    })}`
+                  : `${new Date(booking.start_date).toLocaleDateString("uk-UA", {
+                      day: "numeric",
+                      month: "long"
+                    })} – ${new Date(booking.end_date).toLocaleDateString("uk-UA", {
+                      day: "numeric",
+                      month: "long"
+                    })}`
+                }
+              </p>
+
               <div className="booking-info">
                 <img
                  src={booking.parent?.photo ? `${baseUrl}/storage/${booking.parent.photo}` : `${baseUrl}/storage/default-avatar.jpg`}
@@ -75,12 +87,29 @@ const NannyBookingHistoryPage = () => {
                 />
                 <div>
                   <p className="nanny-name-booking">{booking.parent?.first_name} <br /> {booking.parent?.last_name}</p>
-                  <p className="booking-time">{formatTime(booking.start_time, booking.end_time)}</p>
+                  {(() => {
+                const uniqueDates = Array.from(new Set(booking.booking_days?.map(d => d.date)));
+                if (uniqueDates.length === 1) {
+                  const sortedStarts = [...booking.booking_days].map(t => t.start_time).sort();
+                  const sortedEnds = [...booking.booking_days].map(t => t.end_time).sort();
+                  return (
+                    <p className="booking-time-mini">
+                   {sortedStarts[0].slice(0, 5)} – {sortedEnds[sortedEnds.length - 1].slice(0, 5)}
+                    </p>
+                  );
+                } else {
+                  return (
+                    <p className="booking-time-mini">
+                      {uniqueDates.length} дн.
+                    </p>
+                  );
+                }
+              })()}
                 </div>
                 <div className="booking-actions"><button className="menu-btn">⋯</button></div>
               </div>
             </div>
-          ))}
+          ))} </div>
         </div>
 
         {selectedBooking && (

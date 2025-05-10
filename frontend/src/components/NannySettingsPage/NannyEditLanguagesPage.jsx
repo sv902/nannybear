@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "../../axiosConfig";
 import { useNavigate } from "react-router-dom";
-import VariantHederNanny from "../../components/Header/VariantHederNanny";
+import VariantHeaderNanny from "../../components/Header/VariantHeaderNanny";
 import Footer from "../../components/Footer/Footer";
 import UnsavedChangesModal from "../Modal/UnsavedChangesModal";
 import SavedChangesModal from "../Modal/SavedChangesModal";
@@ -47,7 +47,7 @@ const NannyEditLanguagesPage = () => {
 
   const isChanged = () => {
     const current = [...selectedLanguages, ...customLanguages.filter(Boolean)].sort();
-    const initial = [...initialLanguages].sort();
+    const initial = [...initialLanguages].filter(Boolean).sort();
     return JSON.stringify(current) !== JSON.stringify(initial);
   };
 
@@ -79,7 +79,7 @@ const NannyEditLanguagesPage = () => {
 
   return (
     <div>
-      <VariantHederNanny />
+      <VariantHeaderNanny />
       <div className="edit-page-container">
         <button onClick={() => {
           if (isChanged()) setShowUnsavedModal(true);

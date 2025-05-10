@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Hyperlink } from "../Hyperlink/Hyperlink.jsx";
-import axios from "../../axiosConfig";
+import axios from "../../axiosConfig.js";
 import "./variantheader.css";
 
 import profileIcon from "../../assets/icons/profileIcon/profile.svg"; 
@@ -77,12 +77,33 @@ export const VariantHeader = () => {
         return "/registrationlogin?section=login";
       }
     }
-    return `/nanny-profiles/${profileId}`;
+    return `/nanny/profile/${profileId}`;
   }
 
   if (role === "parent") return "/parent-profiles";
   return "/registrationlogin?section=login";
 };
+
+const handleGoToSchedule = async () => {
+  let profileId = localStorage.getItem("nannyProfileId");
+
+  if (!profileId) {
+    try {
+      const res = await axios.get("/api/nanny/profile");
+      profileId = res.data.profile.id;
+      localStorage.setItem("nannyProfileId", profileId);
+    } catch (err) {
+      console.error("Не вдалося отримати профіль няні", err);
+      alert("❌ Помилка отримання профілю няні");
+      return;
+    }
+  }
+
+  if (profileId) {
+    navigate(`/nanny-schedule/${profileId}`);
+  }
+};
+
 
 
   return (
@@ -104,14 +125,23 @@ export const VariantHeader = () => {
           </Link>
           <button
             className="all-nanny-btn"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/nanny/profile/edit/hourly-rate")}
           >
             ЗАРОБІТОК
           </button>
 
+
           {/*Чат, Розклад, Сповіщення та Питання поки не активні*/}
-          <Hyperlink className="h3-hyperlink" text="ЧАТИ" />
-          <Hyperlink className="hyperlink-instance" text="РОЗКЛАД" />
+          <Hyperlink className="h3-hyperlink" text="ЧАТ" />
+          <button
+            className="hyperlink-instance"
+            onClick={handleGoToSchedule}
+          >
+            РОЗКЛАД
+          </button>
+
+
+
         </div>
         <div className="icon-buttons">
           <button

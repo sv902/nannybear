@@ -30,19 +30,24 @@ class NannyProfileController extends Controller
      */  
     public function show($id)
     {
-        $nanny = NannyProfile::with([
-            'educations',
-            'reviews.parentProfile' => function ($query) {
-            $query->select('user_id', 'first_name', 'last_name', 'photo');
-        }
-        ])->where('id', $id)->first(); // ⬅️ тепер шукає по nanny_profiles.id
+        $user = Auth::user();
     
-        if (!$nanny) {
-            return response()->json(['error' => 'Profile not found'], 404);
+        if (!$user) {
+            return response()->json(['message' => 'Неавторизовано'], 401);
         }
     
-        return response()->json($nanny);
-    }      
+        $profile = NannyProfile::with('educations')->findOrFail($id);
+           
+        if (
+            $user->hasRole('parent') ||
+            ($user->hasRole('nanny') && $user->nannyProfile && $user->nannyProfile->id == $id)
+        ) {
+            return response()->json($profile);
+        }
+    
+        return response()->json(['message' => '🚫 Доступ заборонено'], 403);
+    }
+       
          
     /**
      * Фільтри нянь
@@ -118,5 +123,37 @@ class NannyProfileController extends Controller
     
         return response()->json($nanniesPaginated);
     }   
-        
+    
+    public function updateHourlyRate(Request $request)
+    {
+        $request->validate([
+            'hourly_rate' => 'required|numeric|min:0',
+        ]);
+    
+        $nannyProfile = auth()->user()->nannyProfile;
+        $nannyProfile->hourly_rate = $request->hourly_rate;
+        $nannyProfile->save();
+    
+        return response()->json(['success' => true]);
+    }
+
+    public function getNannyProfile(Request $request)
+    {
+        $user = Auth::user();
+    
+        if (!$user || !$user->hasRole('nanny')) {
+            \Log::warning("403: Доступ заборонено для користувача", ['user_id' => $user?->id]);
+            return response()->json(['message' => 'Доступ заборонено'], 403);
+        }
+    
+        $profile = $user->nannyProfile;
+        $profile = $user->nannyProfile()->with('educations')->first();
+    
+        if (!$profile) {
+            return response()->json(['message' => 'Профіль не знайдено'], 404);
+        }
+    
+        return response()->json(['profile' => $profile]);
+    }       
+               
 }

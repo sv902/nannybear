@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState  } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import VariantHeader from "../components/Header/VariantHeader";
 import Footer from "../components/Footer/Footer";
@@ -12,26 +12,39 @@ const AddParentReviewPage = () => {
   const location = useLocation();
   const booking = location.state?.booking;
   const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
-
+  const [parentProfile, setParentProfile] = useState(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(false);
-
+  
   const [, setReviews] = useState([]);
     const [averageRating, setAverageRating] = useState(null);
-  
+   
 
-  const parent = booking?.parent;
-  const mainAddress = parent.addresses?.[0];
+    const parent = booking?.parent;   
+
   const parentPhoto = parent?.photo
     ? `${baseUrl}/storage/${parent.photo}`
     : `${baseUrl}/storage/default-avatar.jpg`;
     const [showAlreadyReviewedModal, setShowAlreadyReviewedModal] = useState(false);
 
+    useEffect(() => {
+      axios.get(`/api/parent-profiles/${parent.id}`)
+        .then((res) => {
+          setParentProfile(res.data);
+        })
+        .catch((err) => {
+          console.error("❌ Помилка при завантаженні профілю:", err);
+        });
+    }, [parent.id]);
+    
     console.log("Батько:", parent);
+    console.log("Батько:", parentProfile);
     console.log("User всередині parent:", parent?.user);
+       
+    const mainAddress = parentProfile?.addresses?.[0];
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -85,7 +98,7 @@ const AddParentReviewPage = () => {
       setError("Будь ласка, поставте хоча б одну зірку.");
       return;
     }
-
+   
     try {
         await axios.post("/api/parent-reviews", {
           parent_profile_id: parent.id,
@@ -128,7 +141,7 @@ const AddParentReviewPage = () => {
     });
   };
 
-  if (!booking || !parent) return <div>Завантаження...</div>;
+  if (!parent) return <div>Завантаження...</div>;
 
   return (
     <div>
@@ -155,13 +168,13 @@ const AddParentReviewPage = () => {
             </div>
 
             <div className="location">
-            <img src={locationIcon} alt="Локація" className="icon-card" />
-            <span className="yers-city">
+              <img src={locationIcon} alt="Локація" className="icon-card" />
+              <span className="yers-city">
                 {mainAddress?.city || "Місто не вказано"},{" "}
-            </span>
-            <span className="yers-city-text">
+              </span>
+              <span className="yers-city-text">
                 {mainAddress?.district || "район не вказано"}
-            </span>
+              </span>
             </div>
 
             <div className="actions-nanny">

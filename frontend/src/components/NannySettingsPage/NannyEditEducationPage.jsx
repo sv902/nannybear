@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "../../axiosConfig";
-import VariantHederNanny from "../../components/Header/VariantHederNanny";
+import VariantHeaderNanny from "../../components/Header/VariantHeaderNanny";
 import Footer from "../../components/Footer/Footer";
 import UnsavedChangesModal from "../Modal/UnsavedChangesModal";
 import SavedChangesModal from "../Modal/SavedChangesModal";
@@ -21,13 +21,15 @@ const NannyEditEducationPage = () => {
 
   useEffect(() => {
     axios.get("/api/nanny/profile").then((res) => {
-      const fromDB = res.data.profile.educations || [];
+      console.log("Освіта з профілю:", res.data.profile.educations);
+      const fromDB = Array.isArray(res.data.profile.educations) ? res.data.profile.educations : [];
+
       const formatted = fromDB.map((edu) => ({
         institution: edu.institution || "",
         specialty: edu.specialty || "",
         startYear: edu.years?.split("-")[0] || "",
         endYear: edu.years?.split("-")[1] || "",
-        diploma_image: edu.diploma_image || null,
+        diploma_image: edu.diploma_image ?? "",
         preview: null,
       }));
       setEducations(formatted);
@@ -99,7 +101,7 @@ const NannyEditEducationPage = () => {
 
   return (
     <div>
-      <VariantHederNanny />
+      <VariantHeaderNanny />
       <div className="edit-page-container">
         <button
           onClick={() => (isChanged() ? setShowUnsavedModal(true) : window.history.back())}
@@ -172,16 +174,17 @@ const NannyEditEducationPage = () => {
                 </button>
               )}
 
-              {(edu.preview || (edu.diploma_image && typeof edu.diploma_image === "string")) && (
-                <a
-                  className="custom-file-upload-nanny"
-                  href={edu.preview || `${baseUrl}/storage/${edu.diploma_image}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={fotoIcon} alt="Іконка фото" className="center-icon" /> Фото документа
-                </a>
-              )}
+            {(edu.preview || (!!edu.diploma_image && typeof edu.diploma_image === "string")) && (
+              <a
+                className="custom-file-upload-nanny"
+                href={edu.preview || `${baseUrl}/storage/${edu.diploma_image}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={fotoIcon} alt="Іконка фото" className="center-icon" /> Фото документа
+              </a>
+            )}
+
             </div>
           ))}
 

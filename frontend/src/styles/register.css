@@ -4,7 +4,41 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-color: #2E2F4C;
  }
+ .error-text-404{
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+  color: #FFFAEE;
+  margin-bottom: 20px;
+ }
+ .error-btn-404 {
+  width: 100%;
+  max-width: 307px;
+  min-height: 50px;
+  margin-top: 20px;
+  border-radius: 30px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 32px;  
+  background-color: #4DB3AE;
+  font-weight: 400;
+  line-height: 105%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #FFFAEE;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-bottom: 20px;    
+}
+
+.error-btn-404:hover {
+background-color: #FFFAEE;
+color: #4DB3AE;
+}
  .registration-container {
     display: flex;
     width: 100vw;

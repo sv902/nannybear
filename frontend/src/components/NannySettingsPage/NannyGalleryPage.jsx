@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "../../axiosConfig";
 import { useNavigate } from "react-router-dom";
-import VariantHederNanny from "../../components/Header/VariantHederNanny";
+import VariantHeaderNanny from "../../components/Header/VariantHeaderNanny";
 import Footer from "../../components/Footer/Footer";
 import UnsavedChangesModal from "../Modal/UnsavedChangesModal";
 import SavedChangesModal from "../Modal/SavedChangesModal";
@@ -99,7 +99,7 @@ const NannyGalleryPage = () => {
 
   return (
     <div>
-      <VariantHederNanny />
+      <VariantHeaderNanny />
       <div className="edit-page-container">
         <button
           onClick={() => (isChanged() ? setShowUnsavedModal(true) : navigate(-1))}

@@ -18,9 +18,11 @@ return new class extends Migration
             $table->foreignId('nanny_id')->constrained('nanny_profiles')->onDelete('cascade');
             $table->foreignId('address_id')->constrained('parent_addresses')->onDelete('cascade');
         
-            $table->date('date');
+            $table->date('start_date');
+            $table->date('end_date')->nullable();;
             $table->time('start_time');
-            $table->time('end_time')->nullable();
+            $table->time('end_time')->nullable();;
+
         
             $table->enum('payment_type', ['card', 'cash']);
             $table->decimal('hourly_rate', 8, 2);

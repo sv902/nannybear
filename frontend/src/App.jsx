@@ -49,8 +49,18 @@ import NannySupportPage from "./components/NannySettingsPage/NannySupportPage.js
 import NannyChangePasswordPage from "./components/NannySettingsPage/NannyChangePasswordPage.jsx";
 import NannyBookingHistoryPage from "./components/NannySettingsPage/NannyBookingHistoryPage.jsx";
 import AddParentReviewPage from "./pages/AddParentReviewPage.jsx";
+import NannySchedulePage from "./pages/NannySchedulePage.jsx";
+import ParentProfilePublicPage from "./pages/ParentProfilePublicPage.jsx";
+import ParentSchedulePage from "./pages/ParetnSchedulePage.jsx";
 import axios from "./axiosConfig";
 import About from "./screens/About/About.jsx";
+import DisclaimerPage from "./pages/DisclaimerPage";
+import TermsAndConditionsPage from "./pages/TermsAndConditionsPage.jsx";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.jsx";
+import AcceptableUsePolicyPage from "./pages/AcceptableUsePolicyPage.jsx";
+import SupportPage from "./pages/SupportPage.jsx";
+import NannyHourlyRatePage from "./pages/NannyHourlyRatePage.jsx";
+import NannyBookingStatsPage from "./pages/NannyBookingStatsPage.jsx";
 
 const Layout = () => {
   const location = useLocation();
@@ -59,8 +69,7 @@ const Layout = () => {
   // Умови для показу хедера та футера
   const isSurveyPageWithParam = path === "/registration/parent/survey" && new URLSearchParams(location.search).get("from") === "nanny-list";
   const isLoginPage = path === "/registrationlogin"; 
-  const isEmailPage = path === "/registration/email";
-  
+  const isEmailPage = path === "/registration/email"; 
   
   useEffect(() => {
     axios.get('/sanctum/csrf-cookie');
@@ -76,10 +85,10 @@ const Layout = () => {
       ) : (
         <>        
           {/* Для сторінок входу та реєстрації, показуємо маркетинг та хедер */}
-          {(isLoginPage || isEmailPage) && (
+          {(isLoginPage || isEmailPage ) && (
             <>
               <Marketing />
-              <Header />
+              <Header />             
             </>
           )}
         </>
@@ -103,10 +112,9 @@ const router = createBrowserRouter([
       { path: "registration/nanny/profile", element: <NannyProfileForm />,},
       { path: "registration/parent/survey", element: <ParentSurveyForm />,},
       { path: "email-verified", element: <EmailVerified /> },
-      { path: "/nanny-profiles/:id", element: <NannyProfilePage />},
-      { path: "nanny-profiles/user/:user_id", element: <NannyProfilePage /> },    
+      { path: "nanny/profile/:id", element: <NannyProfilePage /> },    
       { path: "nanny-profiles", element: <NannyListPage />},
-      { path: "/nanny/:id", element: <NannyDetailPage /> },
+      { path: "nanny-profiles/:id", element: <NannyDetailPage /> },
       { path: "parent-profiles", element: <ParentProfilePage /> },
       { path: "forgot-password", element: <ForgotPassword /> },
       { path: "reset-password/:token", element: <ResetPassword /> },
@@ -122,7 +130,7 @@ const router = createBrowserRouter([
       { path: "/booking/:id", element: <BookingStep1 /> }, // дата і час початку
       { path: "/booking/:id/end", element: <BookingStep2 /> }, // дата і час завершення
       { path: "/booking/:id/address", element: <BookingStep3 /> }, // адреса
-      { path: "/booking/:id/details", element: <BookingStep4 /> }, // підтвердження
+      { path: "/booking/:id/payment", element: <BookingStep4 /> }, // підтвердження
       { path: "/booking/success", element: <BookingSuccess />},     
       { path: "/booking/failure", element: <BookingFailure />},
       { path: "/add-review", element: <AddReviewPage /> },
@@ -141,8 +149,18 @@ const router = createBrowserRouter([
       { path: "/nanny/profile/edit/support", element: <NannySupportPage />},
       { path: "/nanny/profile/edit/password", element: <NannyChangePasswordPage />},
       { path: "/nanny/profile/edit/history", element: <NannyBookingHistoryPage />},
-     
-       { path: "/about", element: <About />},
+      { path: "/parent-profiles/:id", element: <ParentProfilePublicPage />},
+      { path: "/nanny-schedule/:id", element: <NannySchedulePage /> },
+      { path: "/parent-schedule", element: <ParentSchedulePage /> },
+      { path: "/nanny/profile/edit/hourly-rate", element: <NannyHourlyRatePage />},
+      { path: "/nanny-booking-stats", element: <NannyBookingStatsPage />},
+
+      { path: "/support", element: <SupportPage />},
+      { path: "/acceptable-use", element: <AcceptableUsePolicyPage />},
+      { path: "/privacy", element: <PrivacyPolicyPage />},
+      { path: "/terms", element: <TermsAndConditionsPage />},
+      { path:"/disclaimer", element: <DisclaimerPage />}, 
+      { path: "/about", element: <About />},
       { path: "*", element: <NotFoundPage /> },
     ],
     errorElement: <NotFoundPage />

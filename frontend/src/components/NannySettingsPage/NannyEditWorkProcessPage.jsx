@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../axiosConfig";
 import { useNavigate } from "react-router-dom";
-import VariantHederNanny from "../../components/Header/VariantHederNanny";
+import VariantHeaderNanny from "../../components/Header/VariantHeaderNanny";
 import Footer from "../../components/Footer/Footer";
 import "../../styles/settings.css";
 import UnsavedChangesModal from "../Modal/UnsavedChangesModal";
@@ -67,7 +67,7 @@ const NannyEditWorkProcessPage = () => {
 
   return (
     <div>
-      <VariantHederNanny />
+      <VariantHeaderNanny />
       <div className="edit-page-container">
         <button onClick={handleBackClick} className="back-button-dark">
           <span className="back-text">НАЗАД</span>
