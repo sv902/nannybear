@@ -12,16 +12,18 @@ const NotFoundPage = () => {
        src="/images/bear-empty.png"
         alt="Сумний ведмедик"
         style={{
-          width: "400px",
+          width: "295px",
+          height: "355px",
           marginBottom: "20px",      
           animation: "float 3s ease-in-out infinite",
         }}
       />
-      <h1 className="title-dark">404</h1>
-      <p className="description-dark">
-        Ой! Сторінка загубилась у лісі... <br /> Але ведмедик допоможе знайти дорогу назад 🐻
+      <h1 className="title-light-full-page">404</h1>
+      <p className="error-text-404">Ой! Сторінка загубилася у лісі...</p>
+      <p className="description-light">
+      Але ведмедик уже в дорозі 🐻, щоб допомогти знайти правильну стежку. <br/>Повернімося на головну, там безпечніше! 
       </p>
-      <button className="reg-form-button" onClick={() => navigate("/")}>
+      <button className="error-btn-404" onClick={() => navigate("/")}>
         НА ГОЛОВНУ
       </button>
     </div>

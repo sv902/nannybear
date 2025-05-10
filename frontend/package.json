@@ -5,8 +5,6 @@
   "source": "./index.html",
   "type": "module",
   "proxy": "http://localhost:8000",
-
-
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -17,6 +15,7 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.2.0",
     "react-scripts": "5.0.1",
+    "recharts": "^2.15.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -42,6 +41,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-    
   }
 }

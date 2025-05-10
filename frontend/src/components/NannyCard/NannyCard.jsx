@@ -19,7 +19,8 @@ const NannyCard = ({ nanny }) => {
   const genderClass = nanny.gender === "female" ? "female" : "male";
   const avatar = nanny.photo ? `${baseUrl}/storage/${nanny.photo}` : `${baseUrl}/storage/default-avatar.jpg`;
   const [reviews, setReviews] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);  
+  const [isLoaded, setIsLoaded] = useState(false); 
+  const [, setBookings] = useState(0);
 
   const averageRating =
   reviews.length > 0
@@ -28,8 +29,8 @@ const NannyCard = ({ nanny }) => {
 
   const reviewsCount = reviews.length || 100;// placeholder
   
-  const clients = nanny.total_clients || 100; // placeholder
-  const hoursWorked = nanny.total_hours || 100; // placeholder
+  const [clients, setClients] = useState(100); // fallback
+  const [hoursWorked, setHoursWorked] = useState(100);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -49,8 +50,30 @@ const NannyCard = ({ nanny }) => {
     fetchReviews();
   }, [nanny]);
 
+  useEffect(() => {
+    if (!nanny || !nanny.id) return;
+  
+    axios.get(`/api/nanny/${nanny.id}/bookings`).then(res => {
+      const bookingDays = res.data.flatMap(b => b.booking_days || []);
+      setBookings(res.data.length);
+  
+      const uniqueClients = new Set(res.data.map(b => b.parent_id));
+      setClients(uniqueClients.size);
+  
+      const totalHours = bookingDays.reduce((acc, day) => {
+        const start = new Date(`1970-01-01T${day.start_time}`);
+        const end = new Date(`1970-01-01T${day.end_time}`);
+        return acc + (end - start) / 3600000;
+      }, 0);
+      setHoursWorked(totalHours);   
+    }).catch(err => {
+      console.error("❌ Помилка при завантаженні бронювань:", err);
+    });
+  }, [nanny]);
+  
+
   return (
-    <div className={`nanny-card`} onClick={() => navigate(`/nanny/${nanny.id}`)}>
+    <div className={`nanny-card`} onClick={() => navigate(`/nanny-profiles/${nanny.id}`)}>
         <div className={`nanny-card-header ${genderClass}`}>
           <div className="nanny-avatar">
             <img src={avatar} alt="avatar" className="nanny-avatar" />          

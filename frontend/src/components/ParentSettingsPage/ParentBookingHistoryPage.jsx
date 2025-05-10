@@ -6,19 +6,6 @@ import Footer from "../../components/Footer/Footer";
 import "../../styles/settings.css";
 import Modal from "../../components/Modal/BookingDetailModal"; // новий компонент
 
-const formatDate = (dateStr) => {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("uk-UA", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  });
-};
-
-const formatTime = (start, end) => {
-  return `${start?.slice(0, 5)} - ${end?.slice(0, 5)}`;
-};
-
 const ParentBookingHistoryPage = () => {
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -35,34 +22,22 @@ const ParentBookingHistoryPage = () => {
 
   const filterBookings = (bookings) => {
     const now = new Date();
-  
     return bookings.filter((booking) => {
-      const bookingDate = new Date(booking.date);
-  
+      const date = new Date(booking.start_date);
       if (activeFilter === "УСІ") return true;
-  
       if (activeFilter === "ЦЕЙ ТИЖДЕНЬ") {
-        const startOfWeek = new Date(now);
-        startOfWeek.setDate(now.getDate() - now.getDay() + 1);
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);
-        return bookingDate >= startOfWeek && bookingDate <= endOfWeek;
+        const start = new Date(now);
+        start.setDate(now.getDate() - now.getDay() + 1);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        return date >= start && date <= end;
       }
-  
-      if (activeFilter === "ЦЕЙ МІСЯЦЬ") {
-        return (
-          bookingDate.getMonth() === now.getMonth() &&
-          bookingDate.getFullYear() === now.getFullYear()
-        );
-      }
-  
-      if (activeFilter === "ЦЬОГО РОКУ") {
-        return bookingDate.getFullYear() === now.getFullYear();
-      }
-  
+      if (activeFilter === "ЦЕЙ МІСЯЦЬ") return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+      if (activeFilter === "ЦЬОГО РОКУ") return date.getFullYear() === now.getFullYear();
       return true;
     });
   };
+
   
   return (
     <div>
@@ -88,10 +63,27 @@ const ParentBookingHistoryPage = () => {
       </div>
 
         <div className="booking-cantainer">
-          {filterBookings(bookings).map((booking, index) => (
+        <div className="booking-card-cantainer">
+        {filterBookings(bookings)
+          .sort((a, b) => new Date(a.date) - new Date(b.date))
+          .map((booking, index) => (
             <div key={index} className="booking-card" onClick={() => setSelectedBooking(booking)}>
             
-                <p className="booking-date">{formatDate(booking.date)}</p>
+            <p className="booking-date">               
+                  {booking.start_date === booking.end_date
+                  ? `${new Date(booking.start_date).toLocaleDateString("uk-UA", {
+                      day: "numeric",
+                      month: "long"
+                    })}`
+                  : `${new Date(booking.start_date).toLocaleDateString("uk-UA", {
+                      day: "numeric",
+                      month: "long"
+                    })} – ${new Date(booking.end_date).toLocaleDateString("uk-UA", {
+                      day: "numeric",
+                      month: "long"
+                    })}`
+                }
+              </p>
               <div className="booking-info">
                 <img
                   src={
@@ -106,14 +98,31 @@ const ParentBookingHistoryPage = () => {
                   <p className="nanny-name-booking">
                     {booking.nanny?.first_name} <br /> {booking.nanny?.last_name}
                   </p>
-                  <p className="booking-time">{formatTime(booking.start_time, booking.end_time)}</p>
+                  {(() => {
+                const uniqueDates = Array.from(new Set(booking.booking_days?.map(d => d.date)));
+                if (uniqueDates.length === 1) {
+                  const sortedStarts = [...booking.booking_days].map(t => t.start_time).sort();
+                  const sortedEnds = [...booking.booking_days].map(t => t.end_time).sort();
+                  return (
+                    <p className="booking-time-mini">
+                   {sortedStarts[0].slice(0, 5)} – {sortedEnds[sortedEnds.length - 1].slice(0, 5)}
+                    </p>
+                  );
+                } else {
+                  return (
+                    <p className="booking-time-mini">
+                      {uniqueDates.length} дн.
+                    </p>
+                  );
+                }
+              })()}
                 </div>
                 <div className="booking-actions">             
                   <button className="menu-btn">⋯</button>
                 </div>
               </div>
             </div>
-          ))}
+          ))} </div>
         </div>
 
         {selectedBooking && (

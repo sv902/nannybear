@@ -1,3 +1,4 @@
+
 .settings-container {
     display: flex;
     width: 100%;
@@ -757,19 +758,24 @@
 .booking-cantainer {
   display: flex; 
   flex-direction: column;
-  align-items: center;   
+  align-items: center;
+  justify-items: center;
+     
+}
+.booking-card-cantainer{
+min-width: 360px;
+  max-height: 455px;
+  background-color: #EBE6DB;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  overflow-y: auto;
 }
 
 .booking-card {
   position: relative;
-  min-width: 360px;
-  min-height: 455px;
-  background-color: #EBE6DB;
-  border-radius: 20px;
   color: #3A3B61;
   gap: 15px;
   padding: 25px;
-  margin-bottom: 20px; 
   display: flex;
   flex-direction: column;
   align-items: center;

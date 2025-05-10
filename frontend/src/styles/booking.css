@@ -232,7 +232,7 @@
     color: #3A3B61;
   }
   
-  .next-button {
+  .next-button-booking {
     background: #44c4b8;
     border: none;
     color: #FFFAEE;
@@ -246,22 +246,231 @@
     border-radius: 20px;
     cursor: pointer;
     margin-top: 20px;
+    min-width: 307px;
+    height: 42px;
   }
   
-  .next-button:disabled {
+  .next-button-booking:disabled {
     background: #ccc;
     cursor: not-allowed;
   } 
 
-  .next-button:hover {
+  .next-button-booking:hover {
     border: 2px solid #44c4b8;
+    background-color: #FFFAEE;
     color: #44c4b8;
   }
-  .next-button:active{
+  .next-button-booking:active{
     background-color: #3A3B61;
     color: #FFFAEE;
   }
 
+  .text-confident{
+    color: #3a3b61;
+    font-family: 'Comfortaa', sans-serif; 
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .payment-section {
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .payment-subtitle {
+    margin-top: -10px;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 20px;
+  }
+  
+  .payment-options {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  
+  .payment-card { 
+    position: relative;   
+    width: 417px;
+    height: 317px;
+    border: 1px solid var(--Color-2, #3A3B61);
+    border-radius: 20px;
+    cursor: pointer;   
+    text-align: center;
+    transition: all 0.3s ease;
+    background: #f8f8f8;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .payment-card h4 {
+    padding-left: 40px; 
+    padding-top: 20px;
+    margin-bottom: 113px;
+    color: #3A3B61;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    text-align: left;
+  }
+  .payment-amount{
+    width: 417px;
+    height: 139px;
+    background-color: #74859699;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;   
+    flex-wrap: wrap;
+  }
+
+  .payment-amount span {
+    display: block;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    text-transform: uppercase;
+    color: #FFFAEE;
+    margin-bottom: 6px;
+    text-align: left;
+    padding-left: 30px;
+  
+  }
+  
+  .payment-amount-total {    
+    color: #FFFAEE;
+    font-family: 'Comfortaa', sans-serif; 
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: right;
+    text-transform: uppercase;
+    padding-right: 20px;  
+  }
+  
+  .payment-card.active {
+    border-color: #44c4b8;
+    background: #e6f9f9;
+  } 
+  
+.text-card-payment-amount{
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  color: #FFFAEE;
+  text-align: left;
+  padding-left: 30px;
+  padding-right: 20px;
+}
+.payment-radio {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  width: 18px;
+  height: 18px;
+  accent-color: #3A3B61;
+  cursor: pointer;
+}
+
+.booking-success-page { padding: 40px 0; background-color: #fdfaf5; }
+.container{
+  justify-items: center;
+}
+.success-title { 
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: 100px;
+  line-height: 105%;
+  letter-spacing: 0%;
+  text-align: center;
+  text-transform: uppercase;
+  color: #3A3B61;
+ }
+
+.success-subtitle { 
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
+  text-transform: uppercase;
+  color: #3A3B61;
+  margin-bottom: 20px; 
+  margin-top: 20px;
+}
+.success-text{
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
+  color: #3A3B61;
+}
+
+.nanny-info { 
+ min-width: 910px;
+  display: flex;
+  margin-top: 4%;
+  justify-items: center; 
+  align-items: center;
+  justify-content: space-between
+
+}
+.success-total-price{ 
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 120%;
+  letter-spacing: 0%;
+  text-align: right;
+  text-transform: uppercase;
+  color: #3A3B61;
+}
+.booking-summary-bar{
+  min-width: 980px;
+}
+
+.btn-return { 
+  background-color: #3a3b61; 
+  color: #FFFAEE; 
+  padding: 12px 28px; 
+  border-radius: 30px; 
+  border: none; 
+  margin-top: 30px; 
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+
+.btn-return:hover {
+  color: #3a3b61;
+  background-color: #FFFAEE;
+  border: 2px solid #3a3b61;
+}
   
   @media (max-width: 600px) {
     .nanny-profile-preview-edit-booking {

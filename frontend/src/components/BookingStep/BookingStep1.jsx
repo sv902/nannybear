@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../../axiosConfig";
 import "../../styles/booking.css"; 
@@ -11,6 +11,7 @@ const BookingStep1 = () => {
   const { id } = useParams();
   const [nanny, setNanny] = useState(null);
   const [currentStartIndex, setCurrentStartIndex] = useState(0);
+  const [timeSlots, setTimeSlots] = useState([]);
 
   useEffect(() => {
     axios.get(`/api/nanny-profiles/${id}`)
@@ -57,17 +58,37 @@ const BookingStep1 = () => {
 
   const handleNext = () => {
     if (!selectedTime) return;
-    navigate(`/booking/${id}/end`, {
+
+    const endTime = (() => {
+    const [h, m] = selectedTime.split(":").map(Number);
+    const endDate = new Date();
+    endDate.setHours(h + 1, m || 0);
+    return endDate.toTimeString().slice(0, 5);
+  })();
+
+      navigate(`/booking/${id}/end`, {
       state: {
-        startDate: selectedDate,
+        startDate: selectedDate.toISOString().slice(0, 10),
         startTime: selectedTime,
-        nannyId: id
+        endDate: selectedDate.toISOString().slice(0, 10), // початково: один і той самий день
+        endTime: endTime, // обчислюється +1 год від startTime
       }
-    });
-    
+    });      
   };
 
-  const timeSlots = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
+  const fetchTimeSlots = useCallback((date) => {
+    const formattedDate = date.toISOString().split('T')[0];
+    axios.get(`/api/working-hours/${id}/${formattedDate}`)
+      .then(res => setTimeSlots(res.data))
+      .catch(err => console.error("Помилка завантаження слотів:", err));
+  }, [id]);
+    
+  useEffect(() => {
+    if (selectedDate) {
+      fetchTimeSlots(selectedDate);
+    }
+  }, [selectedDate, fetchTimeSlots]);  
+  
 
   const averageRating = reviews.length > 0
   ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
@@ -130,7 +151,7 @@ const BookingStep1 = () => {
 
         <div className="booking-subtitle-row">
           <h2 className="booking-subtitle">ОБЕРІТЬ ЧАС</h2>
-          <p className="booking-description">оберіть дату та час кінця зустрічі</p>
+          <p className="booking-description">оберіть дату та час початку зустрічі</p>
         </div>
 
         <div className="date-navigation">
@@ -170,27 +191,31 @@ const BookingStep1 = () => {
 
       <div className="time-container">
        <p className="timezone-label">За Вашим місцевим часом</p>
-        <div className="time-slot-grid">
-        
-          {timeSlots.map((slot) => (
-            <button
-              key={slot}
-              className={`time-slot ${selectedTime === slot ? "selected" : ""}`}
-              onClick={() => setSelectedTime(slot)}
-            >
-              {slot}
-            </button>
-          ))}
-        </div>
+       <div className="time-slot-grid">
+          {timeSlots.length > 0 ? (
+            timeSlots.map((slot, index) => (
+              <button
+                key={index}
+                className={`time-slot ${selectedTime === slot.start_time ? "selected" : ""}`}
+                onClick={() => setSelectedTime(slot.start_time)}
+              >
+                {slot.start_time.slice(0, 5)}
+              </button>
+            ))
+          ) : (
+            <p className="timezone-label">Немає доступних годин на цю дату.</p>
+          )}
         </div>
 
-        <button className="next-button" onClick={handleNext} disabled={!selectedTime}>
-          ДАЛІ
-        </button>
-      </div>
-      <Footer />
-    </div>
-  );
-};
+                </div>
+
+                <button className="next-button-booking" onClick={handleNext} disabled={!selectedTime}>
+                  ДАЛІ
+                </button>
+              </div>
+              <Footer />
+            </div>
+          );
+        };
 
 export default BookingStep1;

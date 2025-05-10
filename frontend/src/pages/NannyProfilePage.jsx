@@ -10,7 +10,7 @@ import eye from "../icons/eye.png";
 import BearPlaceholder from "../components/BearPlaceholder/BearPlaceholder";
 import briefcaseIcon from "../assets/icons/briefcase.svg";
 import locationIcon from "../assets/icons/location.svg";
-import VariantNannyHeader from "../components/Header/VariantHederNanny";
+import VariantNannyHeader from "../components/Header/VariantHeaderNanny";
 import Footer from "../components/Footer/Footer";
 
 const NannyProfilePage = () => {
@@ -73,15 +73,37 @@ const NannyProfilePage = () => {
         })
         .catch((err) => console.error("Помилка завантаження профілю няні:", err));
     }, [id]);
+
+    const [clients, setClients] = useState(0);
+const [hoursWorked, setHoursWorked] = useState(0);
+
+useEffect(() => {
+  axios.get("/api/nanny/bookings")
+    .then((res) => {
+      const bookingDays = res.data.flatMap(b => b.booking_days || []);
+      const uniqueClients = new Set(res.data.map(b => b.parent_id));
+      setClients(uniqueClients.size);
+
+      const totalHours = bookingDays.reduce((acc, day) => {
+        const start = new Date(`1970-01-01T${day.start_time}`);
+        const end = new Date(`1970-01-01T${day.end_time}`);
+        return acc + (end - start) / 3600000;
+      }, 0);
+      setHoursWorked(totalHours);
+    })
+    .catch(err => {
+      console.error("❌ Помилка при завантаженні бронювань:", err);
+    });
+}, []);
+
   
     if (!nanny) return <div>Завантаження...</div>;
         
     const averageRating = reviews.length
     ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
     : 0;
-  
-  const clients = nanny.total_clients || 100; // placeholder
-  const hoursWorked = nanny.total_hours || 100; // placeholder
+
+    
   const genderClass = nanny.gender === "female" ? "female" : "male";
  
 

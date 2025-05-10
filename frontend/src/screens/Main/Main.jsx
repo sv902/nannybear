@@ -1,6 +1,6 @@
 import React from "react";
-import { BodyHyperlink } from "../../components/BodyHyperlink/BodyHyperlink.jsx";
-import { FormButton } from "../../components/FormButton/FormButton.jsx";
+// import { BodyHyperlink } from "../../components/BodyHyperlink/BodyHyperlink.jsx";
+// import { FormButton } from "../../components/FormButton/FormButton.jsx";
 import { Header } from "../../components/Header/Header.jsx";
 import { Hyperlink } from "../../components/Hyperlink/Hyperlink.jsx";
 import { Marketing } from "../../components/Marketing/Marketing.jsx";
@@ -10,6 +10,8 @@ import { StatCard } from "../../components/StatCard/StatCard.jsx";
 import { TypeCard } from "../../components/TypeCard/TypeCard.jsx";
 import { RoundAnimate } from "../../icons/RoundAnimate/RoundAnimate.jsx";
 import "./style.css";
+
+import Footer from "../../components/Footer/Footer.jsx";
 
 export const Main = () => {
   return (
@@ -55,7 +57,7 @@ export const Main = () => {
             />
             <img
               className="pexels-arina ipad-img"
-              alt="iPad image"
+              alt="iPad"
               src="/assets/pexels-arina-ipad.png"
             />
 
@@ -190,7 +192,7 @@ export const Main = () => {
           src="/assets/rectangle-123.svg"
         />
 
-        <div className="overlap-10">
+        {/* <div className="overlap-10">
           <div className="rectangle-14" />
 
           <div className="overlap-wrapper">
@@ -298,7 +300,8 @@ export const Main = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+        <Footer/>
 
         <img
           className="arrow-3"

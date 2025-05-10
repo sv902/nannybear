@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../axiosConfig";
-import VariantHederNanny from "../../components/Header/VariantHederNanny";
+import VariantHeaderNanny from "../../components/Header/VariantHeaderNanny";
 import Footer from "../../components/Footer/Footer";
 import editIcon from "../../assets/icons/edit.svg";
 import "../../styles/settings.css";
@@ -225,7 +225,7 @@ const NannyEditPersonalInfo = () => {
 
   return (
     <div>
-      <VariantHederNanny />
+      <VariantHeaderNanny />
       <div className="edit-page-container">
       <button onClick={() => {
         if (initialData && isChanged()) {

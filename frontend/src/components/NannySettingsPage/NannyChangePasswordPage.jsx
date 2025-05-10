@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../axiosConfig";
-import VariantHeader from "../../components/Header/VariantHeader";
+import VariantHeaderNanny from "../../components/Header/VariantHeaderNanny";
 import Footer from "../../components/Footer/Footer";
 import UnsavedChangesModal from "../Modal/UnsavedChangesModal";
 import SavedChangesModal from "../Modal/SavedChangesModal";
@@ -64,7 +64,7 @@ const NannyChangePasswordPage = () => {
 
   return (
     <div>
-    <VariantHeader />
+    <VariantHeaderNanny />
     <div className="edit-page-container">
     <button onClick={() => {
          if (isFormDirty) {

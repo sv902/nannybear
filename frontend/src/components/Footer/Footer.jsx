@@ -7,7 +7,9 @@ import { Property1Default1 } from "../../icons/Property1Default1/Property1Defaul
 import "./footer.css"; 
 import bear from "../../assets/bear-light.png";
 
+
 const Footer = () => {
+
   return (
     <div className="footer">
       <div className="footer-content"> 
@@ -44,10 +46,27 @@ const Footer = () => {
         {/* Другий стовпець */}
         <div className="footer-column">
           <div className="footer-text-wrapper-28">ІНФОРМАЦІЯ</div> 
-          <BodyHyperlink className="footer-body-hyperlink-instance" /> 
-          <BodyHyperlink className="footer-body-hyperlink-6" text={<><br />Загальні умови та положення</>} />       
-          <BodyHyperlink className="footer-body-hyperlink-4" text="Політика конфіденційності" />
-          <BodyHyperlink className="footer-body-hyperlink-5" text="Політика допустимого використання" />
+          <BodyHyperlink 
+            className="footer-body-hyperlink-instance" 
+            text="Дисклеймер" 
+            to="/disclaimer"  
+          /> 
+          <BodyHyperlink
+            className="footer-body-hyperlink-6"
+            text="Загальні умови та положення"
+            to="/terms"
+          />
+          <BodyHyperlink
+            className="footer-body-hyperlink-4"
+            text="Політика конфіденційності"
+            to="/privacy"
+          />
+          <BodyHyperlink
+            className="footer-body-hyperlink-5"
+            text="Політика допустимого використання"
+            to="/acceptable-use"
+          />
+
           
           <p className="footer-text-wrapper-27">v. 1.1.1 © 2025 Nanny Bear. Всі права захищені</p>
         </div>
@@ -55,8 +74,17 @@ const Footer = () => {
         {/* Третій стовпець */}
         <div className="footer-column">          
           <div className="footer-text-wrapper-29">КОРИСНЕ</div>
-          <BodyHyperlink className="footer-body-hyperlink-2" text="Сайт МОЗ" />
-          <BodyHyperlink className="footer-body-hyperlink-3" text="Служба підтримки" />
+          <BodyHyperlink
+            className="footer-body-hyperlink-2"
+            text="Сайт МОЗ"
+            to="https://moz.gov.ua/"
+            external={true}
+          />
+          <BodyHyperlink
+            className="footer-body-hyperlink-3"
+            text="Служба підтримки"
+            to="/support"
+          />
        
            {/* Зображення ведмедика */}
             <div className="bear-wrapper">

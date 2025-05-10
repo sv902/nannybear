@@ -27,6 +27,8 @@ const NannyDetailPage = () => {
     const [reviews, setReviews] = useState([]);   
 
     const [currentPage, setCurrentPage] = useState(0); 
+    const [clients, setClients] = useState(0);
+    const [hoursWorked, setHoursWorked] = useState(0);
 
     const [educationPage, setEducationPage] = useState(0);
     const educationsPerPage = 2;
@@ -73,15 +75,34 @@ const NannyDetailPage = () => {
         })
         .catch((err) => console.error("Помилка завантаження профілю няні:", err));
     }, [id]);
+
+    useEffect(() => {
+      if (!id) return;
+    
+      axios.get(`/api/nanny/${id}/bookings`)
+        .then(res => {
+          const bookingDays = res.data.flatMap(b => b.booking_days || []);
+          const uniqueClients = new Set(res.data.map(b => b.parent_id));
+          setClients(uniqueClients.size);
+    
+          const totalHours = bookingDays.reduce((acc, day) => {
+            const start = new Date(`1970-01-01T${day.start_time}`);
+            const end = new Date(`1970-01-01T${day.end_time}`);
+            return acc + (end - start) / 3600000;
+          }, 0);
+          setHoursWorked(totalHours);
+        })
+        .catch(err => {
+          console.error("❌ Помилка при завантаженні бронювань:", err);
+        });
+    }, [id]);
   
     if (!nanny) return <div>Завантаження...</div>;
         
     const averageRating = reviews.length
     ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
     : 0;
-  
-  const clients = nanny.total_clients || 100; // placeholder
-  const hoursWorked = nanny.total_hours || 100; // placeholder
+    
   const genderClass = nanny.gender === "female" ? "female" : "male";
   const isFavorite = favoriteIds.some((fav) => fav.nanny_id === nanny.id);
  

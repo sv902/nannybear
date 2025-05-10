@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import VariantHederNanny from "../components/Header/VariantHederNanny";
+import VariantHeaderNanny from "../components/Header/VariantHeaderNanny";
 import Footer from "../components/Footer/Footer";
 import axios from "../axiosConfig";
 import "../styles/settings.css";
@@ -33,7 +33,7 @@ const NannySettingsPage = () => {
       
   return (
     <div>
-      <VariantHederNanny />
+      <VariantHeaderNanny />
       <div className="settings-page-container">
         <div className="settings-header">
           <button onClick={() => navigate(-1)} className="back-button-dark">

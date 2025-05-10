@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../axiosConfig";
-import VariantHederNanny from "../../components/Header/VariantHederNanny";
+import VariantHeaderNanny from "../../components/Header/VariantHeaderNanny";
 import Footer from "../../components/Footer/Footer";
 import "../../styles/settings.css";
 import SavedChangesModal from "../Modal/SavedChangesModal";
@@ -57,7 +57,7 @@ const NannyEditSkillsPage = () => {
 
   return (
     <div>
-      <VariantHederNanny />
+      <VariantHeaderNanny />
       <div className="edit-page-container">
         <button
           onClick={() => (isChanged() ? setShowUnsavedModal(true) : window.history.back())}

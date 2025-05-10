@@ -319,6 +319,7 @@ class ProfileController extends Controller
         if ($user->parentProfile) {
             $user->parentProfile->nannyPreference()?->delete();
             $user->parentProfile->children()?->delete();
+            $user->parentProfile->addresses()?->delete();
             $user->parentProfile->delete();
             $deleted = true;
         }
@@ -329,20 +330,7 @@ class ProfileController extends Controller
 
         return response()->json(['error' => 'Профіль не знайдено'], 404);
     }
-
-    public function getNannyProfile()
-    {
-        $user = Auth::user();
-
-        if (!$user || !$user->nannyProfile) {
-            return response()->json(['error' => 'Профіль няні не знайдено'], 404);
-        }
-
-        return response()->json([
-            'profile' => $user->nannyProfile->load('educations')
-        ]);
-    }
-
+   
     public function getParentProfile()
     {
         $user = Auth::user();
@@ -355,6 +343,73 @@ class ProfileController extends Controller
             'profile' => $user->parentProfile->load(['children', 'addresses', 'reviewsFromNannies']),
         ]);
         
+    }
+
+    public function storeAdditionalAddress(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->parentProfile) {
+            return response()->json(['error' => 'Профіль батька не знайдено'], 404);
+        }
+
+        $validated = $request->validate([
+            'type' => 'required|string|max:50',
+            'city' => 'required|string|max:100',
+            'district' => 'nullable|string|max:100',
+            'address' => 'nullable|string|max:255',
+            'floor' => 'nullable|integer|min:0',
+            'apartment' => 'nullable|string|max:10',
+        ]);
+
+        $address = $user->parentProfile->addresses()->create($validated);
+
+        return response()->json([
+            'message' => 'Адресу збережено',
+            'address' => $address
+        ]);
+    }
+
+    public function updateAddress(Request $request, $id)
+    {
+        $user = Auth::user();
+        $address = $user->parentProfile->addresses()->where('id', $id)->first();
+
+        if (!$address) {
+            return response()->json(['error' => 'Адреса не знайдена'], 404);
+        }
+
+        $validated = $request->validate([
+            'type' => 'required|string|max:50',
+            'city' => 'required|string|max:100',
+            'district' => 'nullable|string|max:100',
+            'address' => 'nullable|string|max:255',
+            'floor' => 'nullable|integer|min:0',
+            'apartment' => 'nullable|string|max:10',
+        ]);
+
+        $address->update($validated);
+
+        return response()->json(['message' => 'Адреса оновлена', 'address' => $address]);
+    }
+
+    public function deleteAddress($id)
+    {
+        $user = Auth::user();
+
+        if (!$user || !$user->parentProfile) {
+            return response()->json(['error' => 'Профіль не знайдено'], 404);
+        }
+
+        $address = $user->parentProfile->addresses()->where('id', $id)->first();
+
+        if (!$address) {
+            return response()->json(['error' => 'Адреса не знайдена'], 404);
+        }
+
+        $address->delete();
+
+        return response()->json(['message' => 'Адресу видалено успішно']);
     }
 
 }

@@ -88,8 +88,16 @@ export const VariantHeader = ({setPreferences, setNannies, setCurrentPage, reset
           </button>
 
           {/*Чат, Розклад, Сповіщення та Питання поки не активні*/}
-          <Hyperlink className="h3-hyperlink" text="ЧАТИ" />
-          <Hyperlink className="hyperlink-instance" text="РОЗКЛАД" />
+          <Hyperlink className="h3-hyperlink" text="ЧАТИ" />         
+          
+            <button
+              className="hyperlink-instance"
+              onClick={() => navigate("/parent-schedule")}
+            >
+              РОЗКЛАД
+            </button>
+         
+
         </div>
         <div className="icon-buttons">
           <button

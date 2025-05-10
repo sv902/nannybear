@@ -26,7 +26,10 @@ body {
     width: 100%;  
 }
 .footer-column {
+    display: flex;
     flex: 1;
+    flex-direction: column;
+    margin-bottom: 5px;
   }
 
 .footer-title{

@@ -1,6 +1,7 @@
 .form-button {
     height: 46px;
     width: 417px;
+    
   }
   
   .form-button .overlap-group-2 {
@@ -36,9 +37,10 @@
   .form-button .img {
     height: 15px;
     left: 355px;
-    position: absolute;
+    /* position: absolute; */
     top: 16px;
     width: 53px;
+    margin-top: 5px;
   }
   
   .form-button:hover .text-wrapper-6 {
@@ -48,4 +50,41 @@
   .form-button:hover .rectangle-4 {
     border-color: #4db3ae;
   }
+  .form-button .email-input {
+    position: absolute;
+    z-index: 2;
+    left: 16px;
+    top: 10px;
+    width: 320px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: #FFFAEE;
+    font-size: 18px;
+    font-family: "Comfortaa", Helvetica, sans-serif;
+    outline: none;
+    padding-right: 40px;
+  }
   
+  .form-button .email-input::placeholder {
+    color: #fffaee99;
+  }
+  
+  .form-button .submit-arrow {
+    position: absolute;
+    top: 12px;
+    right: 10px; /* раніше було left: 355px */
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+    padding: 0;
+    color: #FFFAEE;
+    margin-top: 5px;
+  }
+  
+ 
+  .form-button .submit-arrow:hover svg {
+    color: #4db3ae; /* Новий колір стрілки */
+  }
+ 

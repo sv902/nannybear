@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\UserProfileController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\ParentReviewController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\WorkingHourController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,22 +115,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // === НЯНІ ===
     Route::post('/nanny/profile', [ProfileController::class, 'storeNannyProfile']); // створити/оновити
-    Route::get('/nanny/profile', [ProfileController::class, 'getNannyProfile']); 
+    Route::get('/nanny/profile', [NannyProfileController::class, 'getNannyProfile']); //Особистий профіль для редагування 
     Route::get('/nanny-profiles', [NannyProfileController::class, 'index']); // всі
-    Route::get('/nanny-profiles/{id}', [NannyProfileController::class, 'show']); // один
+    Route::get('/nanny-profiles/{id}', [NannyProfileController::class, 'show']); // Перегляд профілю няні батьком
     Route::post('/nanny-profiles/filter', [NannyProfileController::class, 'filterNannies']); // фільтр
    
     Route::post('/nanny-preferences', [NannyPreferenceController::class, 'store']);
     Route::get('/nanny-preferences', [NannyPreferenceController::class, 'show']);
-
+  
     // Вподобані няні
     Route::post('/favorite-nannies', [FavoriteNannyController::class, 'store']); // Додавання в улюблені
     Route::delete('/favorite-nannies/{id}', [FavoriteNannyController::class, 'destroy']); // Видалення з улюблених
     Route::get('/favorite-nannies', [FavoriteNannyController::class, 'index']); // Отримання списку улюблених
 
     Route::get('/profile/{id}', [UserProfileController::class, 'show']);    
+   
+    Route::put('/nanny/profile/hourly-rate', [NannyProfileController::class, 'updateHourlyRate']);
 });
-
 
 // Скарга на профіль
 Route::middleware('auth:sanctum')->post('/reports', [ReportController::class, 'store']);
@@ -180,6 +182,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/parent/bookings', [BookingController::class, 'index']);
     // Створення нового бронювання
     Route::post('/bookings', [BookingController::class, 'store']);
+    Route::get('/bookings/{id}', [BookingController::class, 'show']);
 
     // Отримання бронювань для батька (історія замовлень)
     Route::get('/bookings', [BookingController::class, 'index']);
@@ -191,6 +194,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/bookings/{id}', [BookingController::class, 'destroy']);
 
     Route::get('/nanny/bookings', [BookingController::class, 'getBookingsForNanny']);
+    Route::post('/check-booking-exists', [BookingController::class, 'checkBookingExists']);
+    Route::get('/nanny/bookings/stats', [BookingController::class, 'getStats']);
+
+    Route::post('/booking-address', [ProfileController::class, 'storeAdditionalAddress']);
+    Route::put('/parent/addresses/{id}', [ProfileController::class, 'updateAddress']);
+    Route::delete('/parent/addresses/{id}', [ProfileController::class, 'deleteAddress']);
+
+
+    Route::post('/working-hours', [WorkingHourController::class, 'store']);
+    Route::get('/working-hours/{nannyId}/{date}', [WorkingHourController::class, 'getAvailableHours']);
+   
+    Route::get('/nanny/working-hours/{year}/{month}', [WorkingHourController::class, 'getByMonth']);
+    Route::post('/working-hours/bulk', [WorkingHourController::class, 'storeBulk']);
+
+  
+    Route::delete('/working-hours/{date}', [WorkingHourController::class, 'destroyByDate']);
+    Route::delete('/working-hours/{id}', [WorkingHourController::class, 'destroy']); 
+    Route::get('/nanny-working-hours/{nannyId}', [WorkingHourController::class, 'getByNanny']);
 
 });
+
+Route::get('/nanny/{id}/bookings', [BookingController::class, 'getBookingsForPublic']);
+
+
 
