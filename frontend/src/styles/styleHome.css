@@ -1,0 +1,595 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: auto;
+  margin: 0;
+}
+
+body {
+  width: 100%;
+}
+
+.main {
+  height: auto;
+  width: 100%;
+  background-color: #fffaee;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+  
+ .div-2 {
+  background-color: #fffaee;
+  width: 100%;
+  display: flex; 
+  justify-items: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.home-section {
+  width: 100%;
+  position: relative;
+}
+
+  .overlap-9 {
+   padding: 0 40px; 
+    position: relative;
+    width: 100%;
+    margin-bottom: 100px; 
+  }
+  
+  .baner {
+  position: relative;
+  background-color: #add1f5;
+  border-radius: 20px;
+  height: 847px;
+  width: 100%;
+ overflow: visible;
+   z-index: 1; 
+  }
+  
+.baner-content {
+   position: relative;
+  z-index: 1;
+  color: #3a3b61;
+  margin-left: 80px;
+  margin-top: 40px;
+}
+
+.baner-title-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.baner-title {
+  font-family: "Oswald", sans-serif;
+  font-size: 64px;
+  line-height: 1.1;
+  font-weight: 400;
+  font-size: 100px;
+  line-height: 105%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+  position: relative;
+  text-align: left;
+  color: #3a3b61;
+  z-index: 1;
+}
+
+.baner-title-2{
+  font-family: "Oswald", sans-serif;
+  font-size: 64px;
+  line-height: 1.1;
+  font-weight: 400;
+  font-size: 100px;
+  line-height: 105%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+  position: relative;
+  text-align: left;
+  color: #3a3b61;
+  z-index: 3;
+}
+
+.baner-title-and {
+  position: absolute;
+  top: 5px;   /* змістити вниз */
+  left: 150px; /* змістити вправо */
+  font-family: 'PrincessDiana', cursive;
+  font-style: italic;
+  font-size: 200px;
+  color: #ADD1F5;
+  -webkit-text-stroke: 1px #3A3B61;
+  text-shadow: 1px 1px 0 #3A3B61;
+  z-index: 2;
+  pointer-events: none; /* не заважатиме клікам */
+}
+
+
+.baner-subtitle {
+  margin-top: 24px;
+  font-family: "Comfortaa", sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+  margin-bottom: 120px;
+}
+
+
+.baner-curves {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.baner-arcs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.baner-photo {
+  position: absolute;
+  bottom: 0px;
+  right: 0;
+  max-height: 104.7%;
+  max-width: 100%;
+  object-fit: contain;
+  z-index: 2;
+  top: -40px;  
+}
+
+.home-section.overlap-5 {
+  margin-top: -120px;
+  position: relative;
+  z-index: 3;
+}
+
+.cta-button {
+  
+    position: relative;
+ 
+  }
+  
+ .slogan {
+    border-radius: 20px;
+   /* min-width: 1300px; */
+    width: 100%;
+  }
+
+  .bear-section-wrapper {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+}  
+
+ .round-animate {
+  min-height: 270px !important;
+  min-width: 271px !important;
+  position: absolute;
+  right: -60px; /* підлаштуй як потрібно */
+  top: 120%;
+  transform: translateY(-50%); 
+  animation: spin 10s linear infinite;
+  z-index: 2;
+  }
+
+  .round-animate {
+    animation: spin-counter-clockwise 10s linear infinite;
+  }
+
+  @keyframes spin-counter-clockwise {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(-360deg); 
+    }
+  }
+
+  .about-section {
+  background-color: #fffaee;
+  margin-top: 220px;  
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.about-content {
+  display: flex;
+  max-width: 100%;
+  gap: 60px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.about-image-wrapper {
+  flex: 1;
+  min-width: 400px;
+}
+
+.pexels-arina {
+  width: 100%;
+  max-width: 748px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.about-text-home{
+  flex: 1;
+  min-width: 400px;
+  display: block;
+}
+
+.about-title-home {
+  font-family: "Oswald", sans-serif;
+  font-weight: 400;
+  font-size: 100px;
+  line-height: 105%;
+  letter-spacing: 0%;
+  text-transform: uppercase;
+  color: #3a3b61;
+  margin-bottom: 30px;
+}
+
+.about-description-home {
+  font-family: "Comfortaa", sans-serif;
+  color: #3a3b61;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  z-index: 2;
+  position: relative;
+  display: block;
+font-weight: 400;
+font-size: 18px;
+line-height: 120%;
+letter-spacing: -2%;
+
+}
+
+.about-button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.stat-card-wrapper {
+  display: flex;
+  flex-wrap: wrap; /* дозволяє адаптацію */
+  justify-content: center;
+  gap: 40px; /* відступи між картками */
+  padding: 0 40px;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .stat-card-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.stat-card-instance { 
+    position: relative;
+  }
+  
+ .design-component-instance-node {
+   position: relative;
+  }
+  
+ .typecard-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.type-card-2 {
+    background-color: #fffaee ;
+    position: relative ;  
+  }
+
+.nanny-icons {
+  display: flex;
+  justify-content: center; 
+  margin-left: 40px; 
+  gap: 20px;
+}
+.nanny-icons-container{
+  margin: 20px 40px 40px 0;
+}
+
+.rectangle-10, .rectangle-11, .rectangle-12, .rectangle-13 {
+  width: 100px;
+  height: auto;
+}
+
+.arrow-3 {
+  display: block;
+  margin: 20px auto;
+}
+
+.title-home{
+  font-family: Oswald;
+font-weight: 400;
+font-size: 100px;
+line-height: 105%;
+letter-spacing: 0%;
+text-align: center;
+text-transform: uppercase;
+color: #3a3b61;
+margin-bottom: 10px;
+}
+.text-home{
+font-family: Comfortaa;
+font-weight: 600;
+font-size: 20px;
+line-height: 120%;
+letter-spacing: -2%;
+text-align: center;
+text-transform: uppercase;
+color: #3A3B61;
+margin-top: 10px;
+margin-bottom: 10px;
+}
+.btn-cont-home{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .typecard-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nanny-icons {
+    flex-wrap: wrap;
+  }
+}
+
+.reviews-section {
+  position: relative;
+  padding: 60px 40px;
+}
+
+.msgcard-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 40px;
+}
+.box-text-container{
+  display: flex;
+justify-content: center;
+justify-items: center;
+}
+.box-text{
+ max-width: 466px;
+height: 50px;
+border-top-left-radius: 30px;
+border-top-right-radius: 30px;
+border-bottom-right-radius: 30px;
+color: #fffaee;
+background-color: #4db3ae;
+font-family: Oswald;
+font-weight: 400;
+font-size: 32px;
+line-height: 105%;
+letter-spacing: 0%;
+text-transform: uppercase;
+padding: 10px 20px;
+}
+
+
+.reviews-section-home {
+ background-color: #F9D8E0;
+  padding-top: 20px;
+  padding-bottom: 40px;
+  border-radius: 20px;
+  text-align: center;
+  overflow: visible;
+  margin-left: 40px;
+  margin-right: 40px;
+  max-width:  1460px;
+}
+
+.review-overlay-container {
+  position: relative;
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+ 
+}
+
+.review-bear-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 20px;
+  margin-top: 120px;
+  z-index: 1;
+}
+
+
+/* Загальні стилі для карток */
+.msgcard-wrapper {
+  position: absolute;
+  width: 200px; /* або auto, якщо картка адаптивна */
+  z-index: 2;
+  pointer-events: all; /* дозволяє взаємодію */
+  z-index: 10;
+}
+
+/* Індивідуальні позиції для кожної картки */
+.position-1 {
+  top: 15%;
+  left: 5%;
+}
+
+.position-2 {
+  top: 32%;
+ left: 78%;
+}
+
+.position-3 {
+  top: -10%;
+  left:72%;
+  transform: translateX(-50%);
+}
+
+.position-4 {
+  top: 40%;
+  left: 20%;
+}
+
+.position-5 {
+   top: 0%;
+  left: 95%; 
+  transform: translateX(-55%);
+}
+
+.background-illustration {
+  pointer-events: none;
+}
+
+.instagram-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.title-home-instagram {
+  font-family: "Oswald", sans-serif;
+  font-size: 64px;
+  color: #3a3b61;
+  margin: 0;
+}
+
+.instagram-link-wrapper {
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-end; 
+}
+
+
+.arrow-3-inst {
+  height: 20px;
+}
+
+.h-hyperlink-instance {
+  margin-top: 20px;
+  font-family: "Comfortaa", sans-serif;
+  font-size: 20px;
+  color: #3a3b61;
+  text-decoration: none;
+}
+
+.hover-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.hyperlink-text,
+.arrow-3-inst {
+  transition: all 0.3s ease;
+  font-family: Comfortaa;
+font-weight: 600;
+font-size: 20px;
+line-height: 120%;
+letter-spacing: -2%;
+text-align: right;
+text-transform: uppercase;
+color: #3a3b61;
+
+}
+
+.hover-group:hover .hyperlink-text {
+  text-decoration: underline;
+}
+
+.hover-group:hover .arrow-3-inst {
+  filter: brightness(0.6);
+  transform: translateX(5px); /* легке зміщення */
+}
+
+
+  .rectangle-10 {
+    height: 408px;
+    position: relative;
+   width: 100%;
+    min-width: 306px;
+    max-width: 100%; 
+    object-fit: cover;
+border-top-left-radius: 20px;
+border-bottom-left-radius: 20px;
+  }
+  
+  .rectangle-11 {
+    height: 408px;
+    position: relative;
+   width: 100%;
+   max-width: 100%;
+    min-width: 306px;
+    object-fit: cover;
+  }
+  
+  .rectangle-12 {
+    height: 408px;
+   position: relative;
+    width: 100%;
+    max-width: 100%;
+     min-width: 306px;
+     object-fit: cover;
+  }
+  
+ .rectangle-13 {
+    height: 408px;
+    object-fit: cover;
+    position: relative;
+    width: 100%;
+    min-width: 306px;
+    max-width: 100%;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  
+ 
+  
+ 
+ 
+  
+
+
+  
+
+ 
+  
+
+ 
+  
+
+  
+
+ 
+
+  

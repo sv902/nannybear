@@ -9,7 +9,7 @@ import EmailPasswordForm from "./pages/EmailPasswordForm.jsx";
 import EmailConfirmation from "./pages/EmailConfirmation.jsx";
 import ParentSurveyForm from "./components/ParentSurvey/ParentSurveyForm.jsx";
 import EmailVerified from "./pages/EmailVerified.jsx";
-import Main from "./screens/Main/Main.jsx";
+import Home from "./pages/Home.jsx";
 import NannyProfilePage from "./pages/NannyProfilePage.jsx";
 import NannyListPage from "./pages/NannyListPage.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx"; 
@@ -104,7 +104,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { path: "/", element: <Main /> },
+      { path: "/", element: <Home /> },
       { path: "registrationlogin", element: <RegistrationLogin /> },
       { path: "registration/email", element: <EmailPasswordForm /> },
       { path: "registration/email-confirmation", element: <EmailConfirmation /> },

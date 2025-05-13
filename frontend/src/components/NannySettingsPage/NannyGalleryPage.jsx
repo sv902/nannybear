@@ -45,9 +45,17 @@ const NannyGalleryPage = () => {
   };
 
   const handlePhotoChange = (e) => {
-    const newPhotos = Array.from(e.target.files).slice(0, MAX_PHOTOS - photos.length);
-    setPhotos((prev) => [...prev, ...newPhotos]);
-  };
+  const files = Array.from(e.target.files);
+  const availableSlots = MAX_PHOTOS - photos.length;
+
+  if (files.length > availableSlots) {
+    alert(`Ви можете додати ще лише ${availableSlots} фото.`);
+  }
+
+  const newPhotos = files.slice(0, availableSlots);
+  setPhotos((prev) => [...prev, ...newPhotos].filter((p) => !!p));
+};
+
 
   const triggerVideoInput = () => {
     videoInputRef.current.click();
@@ -62,10 +70,10 @@ const NannyGalleryPage = () => {
   };
 
   const handleRemovePhoto = (index) => {
-    const updatedPhotos = [...photos];
-    updatedPhotos.splice(index, 1);
-    setPhotos(updatedPhotos);
-  };
+  const updated = photos.filter((_, i) => i !== index);
+  setPhotos(updated);
+};
+
 
   const isChanged = () => {
     const videoChanged = video !== initialVideo;
@@ -75,11 +83,25 @@ const NannyGalleryPage = () => {
 
   const handleSave = async () => {
     const formData = new FormData();
-    if (video instanceof File) formData.append("video", video);
-    photos.forEach((photo, index) => {
-      if (photo instanceof File) {
-        formData.append(`gallery[${index}]`, photo);
-      }
+
+    if (video instanceof File) {
+      formData.append("video", video);
+    }
+
+    // 1. Відправити тільки нові фото
+    const newPhotos = photos.filter((p) => p instanceof File);
+    newPhotos.forEach((photo, index) => {
+      formData.append(`gallery[${index}]`, photo);
+    });
+
+    // 2. Відправити тільки наявні дійсні шляхи
+    const existingPhotoPaths = photos
+      .filter((p) => typeof p === "string" && p.includes("/storage/"))
+      .map((url) => url.replace(`${baseUrl}/storage/`, ""))
+      .filter(Boolean); // прибрати пусті
+
+    existingPhotoPaths.forEach((path, i) => {
+      formData.append(`existing_gallery[${i}]`, path);
     });
 
     try {
@@ -91,6 +113,7 @@ const NannyGalleryPage = () => {
       alert("Помилка при збереженні файлів");
     }
   };
+
 
   const handleSavedModalClose = () => {
     setShowSavedModal(false);

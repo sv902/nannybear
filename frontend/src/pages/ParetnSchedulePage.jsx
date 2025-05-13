@@ -42,6 +42,20 @@ const ParentSchedulePage = () => {
     }
   }, [location?.state]);  
 
+  const fetchBookings = () => {
+  axios
+    .get("/api/parent/bookings")
+    .then((res) => {
+      setBookings(res.data);
+    })
+    .catch((err) => console.error("❌ Помилка при завантаженні бронювань:", err));
+};
+
+useEffect(() => {
+  fetchBookings();
+}, []);
+
+
   const renderView = () => {
     switch (viewMode) {
       case "day":
@@ -71,6 +85,7 @@ const ParentSchedulePage = () => {
           <ScheduleMonthViewParent
             bookings={bookings}
             onBookingClick={setSelectedBooking}
+            onRefresh={fetchBookings}
           />
         );
     }

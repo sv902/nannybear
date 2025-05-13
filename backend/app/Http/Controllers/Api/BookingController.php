@@ -138,14 +138,25 @@ class BookingController extends Controller
         }
 
         try {
-            foreach ($booking->bookingDays as $day) {
-                WorkingHour::where([
-                    'nanny_id' => $booking->nanny_id,
-                    'start_date' => $day->date,
-                    'start_time' => $day->start_time,
-                    'end_time' => $day->end_time,
-                ])->update(['is_available' => true]);
-            }
+           foreach ($booking->bookingDays as $day) {
+    $start = strtotime($day->date . ' ' . $day->start_time);
+    $end = strtotime($day->date . ' ' . $day->end_time);
+
+    for ($t = $start; $t < $end; $t += 3600) {
+        $slotStart = date('H:i:s', $t);
+        $slotEnd = date('H:i:s', $t + 3600);
+
+        $updated = WorkingHour::where([
+            'nanny_id' => $booking->nanny_id,
+            'start_date' => $day->date,
+            'start_time' => $slotStart,
+            'end_time' => $slotEnd,
+        ])->update(['is_available' => true]);
+
+        \Log::info("🔁 Розблоковано слот $day->date $slotStart-$slotEnd | Оновлено: $updated");
+    }
+}
+
 
             event(new BookingCancelled($booking));
 

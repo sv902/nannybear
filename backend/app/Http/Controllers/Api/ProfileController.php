@@ -270,27 +270,43 @@ class ProfileController extends Controller
 
             $validated['video'] = $request->file('video')->storeAs('videos/nannies', $filename, 'public');
         }
-        
+       
+       
+       // Оновлення галереї фото
+     $existingGalleryRaw = $request->input('existing_gallery', []);
+$existingGallery = array_filter(is_array($existingGalleryRaw) ? $existingGalleryRaw : []);
 
-        // Оновлення галереї фото
-        $galleryPaths = [];
-        if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $index => $image) {
-                $firstName = $validated['first_name']
-                    ?? ($profile->first_name ?? $user->first_name)
-                    ?? 'nanny';
+$oldGallery = is_array($profile->gallery)
+    ? $profile->gallery
+    : json_decode($profile->gallery ?? '[]', true);
 
-                $lastName = $validated['last_name']
-                    ?? ($profile->last_name ?? $user->last_name)
-                    ?? '';
+$oldGallery = array_filter($oldGallery); // видалити пусті значення
 
-                $filename = Str::slug($firstName . '_' . $lastName . '_gallery_' . $index . '_' . uniqid()) . '.' . $image->getClientOriginalExtension();
+// Знаходимо фото, які потрібно видалити
+$toDelete = array_diff($oldGallery, $existingGallery);
+foreach ($toDelete as $path) {
+    if (!empty($path)) {
+        \Storage::disk('public')->delete($path);
+    }
+}
 
-                $path = $image->storeAs('gallery/nannies', $filename, 'public');
-                $galleryPaths[] = $path;
-            }
-            $validated['gallery'] = $galleryPaths;
-        } 
+// Завантаження нових фото
+$galleryPaths = $existingGallery;
+if ($request->hasFile('gallery')) {
+    foreach ($request->file('gallery') as $index => $image) {
+        if ($image && $image->isValid()) {
+            $firstName = $validated['first_name'] ?? ($profile->first_name ?? $user->first_name ?? 'nanny');
+            $lastName = $validated['last_name'] ?? ($profile->last_name ?? $user->last_name ?? '');
+            $filename = Str::slug($firstName . '_' . $lastName . '_gallery_' . $index . '_' . uniqid()) . '.' . $image->getClientOriginalExtension();
+            $path = $image->storeAs('gallery/nannies', $filename, 'public');
+            $galleryPaths[] = $path;
+        }
+    }
+}
+
+// Зберігаємо масив галереї
+$validated['gallery'] = array_slice($galleryPaths, 0, 8);
+
 
         // Оновлення профілю в базі даних
         $profile->update($validated);

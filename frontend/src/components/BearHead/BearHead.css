@@ -1,0 +1,92 @@
+.container-bear{
+justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.bear-head-home {
+  position: relative;
+  width: 100%;
+  height: 442px;
+  background-color: #f9d8e0;  
+  margin-top: 80px;
+  margin-left: 40px;
+  margin-right: 40px;
+  
+}
+
+.bear-ear-home {
+  position: absolute;
+  width: 392px;
+  height: 392px;
+  background-color: #f9d8e0;
+  border-radius: 50%;
+  top: -120px;
+}
+
+.left-ear-home {
+  left: -180px;
+  z-index: 1;
+}
+
+.right-ear-home {
+  right: -180px;
+  z-index: 1;
+}
+
+.bear-face-home {
+   position: relative;
+  width: 100%;
+  height: 100%;
+}
+.bear-nose-img {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 196px;
+  height: auto;
+  z-index: 1;
+}
+.vector-2 {
+  position: absolute;
+  bottom: 60px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: auto;
+  z-index: 2; 
+}
+.cheek {
+  position: absolute;
+  bottom: -160px;
+  width: 50%;
+  height: 180px;
+  background-color: #f9d8e0;
+  border-bottom-left-radius: 500px;  
+  border-bottom-right-radius: 500px;
+    z-index: 1;
+}
+
+/* Перша щічка — ліва */
+.left-cheek {
+  left: 0;
+}
+
+/* Друга щічка — права */
+.right-cheek {
+  right: 0;
+}
+
+.bear-head-home-text{
+    margin-top: 10px;
+font-family: Oswald;
+font-weight: 400;
+font-size: 64px;
+line-height: 120%;
+letter-spacing: 0%;
+text-align: center;
+text-transform: uppercase;
+color: #3A3B61;
+z-index: 2;
+position: relative;
+}

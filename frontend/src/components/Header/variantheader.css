@@ -1,8 +1,9 @@
 .header {
     height: 58px;
     width: 100%;
-    max-width: 1490px;
+    min-width: 1490px;
     border-bottom: none;
+    padding-right: 40px;
   }
   
   .header .overlap-group-3 {
@@ -71,14 +72,29 @@
     left: 622px !important;
     position: absolute !important;
     top: 17px !important;
+    margin-left: 80px;
   }
   
-  .header .hyperlink-instance {
-    left: 843px !important;
+ .hyperlink-instance {
+    left: 940px !important;
     position: absolute !important;
     top: 17px !important;
+    font-family: Comfortaa;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 120%;
+    letter-spacing: -2%;
+    text-align: center;
+    text-transform: uppercase;
+    color: #3A3B61;
+    border: none;
+    cursor: pointer;
   }
   
+  .hyperlink-instance:hover {
+  text-decoration: underline;
+}
+
   .header .logonannybear {
     display: block;
     height: 50px;

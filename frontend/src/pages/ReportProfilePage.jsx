@@ -165,22 +165,22 @@ const ReportProfilePage = () => {
 
       </div>
       {showSuccessModal && (
-  <div className="bear-modal-overlay">
-    <div className="bear-modal">
+  <div className="bear-modal-overlay-report">
+    <div className="bear-modal-report">
       {/* Ліве вушко */}
-      <div className="ear left-ear"></div>
+      <div className="ear-report left-ear-report"></div>
       {/* Праве вушко */}
-      <div className="ear right-ear">
-        <button className="close-btn" onClick={() => setShowSuccessModal(false)}>✖</button>
+      <div className="ear-report right-ear-report">
+        <button className="close-btn-report" onClick={() => setShowSuccessModal(false)}>✖</button>
       </div>
 
-      <div className="modal-content">
+      <div className="modal-content-report">
         <h2>Дякуємо!</h2>
         <p>
           Ми цінуємо вашу уважність, адже це допомагає нам вдосконалювати наш сервіс і
           забезпечувати ще кращу якість послуг для всіх користувачів.
         </p>
-        <button className="go-back-btn" onClick={() => navigate("/all-nannies")}>
+        <button className="go-back-btn-report" onClick={() => navigate("/all-nannies")}>
           Повернутись до списку нянь
         </button>
       </div>

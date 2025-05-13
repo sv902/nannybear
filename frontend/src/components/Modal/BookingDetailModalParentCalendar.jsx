@@ -6,7 +6,7 @@ import "../../styles/modal.css";
 import DeleteBookingConfirmModalParent from "../Modal/DeleteBookingConfirmModalParent";
 import TooEarlyReviewModal from "./TooEarlyReviewModal";
 
-const BookingDetailModalParentCalendar = ({ bookings, initialIndex = 0, onClose, onDelete }) => {
+const BookingDetailModalParentCalendar = ({ bookings, initialIndex = 0, onClose, onDelete, onRefresh }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
  
@@ -93,9 +93,10 @@ const averageRating = validReviews.length > 0
 
   const handleDelete = (id) => {
     axios.delete(`/api/bookings/${id}`)
-      .then(() => {
-        onDelete(id);        // Видаляє з локального стану
-        onClose();           // Закриває модалку
+        .then(() => {
+        alert("Бронювання скасовано");
+        onClose(); 
+        onRefresh(); // ⬅ оновлення бронювань у розкладі
       })
       .catch((err) => {
         console.error("Помилка при видаленні зустрічі:", err);
