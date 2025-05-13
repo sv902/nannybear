@@ -1,28 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../styles/disclaimer.css"; 
 import Footer from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
-import VariantHeaderNanny from "../components/Header/VariantHeaderNanny";
-import VariantHeader from "../components/Header/VariantHeader";
+import DynamicHeader from "../components/Header/DynamicHeader";
 
 const PrivacyPolicyPage = () => {
-   const [userRole, setUserRole] = useState(null);
-  
-    useEffect(() => {
-      const role = localStorage.getItem("userRole"); // "parent", "nanny", або null
-      console.log("Роль користувача з localStorage:", role);
-      setUserRole(role);
-    }, []);
-  
-    const renderHeader = () => {
-      if (!userRole) return <Header />;
-      if (userRole === "parent") return <VariantHeader />;
-      if (userRole === "nanny") return <VariantHeaderNanny />;
-      return <Header />;
-    };
+   const role = localStorage.getItem("userRole");
   return (
     <>
-     {renderHeader()}
+      <DynamicHeader role={role} />
       <div className="disclaimer-container">        
         <div className="disclaimer-content">
           <h1>Політика конфіденційності</h1>
@@ -163,11 +148,9 @@ Mindly зареєстрована в Естонії. Інформація, зі�
 Ці файли cookie з часом збирають інформацію про вашу онлайн-діяльність на веб-сайті/додатку та в інших онлайн-сервісах, щоб зробити онлайн-рекламу більш актуальною та ефективною для вас. Це відомо як реклама на основі інтересів. Вони також виконують такі функції, як запобігання постійному повторному показу тієї самої реклами та забезпечення правильного відображення реклами для рекламодавців. Без файлів cookie рекламодавцю дуже важко охопити свою аудиторію або дізнатися, скільки оголошень було показано та скільки кліків вони отримали.
             </p>
           </section>      
-        </div>
-      
-
-        <Footer />
-      </div>
+        </div>    
+       </div>
+     <Footer />
     </>
   );
 };

@@ -1,29 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../styles/disclaimer.css"; 
 import Footer from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
-import VariantHeaderNanny from "../components/Header/VariantHeaderNanny";
-import VariantHeader from "../components/Header/VariantHeader";
+import DynamicHeader from "../components/Header/DynamicHeader";
 
 const TermsAndConditionsPage = () => {
-   const [userRole, setUserRole] = useState(null);
-
-  useEffect(() => {
-    const role = localStorage.getItem("userRole"); // "parent", "nanny", або null
-    console.log("Роль користувача з localStorage:", role);
-    setUserRole(role);
-  }, []);
-
-  const renderHeader = () => {
-    if (!userRole) return <Header />;
-    if (userRole === "parent") return <VariantHeader />;
-    if (userRole === "nanny") return <VariantHeaderNanny />;
-    return <Header />;
-  };
+   const role = localStorage.getItem("userRole");
 
   return (
     <>
-     {renderHeader()}
+      <DynamicHeader role={role} />
       <div className="disclaimer-container">        
         <div className="disclaimer-content">
           <h1>ЗАГАЛЬНІ УМОВИ ТА ПОЛОЖЕННЯ</h1>
@@ -169,11 +154,9 @@ Mindly надає платформу для зв'язку спеціалісті
 <br/>Юрисдикція: Ці умови регулюються законодавством Естонії. Спори вирішуються в суді Хар'ю.
             </p>
           </section>      
-        </div>
-      
-
-        <Footer />
+        </div>    
       </div>
+     <Footer />
     </>
   );
 };

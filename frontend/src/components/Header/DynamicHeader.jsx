@@ -2,12 +2,14 @@ import NannyHeader from "../Header/VariantHeaderNanny";
 import ParentHeader from "../Header/VariantHeader";
 import GuestHeader from "../Header/Header";
 
-const DynamicHeader = ({ role }) => {
+const DynamicHeader = () => {
+  const role = localStorage.getItem("userRole");
+
   switch (role) {
     case "nanny":
       return <NannyHeader />;
     case "parent":
-      return <ParentHeader />;  
+      return <ParentHeader />;
     default:
       return <GuestHeader />;
   }

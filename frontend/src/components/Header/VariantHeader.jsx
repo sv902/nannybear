@@ -47,7 +47,7 @@ export const VariantHeader = ({setPreferences, setNannies, setCurrentPage, reset
   const handleLogout = () => {
     handleButtonClick("logout");
     localStorage.removeItem("authToken");
-    localStorage.removeItem("role");
+    localStorage.removeItem("userRole");
   localStorage.removeItem("token"); 
   localStorage.removeItem("userId"); 
     window.location.href = "/registrationlogin?section=login";

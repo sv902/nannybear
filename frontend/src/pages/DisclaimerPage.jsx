@@ -1,10 +1,14 @@
 import React from "react";
 import "../styles/disclaimer.css"; 
 import Footer from "../components/Footer/Footer";
+import DynamicHeader from "../components/Header/DynamicHeader";
 
 const DisclaimerPage = () => {
+  const role = localStorage.getItem("userRole");
   return (
     <>
+
+    <DynamicHeader role={role} />
       <div className="disclaimer-container">        
         <div className="disclaimer-content">
           <h1>ДИСКЛЕЙМЕР</h1>
@@ -96,11 +100,9 @@ Mindly має партнерські посилання, і в цьому роз
 Електронна пошта: support@mindlyspace.com
             </p>
           </section>      
-        </div>
-      
-
-        <Footer />
+        </div>             
       </div>
+    <Footer />
     </>
   );
 };

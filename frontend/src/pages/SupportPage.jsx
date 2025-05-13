@@ -1,28 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Footer from "../components/Footer/Footer";
 import "../styles/disclaimer.css"; 
-import Header from "../components/Header/Header";
-import VariantHeaderNanny from "../components/Header/VariantHeaderNanny";
-import VariantHeader from "../components/Header/VariantHeader";
+import DynamicHeader from "../components/Header/DynamicHeader";
 
 const SupportPage = () => {
-  const [userRole, setUserRole] = useState(null);
-    
-      useEffect(() => {
-        const role = localStorage.getItem("userRole"); // "parent", "nanny", або null
-        console.log("Роль користувача з localStorage:", role);
-        setUserRole(role);
-      }, []);
-    
-      const renderHeader = () => {
-        if (!userRole) return <Header />;
-        if (userRole === "parent") return <VariantHeader />;
-        if (userRole === "nanny") return <VariantHeaderNanny />;
-        return <Header />;
-      };
+  const role = localStorage.getItem("userRole");
   return (
     <>
-     {renderHeader()}
+      <DynamicHeader role={role} />
     <div className="disclaimer-container">
         <div className="disclaimer-content">
         <h1>Служба підтримки</h1>      
@@ -43,10 +28,9 @@ const SupportPage = () => {
 
 
         </ul>
-      </div>
-
-      <Footer />
+      </div>     
     </div>
+    <Footer />
     </>
   );
 };

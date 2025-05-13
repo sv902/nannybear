@@ -13,11 +13,13 @@ import Footer from "../components/Footer/Footer.jsx";
 
 
 export const Home = () => {
-  const [userType, setUserType] = useState("guest");
+    const [userType, setUserType] = useState("guest");
+  const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
+useEffect(() => {
   const storedRole = localStorage.getItem("userRole") || "guest";
   setUserType(storedRole);
+  setLoaded(true);
 }, []);
 const id = localStorage.getItem("nannyProfileId");
 
@@ -25,7 +27,7 @@ const id = localStorage.getItem("nannyProfileId");
     <div className="main">
       <div className="div-2">
         <Marketing />
-        <DynamicHeader role={userType}  />
+        {loaded && <DynamicHeader role={userType} />}
 
          <div className="home-section overlap-9">
           <div className="baner">    
@@ -61,7 +63,7 @@ const id = localStorage.getItem("nannyProfileId");
                 Легкий та надійний спосіб знайти няню, <br />
                 яка ідеально підходить вашій родині.
                 </p>
-                  <FindNannyButton role={userType} id={id} />
+                  {loaded && <FindNannyButton role={userType} id={id} />}
                 </div>           
            <img className="baner-photo" src="/assets/ph1.png" alt="Мама з дитиною" />
          </div>
@@ -97,7 +99,7 @@ const id = localStorage.getItem("nannyProfileId");
                     Знайдіть свою няню вже зараз!
                 </p>
                 <div className="about-button">
-                    <FindNannyButton role={userType} id={id} />
+                     {loaded && <FindNannyButton role={userType} id={id} />}
                 </div>
                 </div>
             </div>
@@ -139,7 +141,7 @@ const id = localStorage.getItem("nannyProfileId");
             </div>
             <p className="text-home">ЩЕ 10 ВИДІВ НЯНЬ...</p>
             <div className="btn-cont-home">
-                <FindNannyButton role={userType} id={id} />
+                 {loaded && <FindNannyButton role={userType} id={id} />}
             </div>  
             </div>
        

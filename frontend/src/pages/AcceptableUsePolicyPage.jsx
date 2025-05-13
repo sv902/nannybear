@@ -1,29 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../styles/disclaimer.css"; 
 import Footer from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
-import VariantHeaderNanny from "../components/Header/VariantHeaderNanny";
-import VariantHeader from "../components/Header/VariantHeader";
+import DynamicHeader from "../components/Header/DynamicHeader";
 
 const AcceptableUsePolicyPage = () => {
-  const [userRole, setUserRole] = useState(null);
-  
-    useEffect(() => {
-      const role = localStorage.getItem("userRole"); // "parent", "nanny", або null
-      console.log("Роль користувача з localStorage:", role);
-      setUserRole(role);
-    }, []);
-  
-    const renderHeader = () => {
-      if (!userRole) return <Header />;
-      if (userRole === "parent") return <VariantHeader />;
-      if (userRole === "nanny") return <VariantHeaderNanny />;
-      return <Header />;
-    };
-
+   const role = localStorage.getItem("userRole");
   return (
     <>
-      {renderHeader()}
+    <DynamicHeader role={role} />    
       <div className="disclaimer-container">        
         <div className="disclaimer-content">
           <h1>Політика допустимого
@@ -65,11 +49,9 @@ const AcceptableUsePolicyPage = () => {
 <br/>6.1. Mindly залишає за собою право оновлювати цю Політику в будь-який час. Подальше використання Платформи після внесення змін означає вашу згоду з оновленими умовами.
             </p>
           </section>      
-        </div>
-      
-
-        <Footer />
+        </div>             
       </div>
+      <Footer />
     </>
   );
 };
