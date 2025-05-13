@@ -19,7 +19,7 @@ import notificationPressedIcon from "../../assets/icons/profilePressedIcon/notif
 import questionPressedIcon from "../../assets/icons/profilePressedIcon/question-pressed.svg"; 
 import logoutPressedIcon from "../../assets/icons/profilePressedIcon/logout-pressed.svg"; 
 
-export const VariantHeader = () => {
+export const VariantHeaderNanny = () => {
   const [selectedButton, setSelectedButton] = useState(null); 
   const [pressedButton, setPressedButton] = useState(null); 
   const [hoveredButton, setHoveredButton] = useState(null); // Стан для наведення
@@ -211,4 +211,4 @@ const handleGoToSchedule = async () => {
   );
 };
 
-export default VariantHeader;
+export default VariantHeaderNanny;

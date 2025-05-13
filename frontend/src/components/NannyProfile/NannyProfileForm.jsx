@@ -161,7 +161,7 @@ const NannyProfileForm = () => {
   
       if (response.status === 200) {        
         localStorage.removeItem("nannyFormData");
-        navigate("/nanny/profile");
+        navigate(`/nanny/profile/${response.data.id}`);
       }
     } catch (error) {
       console.error("❌ Помилка збереження профілю:", error.response?.data || error.message);

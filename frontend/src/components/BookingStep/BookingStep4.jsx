@@ -73,21 +73,19 @@ const getHourDiff = (start, end) => {
       return;
     }
   
-    // const startStr = new Date(startDate).toISOString().slice(0, 10);
-    // const endStr = new Date(endDate).toISOString().slice(0, 10);
-  
-    // const selectedDates = [startStr, endStr];
-    // selectedDates.forEach(date => {
-    //   if (!workingHours.some(h => h.start_date === date && h.is_available)) {
-    //     alert(`⚠️ Няня не працює на ${date}`);
-    //   }
-    // });
-   
-   
-   const finalBookingDays = booking_days?.filter(
-  (d) => d.date && d.start_time && d.end_time
-);
+    const normalizeTime = (timeStr) => {
+  return timeStr?.length === 5 ? timeStr + ":00" : timeStr;
+};
 
+const finalBookingDays = booking_days?.filter(
+  (d) => d.date && d.start_time && d.end_time
+).map((d) => ({
+  ...d,
+  start_time: normalizeTime(d.start_time),
+  end_time: normalizeTime(d.end_time),
+}));
+ 
+  
   
       console.log("Дані для бронювання:", {
         nanny_id: Number(id),

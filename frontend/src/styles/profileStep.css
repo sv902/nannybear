@@ -271,6 +271,7 @@
   transition: 0.3s; 
   margin-bottom: 5px;
   border-color: #4DB3AE;
+  padding: 10px 20px;
 }
 .next-btn:hover {
   background-color: #FFFAEE;
