@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../axiosConfig";
 
 const EmailVerified = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
+
+  const getQueryParam = (param) => {
+    return new URLSearchParams(location.search).get(param);
+  };
 
   useEffect(() => {
     const loginAndRedirect = async () => {
-      const email =
-  localStorage.getItem("email") || sessionStorage.getItem("email");
-const password =
-  localStorage.getItem("password") || sessionStorage.getItem("password");
-const role =
-  localStorage.getItem("userRole") || sessionStorage.getItem("userRole");
+      const urlEmail = getQueryParam("email");
+      const urlRole = getQueryParam("role");
 
+      const email = urlEmail || localStorage.getItem("email") || sessionStorage.getItem("email");
+      const password = localStorage.getItem("password") || sessionStorage.getItem("password");
+      const role = urlRole || localStorage.getItem("userRole") || sessionStorage.getItem("userRole");
 
       if (!email || !password || !role) {
         alert("Дані для входу не знайдені. Будь ласка, зареєструйтесь ще раз.");
@@ -23,10 +27,8 @@ const role =
       }
 
       try {
-        // Отримуємо CSRF cookie (для Sanctum)
         await axios.get("/sanctum/csrf-cookie", { withCredentials: true });
 
-        // Логін
         const loginResponse = await axios.post(
           "/api/login",
           { email, password },
@@ -35,38 +37,27 @@ const role =
 
         console.log("✅ Успішний логін:", loginResponse.data);
 
-        localStorage.removeItem("parentFormData");
-        localStorage.removeItem("nannyFormData");
-        localStorage.removeItem("surveyData");
-
-        // Зберігаємо токен для подальшого використання
         const token = loginResponse?.data?.token;
         if (token) {
           localStorage.setItem("authToken", token);
           axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         }
 
-        // Позначаємо, що користувач тільки що увійшов (для профілю)
+        localStorage.removeItem("parentFormData");
+        localStorage.removeItem("nannyFormData");
+        localStorage.removeItem("surveyData");
+
         localStorage.setItem("justLoggedIn", "true");
 
-        // ❗ НЕ видаляємо formData (щоб не стерти введене)
-        // localStorage.removeItem("parentFormData"); — не потрібно
-
-        // 🔀 Перенаправлення згідно з роллю
         if (role === "parent") {
-          navigate("/registration/parent/profile");
           localStorage.setItem("lastVisited", "/registration/parent/profile");
+          navigate("/registration/parent/profile");
         } else if (role === "nanny") {
-          navigate("/registration/nanny/profile");
           localStorage.setItem("lastVisited", "/registration/nanny/profile");
+          navigate("/registration/nanny/profile");
         } else {
           navigate("/");
-        }        
-
-        // ✅ Тепер можна стерти логін-дані
-        // localStorage.removeItem("email");
-        // localStorage.removeItem("password");
-        // localStorage.removeItem("userRole");
+        }
 
       } catch (error) {
         console.error("❌ Помилка при логіні після підтвердження email:", error.response || error.message);
@@ -78,7 +69,7 @@ const role =
     };
 
     loginAndRedirect();
-  }, [navigate]);
+  }, [navigate, location]);
 
   return (
     <div className="email-confirmation-container">
