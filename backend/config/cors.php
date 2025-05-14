@@ -19,7 +19,10 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_origins' => [
+    'http://localhost:3000',
+    'https://nanny-frontend-4b18.onrender.com',
+    ],
 
     'allowed_origins_patterns' => [],
 
