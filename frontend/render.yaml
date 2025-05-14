@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: nanny-frontend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npx serve -s dist
+    staticPublishPath: dist
+    buildFilter:
+      paths:
+        - frontend/**
