@@ -10,7 +10,8 @@ const RegisterForm = ({ onSwitch }) => {
   const [selectedRole, setSelectedRole] = useState("parent"); 
 
   const handleNext = () => {
-    navigate("/registration/email", { state: { role: selectedRole } });
+    localStorage.setItem("selectedRole", selectedRole);
+    navigate("/registration/email");
   };
 
   return (
