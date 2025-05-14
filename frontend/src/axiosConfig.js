@@ -18,9 +18,9 @@ instance.interceptors.request.use(config => {
   }
   
   const xsrfToken = getCookie("XSRF-TOKEN");
-  if (xsrfToken) {
-    config.headers['X-XSRF-TOKEN'] = decodeURIComponent(xsrfToken);
-  }
+if (xsrfToken !== undefined) {
+  config.headers['X-XSRF-TOKEN'] = decodeURIComponent(xsrfToken);
+}
   return config;
 });
 
