@@ -20,7 +20,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [  
-    'https://nanny-frontend-4b18.onrender.com',
+    'https://nanny-bear.onrender.com',
     ],
 
     'allowed_origins_patterns' => [],
