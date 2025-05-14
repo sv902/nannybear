@@ -59,3 +59,19 @@ Route::get('/reset-password/{token}', function () {
 Route::get('/{any}', function () {
     return file_get_contents(public_path('index.html'));
 })->where('any', '.*');
+
+Route::get('/check-session', function () {
+    try {
+        session(['debug' => 'it works']);
+        return response()->json([
+            'status' => '✅ Session writable',
+            'session' => session()->all()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => '❌ Session error',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+});
+
