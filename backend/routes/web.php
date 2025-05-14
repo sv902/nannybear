@@ -24,9 +24,8 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
         event(new \Illuminate\Auth\Events\Verified($user));
     }
 
-    // Перенаправлення на frontend сторінку для логіну
-    // return Redirect::to(env('FRONTEND_URL') . '/email-verified');
-    return redirect()->to(env('FRONTEND_URL') . '/email-verified')->withoutCookie('XSRF-TOKEN');
+    // ✅ Передача email і ролі у URL frontend-сторінки
+    return redirect()->to(env('FRONTEND_URL') . '/email-verified?email=' . urlencode($user->email) . '&role=' . $user->getRoleNames()->first());
 })->middleware('signed')->name('verification.verify');
 
 // Повторна відправка листа
