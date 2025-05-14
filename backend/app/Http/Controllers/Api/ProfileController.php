@@ -314,6 +314,7 @@ $validated['gallery'] = array_slice($galleryPaths, 0, 8);
 
         return response()->json([
             'message' => 'Профіль няні оновлено',
+            'id' => $profile->id,
             'profile' => $user->nannyProfile()->with('educations')->first()
         ]);
     }
