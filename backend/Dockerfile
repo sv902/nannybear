@@ -16,6 +16,7 @@ COPY . /var/www/html
 
 WORKDIR /var/www/html
 RUN composer install
+RUN php artisan migrate --force && php artisan db:seed --force
 
 RUN a2enmod rewrite
 
