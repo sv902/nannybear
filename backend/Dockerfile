@@ -21,6 +21,7 @@ RUN a2enmod rewrite
 
 # ✅ ДОДАНО СТВОРЕННЯ ПАПКИ ДЛЯ СЕСІЙ
 RUN mkdir -p /var/www/html/storage/framework/sessions \
- && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+ && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+ && chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
 COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
