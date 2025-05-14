@@ -98,7 +98,8 @@ const ParentProfilePage = () => {
     
   if (!parent) return <div>Завантаження...</div>;
 
-  const isValidPhoto = parent.photo && parent.photo !== "null" && parent.photo.trim() !== "";
+  const isValidPhoto = parent.photo && !parent.photo.includes("index") && parent.photo.trim() !== "";
+
   const mainAddress = parent.addresses?.[0] || {};
 
  return (
