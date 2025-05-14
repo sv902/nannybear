@@ -54,12 +54,6 @@ Route::get('/reset-password/{token}', function () {
 //     Route::patch('/users/{id}/role', [AdminController::class, 'updateRole'])->name('admin.users.role'); // Змінити роль
 // });
 
-
-// Передача всіх маршрутів фронтенду React
-Route::get('/{any}', function () {
-    return file_get_contents(public_path('index.html'));
-})->where('any', '.*');
-
 Route::get('/check-session', function () {
     try {
         session(['debug' => 'it works']);
@@ -75,3 +69,7 @@ Route::get('/check-session', function () {
     }
 });
 
+// Передача всіх маршрутів фронтенду React
+Route::get('/{any}', function () {
+    return file_get_contents(public_path('index.html'));
+})->where('any', '.*');
