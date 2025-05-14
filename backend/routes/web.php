@@ -11,8 +11,6 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\File;
 
-use Illuminate\Support\Facades\Artisan;
-
 // Підтвердження email через посилання
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
     $user = User::findOrFail($id);
@@ -56,23 +54,6 @@ Route::get('/reset-password/{token}', function () {
 //     Route::patch('/users/{id}/role', [AdminController::class, 'updateRole'])->name('admin.users.role'); // Змінити роль
 // });
 
-Route::get('/run-migrations', function () {
-    try {
-        Artisan::call('migrate', ['--force' => true]);
-        return '✅ Міграції виконано';
-    } catch (\Exception $e) {
-        return '❌ Помилка: ' . $e->getMessage();
-    }
-});
-
-Route::get('/run-seeder', function () {
-    try {
-        Artisan::call('db:seed', ['--class' => 'DatabaseSeeder', '--force' => true]);
-        return '✅ Ролі створено';
-    } catch (\Exception $e) {
-        return '❌ Помилка: ' . $e->getMessage();
-    }
-});
 
 // Передача всіх маршрутів фронтенду React
 Route::get('/{any}', function () {
