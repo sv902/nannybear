@@ -3,8 +3,5 @@ services:
     name: nanny-frontend
     env: node
     buildCommand: npm install && npm run build
-    startCommand: npx serve -s dist
-    staticPublishPath: dist
-    buildFilter:
-      paths:
-        - frontend/**
+    startCommand: npx serve -s build
+    staticPublishPath: build
