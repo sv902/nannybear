@@ -3,37 +3,30 @@ services:
     name: nanny-backend
     env: php
     plan: free
-    rootDir: backend
     buildCommand: |
       composer install --no-dev --optimize-autoloader
       php artisan key:generate
       php artisan migrate --force
       php artisan storage:link
-    startCommand: php artisan serve --host 0.0.0.0 --port $PORT
+    startCommand: php artisan serve --host 0.0.0.0 --port 10000
     envVars:
       - key: APP_ENV
         value: production
       - key: APP_KEY
-        sync: false
-      - key: APP_DEBUG
-        value: false
-      - key: LOG_CHANNEL
-        value: stderr
+        generateValue: true
       - key: APP_URL
         value: https://nanny-backend-pk2s.onrender.com
-      - key: FRONTEND_URL
-        value: https://nanny-bear.onrender.com
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
-        sync: false
+        value: dpg-d0i7ccjuibrs73a13afg-a.frankfurt-postgres.render.com
       - key: DB_PORT
         value: 5432
       - key: DB_DATABASE
-        sync: false
+        value: nanny_bear_db
       - key: DB_USERNAME
-        sync: false
+        value: nanny_bear_db_user
       - key: DB_PASSWORD
-        sync: false
-      - key: SANCTUM_STATEFUL_DOMAINS
-        value: nanny-bear.onrender.com
+        value: YFr7Ecag5OPu5KrdN2eyaMbojkfnPPvo
+      - key: FILESYSTEM_DRIVER
+        value: public
