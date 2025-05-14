@@ -110,8 +110,13 @@ const ParentProfileForm = () => {
         navigate("/registration/parent/survey");
       }
     } catch (error) {
-      console.error("❌ Помилка збереження профілю:", error.response?.data || error.message);
-      alert("Сталася помилка при збереженні. Спробуйте ще раз.");
+      if (error.response?.status === 422) {
+        console.error("📋 Валідатор відповів з помилками:", error.response.data.errors);
+        alert("🚫 Некоректні дані. Перевірте форму.");
+      } else {
+        console.error("❌ Інша помилка:", error.response?.data || error.message);
+        alert("Сталася помилка при збереженні. Спробуйте ще раз.");
+      }
     }
   };
 
