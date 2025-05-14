@@ -73,27 +73,29 @@ const ParentProfileForm = () => {
       await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
 
       const birthDate = `${formData.birthYear}-${formData.birthMonth.padStart(2, "0")}-${formData.birthDay.padStart(2, "0")}`;
-      const payload = {
-        ...formData,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        birth_date: birthDate,
-        phone: formData.phone,
-        addresses: [
-          {
-            type: formData.addresses?.[0]?.type || "Дім",
-            city: formData.addresses?.[0]?.city || "",
-            district: formData.addresses?.[0]?.district || "",
-            address: formData.addresses?.[0]?.address || "",
-            floor: formData.addresses?.[0]?.floor || "",
-            apartment: formData.addresses?.[0]?.apartment || "",
-          }
-        ],
-        children: (formData.children || []).map(child => ({
-          name: child.name,
-          birth_date: `${child.year}-${String(child.month).padStart(2, "0")}-${String(child.day).padStart(2, "0")}`,
-        })),
-      };      
+      const address = formData.addresses?.[0] || {};
+       const payload = {
+          ...formData,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          birth_date: birthDate,
+          phone: formData.phone,
+          city: address.city || "", // 🔥 додаємо окремо для валідації
+          addresses: [
+            {
+              type: address.type || "Дім",
+              city: address.city || "",
+              district: address.district || "",
+              address: address.address || "",
+              floor: address.floor || "",
+              apartment: address.apartment || "",
+            }
+          ],
+          children: (formData.children || []).map(child => ({
+            name: child.name,
+            birth_date: `${child.year}-${String(child.month).padStart(2, "0")}-${String(child.day).padStart(2, "0")}`,
+          })),
+        }; 
 
       delete payload.birthDay;
       delete payload.birthMonth;
