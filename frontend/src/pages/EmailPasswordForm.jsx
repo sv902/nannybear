@@ -10,7 +10,7 @@ import "../styles/register.css";
 const EmailPasswordForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const role = location.state?.role || "parent";
+  const role = location.state?.role || localStorage.getItem("selectedRole") || "parent";
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");  
