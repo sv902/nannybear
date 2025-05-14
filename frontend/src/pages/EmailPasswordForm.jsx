@@ -56,6 +56,10 @@ const EmailPasswordForm = () => {
       localStorage.setItem('userRole', role);
       localStorage.setItem("email", email);
       localStorage.setItem("password", password);
+
+    sessionStorage.setItem("email", email);
+    sessionStorage.setItem("password", password);
+    sessionStorage.setItem("userRole", role);
       
       if (response.data.token) {
         localStorage.setItem('authToken', response.data.token);
