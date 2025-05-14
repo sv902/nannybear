@@ -19,6 +19,8 @@ RUN composer install
 
 RUN a2enmod rewrite
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# ✅ ДОДАНО СТВОРЕННЯ ПАПКИ ДЛЯ СЕСІЙ
+RUN mkdir -p /var/www/html/storage/framework/sessions \
+ && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
