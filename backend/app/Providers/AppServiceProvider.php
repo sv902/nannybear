@@ -22,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Автоматичне створення символічного лінку storage -> public/storage
+        if (app()->environment('production') && !file_exists(public_path('storage'))) {
+            \Artisan::call('storage:link');
+        }
+        
         Event::listen(
             UserRegistered::class,
             SendWelcomeEmail::class
