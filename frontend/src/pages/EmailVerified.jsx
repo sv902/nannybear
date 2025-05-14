@@ -8,9 +8,13 @@ const EmailVerified = () => {
 
   useEffect(() => {
     const loginAndRedirect = async () => {
-      const email = localStorage.getItem("email");
-      const password = localStorage.getItem("password");
-      const role = localStorage.getItem("userRole");
+      const email =
+  localStorage.getItem("email") || sessionStorage.getItem("email");
+const password =
+  localStorage.getItem("password") || sessionStorage.getItem("password");
+const role =
+  localStorage.getItem("userRole") || sessionStorage.getItem("userRole");
+
 
       if (!email || !password || !role) {
         alert("Дані для входу не знайдені. Будь ласка, зареєструйтесь ще раз.");
