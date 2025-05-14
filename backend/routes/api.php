@@ -218,4 +218,10 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/nanny/{id}/bookings', [BookingController::class, 'getBookingsForPublic']);
 
 
+Route::get('/test-env', function () {
+    return response()->json([
+        'session_domain' => config('session.domain'),
+        'sanctum_stateful' => config('sanctum.stateful'),
+    ]);
+});
 
