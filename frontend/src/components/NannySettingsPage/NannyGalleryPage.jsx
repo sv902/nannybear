@@ -110,6 +110,7 @@ const NannyGalleryPage = () => {
       setInitialPhotos(photos);
       setShowSavedModal(true);
     } catch (err) {
+      console.error("❌ SERVER VALIDATION ERROR", err.response?.data);
       alert("Помилка при збереженні файлів");
     }
   };
