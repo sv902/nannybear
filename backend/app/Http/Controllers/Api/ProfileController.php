@@ -126,11 +126,14 @@ class ProfileController extends Controller
         }
 
         \Log::info('🎥 hasFile(video): ' . ($request->hasFile('video') ? 'YES' : 'NO'));
-        \Log::info('🎥 video info: ', [
-            'name' => $request->file('video')?->getClientOriginalName(),
-            'mime' => $request->file('video')?->getClientMimeType(),
-            'size' => $request->file('video')?->getSize()
+      \Log::info('--- Вхідний запит (video)', [
+            'has video?' => $request->hasFile('video'),
+            'video' => $request->file('video'),
+            'video name' => $request->file('video')?->getClientOriginalName(),
+            'video size' => $request->file('video')?->getSize(),
+            'video mime' => $request->file('video')?->getMimeType(),
         ]);
+
 
         // Валідація вхідних даних
         $validated = $request->validate([
