@@ -125,6 +125,13 @@ class ProfileController extends Controller
             return response()->json(['error' => '❌ User not authenticated'], 401);
         }
 
+        \Log::info('🎥 hasFile(video): ' . ($request->hasFile('video') ? 'YES' : 'NO'));
+        \Log::info('🎥 video info: ', [
+            'name' => $request->file('video')?->getClientOriginalName(),
+            'mime' => $request->file('video')?->getClientMimeType(),
+            'size' => $request->file('video')?->getSize()
+        ]);
+
         // Валідація вхідних даних
         $validated = $request->validate([
             'first_name' => 'sometimes|required|string|max:255',
@@ -149,7 +156,7 @@ class ProfileController extends Controller
             'experience_years' => 'sometimes|required|numeric|min:0|max:50',
             'hourly_rate' => 'sometimes|required|numeric|min:0|max:500',
             'availability' => 'nullable|array',
-            'video' => 'nullable|file|mimes:mp4,mov,avi,webm|max:20480', // до 20MB
+            'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/quicktime|max:20480', // до 20MB
             'gallery' => 'nullable|array',
             'gallery.*' => 'nullable|file|image|max:5120', // кожне фото до 5MB
             'goat' => 'nullable|string',
