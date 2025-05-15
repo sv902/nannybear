@@ -17,7 +17,7 @@ COPY . /var/www/html
 WORKDIR /var/www/html
 RUN composer install
 RUN php artisan migrate --force && php artisan db:seed --force
-RUN php artisan storage:link
+RUN rm -rf public/storage && php artisan storage:link
 RUN a2enmod rewrite
 
 # ✅ ДОДАНО СТВОРЕННЯ ПАПКИ ДЛЯ СЕСІЙ
