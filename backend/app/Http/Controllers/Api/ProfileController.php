@@ -66,6 +66,12 @@ class ProfileController extends Controller
             'photo' => 'nullable|file|image|max:5120',
         ]);
 
+        // Автоматично копіюємо місто з першої адреси, якщо не передано напряму
+if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
+    $validated['city'] = $validated['addresses'][0]['city'];
+}
+
+
         if ($request->hasFile('photo')) {
             // Видаляємо старе фото, якщо є
             if ($user->parentProfile && $user->parentProfile->photo) {
