@@ -1,4 +1,11 @@
 <IfModule mod_rewrite.c>
+
+    <IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "https://nanny-bear.onrender.com"
+    Header set Access-Control-Allow-Methods "GET, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+    </IfModule>
+
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
