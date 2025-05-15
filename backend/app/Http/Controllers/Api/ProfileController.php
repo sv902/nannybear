@@ -191,6 +191,11 @@ class ProfileController extends Controller
             }
         }
 
+        if (!$request->hasFile('photo') && !isset($validated['photo'])) {
+    $validated['photo'] = $profile->photo;
+}
+
+
         // Створюємо або оновлюємо профіль
         if (!$user->nannyProfile) {
             $profile = $user->nannyProfile()->create($validated);
@@ -280,7 +285,11 @@ class ProfileController extends Controller
 
             $validated['video'] = $request->file('video')->storeAs('videos/nannies', $filename, 'public');
         }
-       
+
+        if (!$request->hasFile('video') && !isset($validated['video'])) {
+    $validated['video'] = $profile->video;
+}
+
        
        // Оновлення галереї фото
      $existingGalleryRaw = $request->input('existing_gallery', []);
@@ -318,6 +327,26 @@ if ($request->hasFile('gallery')) {
 if (!empty($galleryPaths)) {
     $validated['gallery'] = array_slice($galleryPaths, 0, 8);
 }
+// Перевірка: якщо галерея не надіслана — залишити стару
+if (!$request->hasFile('gallery') && empty($existingGallery)) {
+    $validated['gallery'] = $profile->gallery ?? [];
+}
+
+        if (!isset($validated['gallery']) && is_array($profile->gallery)) {
+    $validated['gallery'] = $profile->gallery;
+}
+if (!isset($validated['photo'])) {
+    $validated['photo'] = $profile->photo;
+}
+
+if (!isset($validated['video'])) {
+    $validated['video'] = $profile->video;
+}
+
+if (!isset($validated['gallery'])) {
+    $validated['gallery'] = $profile->gallery;
+}
+
 
         // Оновлення профілю в базі даних
         $profile->update($validated);
