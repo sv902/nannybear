@@ -201,10 +201,7 @@ class ProfileController extends Controller
             $profile = $user->nannyProfile()->create($validated);
         } else {
             $profile = $user->nannyProfile;
-            $profile->update($validated);
-        }
-        
-        // Оновлення спеціалізацій
+            // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
             $profile->specialization = $validated['specialization'];
         }
@@ -223,6 +220,11 @@ class ProfileController extends Controller
         if (isset($validated['additional_skills'])) {
             $profile->additional_skills = $validated['additional_skills'];
         }
+            
+            $profile->update($validated);
+        }
+        
+        
 
         // Оновлення освіти
         if (isset($validated['education'])) {
