@@ -84,8 +84,13 @@ const NannyGalleryPage = () => {
   const handleSave = async () => {
     const formData = new FormData();
 
+    console.log("🎥 VIDEO:", video);
+    console.log("🎥 video instanceof File:", video instanceof File);
+      
     if (video instanceof File) {
       formData.append("video", video);
+    } else {
+      console.warn("❌ Video is not a valid File object!");
     }
 
     // 1. Відправити тільки нові фото
@@ -105,7 +110,12 @@ const NannyGalleryPage = () => {
     });
 
     try {
-      await axios.post("/api/nanny/profile", formData);
+      await axios.post("/api/nanny/profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+      });
       setInitialVideo(video);
       setInitialPhotos(photos);
       setShowSavedModal(true);
