@@ -114,7 +114,7 @@ class ProfileController extends Controller
         ]);
     }
     
-    /**
+     /**
      * Оновлення або збереження профілю няні
      */
     public function storeNannyProfile(Request $request)
@@ -124,16 +124,6 @@ class ProfileController extends Controller
         if (!$user) {
             return response()->json(['error' => '❌ User not authenticated'], 401);
         }
-
-        \Log::info('🎥 hasFile(video): ' . ($request->hasFile('video') ? 'YES' : 'NO'));
-      \Log::info('--- Вхідний запит (video)', [
-            'has video?' => $request->hasFile('video'),
-            'video' => $request->file('video'),
-            'video name' => $request->file('video')?->getClientOriginalName(),
-            'video size' => $request->file('video')?->getSize(),
-            'video mime' => $request->file('video')?->getMimeType(),
-        ]);
-
 
         // Валідація вхідних даних
         $validated = $request->validate([
@@ -159,7 +149,7 @@ class ProfileController extends Controller
             'experience_years' => 'sometimes|required|numeric|min:0|max:50',
             'hourly_rate' => 'sometimes|required|numeric|min:0|max:500',
             'availability' => 'nullable|array',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/webm,video/quicktime|max:20480', // до 20MB
+            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime|max:20480', // до 20MB
             'gallery' => 'nullable|array',
             'gallery.*' => 'nullable|file|image|max:5120', // кожне фото до 5MB
             'goat' => 'nullable|string',
@@ -191,17 +181,15 @@ class ProfileController extends Controller
             }
         }
 
-        if (!$request->hasFile('photo') && !isset($validated['photo'])) {
-    $validated['photo'] = $profile->photo;
-}
-
-
         // Створюємо або оновлюємо профіль
         if (!$user->nannyProfile) {
             $profile = $user->nannyProfile()->create($validated);
         } else {
             $profile = $user->nannyProfile;
-            // Оновлення спеціалізацій
+            $profile->update($validated);
+        }
+        
+        // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
             $profile->specialization = $validated['specialization'];
         }
@@ -220,11 +208,6 @@ class ProfileController extends Controller
         if (isset($validated['additional_skills'])) {
             $profile->additional_skills = $validated['additional_skills'];
         }
-            
-            $profile->update($validated);
-        }
-        
-        
 
         // Оновлення освіти
         if (isset($validated['education'])) {
@@ -287,11 +270,7 @@ class ProfileController extends Controller
 
             $validated['video'] = $request->file('video')->storeAs('videos/nannies', $filename, 'public');
         }
-
-        if (!$request->hasFile('video') && !isset($validated['video'])) {
-    $validated['video'] = $profile->video;
-}
-
+       
        
        // Оновлення галереї фото
      $existingGalleryRaw = $request->input('existing_gallery', []);
@@ -326,28 +305,7 @@ if ($request->hasFile('gallery')) {
 }
 
 // Зберігаємо масив галереї
-if (!empty($galleryPaths)) {
-    $validated['gallery'] = array_slice($galleryPaths, 0, 8);
-}
-// Перевірка: якщо галерея не надіслана — залишити стару
-if (!$request->hasFile('gallery') && empty($existingGallery)) {
-    $validated['gallery'] = $profile->gallery ?? [];
-}
-
-        if (!isset($validated['gallery']) && is_array($profile->gallery)) {
-    $validated['gallery'] = $profile->gallery;
-}
-if (!isset($validated['photo'])) {
-    $validated['photo'] = $profile->photo;
-}
-
-if (!isset($validated['video'])) {
-    $validated['video'] = $profile->video;
-}
-
-if (!isset($validated['gallery'])) {
-    $validated['gallery'] = $profile->gallery;
-}
+$validated['gallery'] = array_slice($galleryPaths, 0, 8);
 
 
         // Оновлення профілю в базі даних
@@ -356,7 +314,6 @@ if (!isset($validated['gallery'])) {
 
         return response()->json([
             'message' => 'Профіль няні оновлено',
-            'id' => $profile->id,
             'profile' => $user->nannyProfile()->with('educations')->first()
         ]);
     }
