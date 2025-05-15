@@ -80,7 +80,7 @@ const ParentProfileForm = () => {
           last_name: formData.lastName,
           birth_date: birthDate,
           phone: formData.phone,
-          // city: address.city || "", // 🔥 додаємо окремо для валідації
+          city: address.city || "", // 🔥 додаємо окремо для валідації
           addresses: [
             {
               type: address.type || "Дім",
