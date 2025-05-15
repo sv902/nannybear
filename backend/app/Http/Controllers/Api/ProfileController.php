@@ -315,8 +315,9 @@ if ($request->hasFile('gallery')) {
 }
 
 // Зберігаємо масив галереї
-$validated['gallery'] = array_slice($galleryPaths, 0, 8);
-
+if (!empty($galleryPaths)) {
+    $validated['gallery'] = array_slice($galleryPaths, 0, 8);
+}
 
         // Оновлення профілю в базі даних
         $profile->update($validated);
