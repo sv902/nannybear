@@ -96,18 +96,20 @@ body {
   z-index: 3;
 }
 
-@font-face {
-  font-family: 'Princess Diana';
-  src: url('../assets/fonts/PrincessDiana.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
+  @font-face {
+    font-family: 'PrincessDiana';
+    src: url('../../assets/fonts/PrincessDiana.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
 }
+
+
 
 .baner-title-and {
   position: absolute;
   top: 5px;   /* змістити вниз */
   left: 150px; /* змістити вправо */
-  font-family: 'PrincessDiana', cursive;
+  font-family: 'PrincessDiana', cursive !important;
   font-style: italic;
   font-size: 200px;
   color: #ADD1F5;
