@@ -96,6 +96,13 @@ body {
   z-index: 3;
 }
 
+@font-face {
+  font-family: 'Princess Diana';
+  src: url('/fonts/PrincessDiana.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 .baner-title-and {
   position: absolute;
   top: 5px;   /* змістити вниз */
