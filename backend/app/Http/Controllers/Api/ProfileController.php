@@ -75,7 +75,7 @@ if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
         if ($request->hasFile('photo')) {
             // Видаляємо старе фото, якщо є
             if ($user->parentProfile && $user->parentProfile->photo) {
-                \Storage::disk('public')->delete($user->parentProfile->photo);
+                \Storage::disk('s3')->delete($user->parentProfile->photo);
             }
         
             $firstName = $validated['first_name'] ?? 'parent';
@@ -85,7 +85,7 @@ if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
             $filename = Str::slug($firstName . '_' . $lastName . '_parent_avatar') . '.' . $extension;
         
             // Зберігаємо фото з постійним іменем (без uniqid)
-            $validated['photo'] = $request->file('photo')->storeAs('photos/parents', $filename, 'public');
+            $validated['photo'] = $request->file('photo')->storeAs('photos/parents', $filename, 's3');
        }        
       
         if (isset($validated['birth_date'])) {
@@ -171,7 +171,7 @@ if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
         if ($request->hasFile('photo')) {
             // Видаляємо старе фото, якщо є
             if ($user->nannyProfile && $user->nannyProfile->photo) {
-                \Storage::disk('public')->delete($user->nannyProfile->photo);
+                \Storage::disk('s3')->delete($user->nannyProfile->photo);
             }
         
             $firstName = $validated['first_name'] ?? 'nanny';
@@ -180,7 +180,7 @@ if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
             $extension = $request->file('photo')->getClientOriginalExtension();
             $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
 
-            $validated['photo'] = $request->file('photo')->storeAs('photos/nannies', $filename, 'public');
+            $validated['photo'] = $request->file('photo')->storeAs('photos/nannies', $filename, 's3');
             // Якщо не надіслано нове фото і в базі немає фото
             if (empty($validated['photo']) && (!$profile->photo ?? true)) {
                 $validated['photo'] = 'default-avatar.jpg';
@@ -235,7 +235,7 @@ if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
 
                     $filename = Str::slug($firstName . '_' . $lastName . '_' . $eduData['institution'] . '_diploma_' . uniqid()) . '.' . $file->getClientOriginalExtension();
         
-                    $diplomaPath = $file->storeAs('diplomas', $filename, 'public');
+                    $diplomaPath = $file->storeAs('diplomas', $filename, 's3');
                 } else {
                     // Якщо файл не передано, а існуючий запис є — зберігаємо старий шлях
                     $diplomaPath = $existing?->diploma_image;
@@ -261,7 +261,7 @@ if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
         // Оновлення відео
         if ($request->hasFile('video')) {
             if ($profile->video) {
-                \Storage::disk('public')->delete($profile->video);
+                \Storage::disk('s3')->delete($profile->video);
             }
         
             $firstName = $validated['first_name']
@@ -274,7 +274,7 @@ if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
         
             $filename = Str::slug($firstName . '_' . $lastName . '_video_' . uniqid()) . '.' . $request->file('video')->getClientOriginalExtension();
 
-            $validated['video'] = $request->file('video')->storeAs('videos/nannies', $filename, 'public');
+            $validated['video'] = $request->file('video')->storeAs('videos/nannies', $filename, 's3');
         }
        
        
@@ -292,7 +292,7 @@ $oldGallery = array_filter($oldGallery); // видалити пусті знач
 $toDelete = array_diff($oldGallery, $existingGallery);
 foreach ($toDelete as $path) {
     if (!empty($path)) {
-        \Storage::disk('public')->delete($path);
+        \Storage::disk('s3')->delete($path);
     }
 }
 
@@ -304,7 +304,7 @@ if ($request->hasFile('gallery')) {
             $firstName = $validated['first_name'] ?? ($profile->first_name ?? $user->first_name ?? 'nanny');
             $lastName = $validated['last_name'] ?? ($profile->last_name ?? $user->last_name ?? '');
             $filename = Str::slug($firstName . '_' . $lastName . '_gallery_' . $index . '_' . uniqid()) . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('gallery/nannies', $filename, 'public');
+            $path = $image->storeAs('gallery/nannies', $filename, 's3');
             $galleryPaths[] = $path;
         }
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class ParentProfile extends Model
 {
@@ -83,4 +84,10 @@ class ParentProfile extends Model
         return $this->hasMany(Booking::class, 'parent_id');
     }
 
+    protected $appends = ['photo'];
+
+     public function getPhotoAttribute($value)
+    {
+        return $value ? Storage::disk('s3')->url($value) : null;
+    }
 }

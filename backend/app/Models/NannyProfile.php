@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class NannyProfile extends Model
 {
@@ -74,6 +75,25 @@ class NannyProfile extends Model
     public function parentReviews()
     {
         return $this->hasMany(\App\Models\ParentReview::class);
+    }
+    
+    protected $appends = ['photo', 'video', 'gallery'];
+
+    public function getPhotoAttribute($value)
+    {
+        return $value ? Storage::disk('s3')->url($value) : null;
+    }
+
+    public function getVideoAttribute($value)
+    {
+        return $value ? Storage::disk('s3')->url($value) : null;
+    }
+
+    public function getGalleryAttribute($value)
+    {
+        $paths = is_array($value) ? $value : json_decode($value, true) ?? [];
+
+        return array_map(fn($path) => Storage::disk('s3')->url($path), $paths);
     }
 
 }
