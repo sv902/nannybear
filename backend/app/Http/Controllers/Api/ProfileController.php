@@ -84,6 +84,7 @@ class ProfileController extends Controller
             $profile->update($validated);
         }
 
+        $photoFile = $request->file('photo');
         
          // Завантаження фото
         if ($photoFile) {
@@ -178,6 +179,7 @@ class ProfileController extends Controller
             $profile->update($validated);
         }
 
+        $photoFile = $request->file('photo');
 
          // Якщо є нове фото, зберігаємо його
        if ($photoFile) {
