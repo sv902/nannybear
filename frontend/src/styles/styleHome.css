@@ -407,7 +407,11 @@ padding: 10px 20px;
 
 
 .reviews-section-home {
- background-color: #F9D8E0;
+  background-color: #F9D8E0;
+  background-image: url("/assets/AnimalsReviews.svg"); 
+  background-repeat: no-repeat;
+  background-size: contain; 
+  background-position: bottom center;
   padding-top: 20px;
   padding-bottom: 40px;
   border-radius: 20px;
@@ -415,7 +419,8 @@ padding: 10px 20px;
   overflow: visible;
   margin-left: 40px;
   margin-right: 40px;
-  max-width:  1460px;
+  max-width: 1460px;
+  min-height: 600px; 
 }
 
 .review-overlay-container {

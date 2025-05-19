@@ -134,7 +134,7 @@ const id = localStorage.getItem("nannyProfileId");
             <div className="typecard-wrapper">
                 <TypeCard 
                     className="type-card-instance" 
-                    image="/assets/ILLUSTRATION-08.svg"
+                    image="/assets/ILLUSTRATION-03.svg"
                 />
                 <TypeCard 
                     className="type-card-2" 
@@ -146,13 +146,13 @@ const id = localStorage.getItem("nannyProfileId");
                     className="type-card-3" 
                     text="НЯНЯ З ПРОЖИВАННЯМ" 
                     text1="Щоденний догляд, розвиток, супровід дитини у комфортній атмосфері." 
-                    image="/assets/ILLUSTRATION-03.svg"
+                    image="/assets/ILLUSTRATION-04.svg"
                 />
                 <TypeCard 
                     className="type-card-2" 
                     text="НЯНЯ ПОГОДИННО" 
                     text1="Приходить за потреби на декілька годин, коли батькам потрібно." 
-                    image="/assets/ILLUSTRATION-04.svg"
+                    image="/assets/ILLUSTRATION-08.svg"
                 />
                 <TypeCard 
                     className="type-card-5" 
@@ -183,11 +183,11 @@ const id = localStorage.getItem("nannyProfileId");
                     <p className="box-text">НАВЕДМІДЬ НА ПОВІДОМЛЕННЯ!</p></div>
             
             <div className="review-overlay-container">
-                <img
+                {/* <img
                 src="/assets/AnimalsReviews.svg"
                 alt="Ілюстрація відгуків"
                 className="review-bear-image"
-                />
+                /> */}
                
             <div className="msgcard-wrapper position-1">
             <MsgCard property1="default" />
