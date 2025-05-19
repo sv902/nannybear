@@ -14,9 +14,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY . /var/www/html
+COPY composer.json composer.lock ./
 
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
+COPY . .
 
 RUN php artisan migrate --force && php artisan db:seed --force
 RUN rm -rf public/storage && php artisan storage:link
