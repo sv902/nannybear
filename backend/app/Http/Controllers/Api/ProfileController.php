@@ -326,9 +326,13 @@ class ProfileController extends Controller
                 $profile->gallery = $profile->getGalleryUrls();
 
                 return response()->json([
-                    'message' => 'Профіль няні оновлено',
-                    'profile' => $user->nannyProfile()->with('educations')->first()
-                ]);
+    'validated' => $validated,
+    'has_file' => $request->hasFile('photo'),
+    'file_name' => $request->file('photo')?->getClientOriginalName(),
+    'saved_photo_path' => $validated['photo'] ?? null,
+    'message' => 'Тест логування на фронт',
+], 200);
+
             }
 
     /**
