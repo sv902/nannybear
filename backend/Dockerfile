@@ -34,12 +34,5 @@ RUN mkdir -p storage/framework/sessions storage/app/public && \
     chown -R www-data:www-data storage bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
-# Artisan-команди
-RUN cp .env.example .env && \
-    php artisan key:generate && \
-    php artisan config:clear && \
-    php artisan cache:clear && \
-    if [ ! -L "public/storage" ]; then php artisan storage:link; fi
-
 # Apache конфіг
 COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf

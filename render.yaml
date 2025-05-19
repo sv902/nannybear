@@ -4,12 +4,15 @@ services:
     env: php
     plan: free
     buildCommand: |
+      cd backend
+      cp .env.example .env
       composer install --no-dev --optimize-autoloader
       php artisan key:generate
       php artisan migrate --force
       php artisan storage:link
-    startCommand: php artisan serve --host 0.0.0.0 --port 10000
-    staticPublishPath: public
+    startCommand: |
+      cd backend && php artisan serve --host 0.0.0.0 --port 10000
+    staticPublishPath: backend/public
     envVars:
       - key: APP_ENV
         value: production
@@ -39,4 +42,3 @@ services:
         value: eu-north-1
       - key: AWS_BUCKET
         value: nanny-bear-media-bucket
-
