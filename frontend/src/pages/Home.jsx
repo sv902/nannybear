@@ -8,6 +8,7 @@ import FindNannyButton from "../components/PrimaryButton/FindNannyButton.jsx";
 import "../styles/styleHome.css";
 import { Marketing } from "../components/Marketing/Marketing.jsx";
 import DynamicHeader from "../components/Header/DynamicHeader.jsx";
+import AnimalsReviews from "../assets/AnimalsReviews.svg";
 
 import Footer from "../components/Footer/Footer.jsx";
 
@@ -173,7 +174,9 @@ const id = localStorage.getItem("nannyProfileId");
             </div>  
             </div>
        
-            <div className="home-section reviews-section-home">
+            <div className="home-section reviews-section-home"
+            style={{ backgroundImage: `url(${AnimalsReviews})` }}
+            >
             <h1 className="title-home">ВІДГУКИ</h1>
             <p className="text-home">
                 РЕАЛЬНІ ІСТОРІЇ БАТЬКІВ, ЯКІ ВЖЕ ЗНАЙШЛИ ІДЕАЛЬНУ НЯНЮ.
