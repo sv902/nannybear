@@ -78,14 +78,13 @@ class ProfileController extends Controller
                 \Storage::disk('s3')->delete($user->parentProfile->photo);
             }
         
-            $firstName = $validated['first_name'] ?? 'parent';
+             $firstName = $validated['first_name'] ?? 'nanny';
             $lastName = $validated['last_name'] ?? '';
             $extension = $request->file('photo')->getClientOriginalExtension();
-        
-            $filename = Str::slug($firstName . '_' . $lastName . '_parent_avatar') . '.' . $extension;
-        
-            // Зберігаємо фото з постійним іменем (без uniqid)
-            $validated['photo'] = $request->file('photo')->storeAs('photos/parents', $filename, 's3');
+            $filename = Str::slug($firstName . '_' . $lastName . '_parent_avatar_' . uniqid()) . '.' . $extension;
+            $path = $request->file('photo')->storeAs('photos/parents', $filename, 's3');
+            
+            $validated['photo'] = $path;
        }        
       
         if (isset($validated['birth_date'])) {
@@ -169,18 +168,8 @@ class ProfileController extends Controller
             // Примусово встановлюємо час на полудень, щоб уникнути зміщення
         $validated['birth_date'] = \Carbon\Carbon::parse($validated['birth_date'])->setTime(12, 0, 0);
         }
-        
-         // Створюємо або оновлюємо профіль
-        if (!$user->nannyProfile) {
-            $profile = $user->nannyProfile()->create($validated);
-        } else {
-            $profile = $user->nannyProfile;
-            $profile->update($validated);
-        }
 
-      
-        
-        // Якщо є нове фото, зберігаємо його
+         // Якщо є нове фото, зберігаємо його
         if ($request->hasFile('photo')) {
             // Видаляємо старе фото, якщо є
             if ($user->nannyProfile && $user->nannyProfile->photo) {
@@ -199,6 +188,18 @@ class ProfileController extends Controller
                 $validated['photo'] = 'default-avatar.jpg';
             }
         }
+        
+         // Створюємо або оновлюємо профіль
+        if (!$user->nannyProfile) {
+            $profile = $user->nannyProfile()->create($validated);
+        } else {
+            $profile = $user->nannyProfile;
+            $profile->update($validated);
+        }
+
+      
+        
+       
               
         // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
