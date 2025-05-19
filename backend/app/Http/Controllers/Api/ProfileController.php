@@ -104,9 +104,10 @@ class ProfileController extends Controller
 
         // Якщо не передано нове фото і ще немає — встановлюємо дефолтне
         if (!$profile->photo) {
-            $profile->photo = 'photos/parents/default-avatar.jpg';
+            $profile->photo = 'default-avatar.jpg'; // Мінімальний ключ
             $profile->save();
         }
+
        
         if (isset($validated['addresses'])) {
             $profile->addresses()->delete(); // Очистити старі
@@ -207,10 +208,11 @@ class ProfileController extends Controller
         }
 
         // Якщо нічого не завантажено і фото ще немає — встановити дефолтне
-       if (!$profile->photo) {
-            $profile->photo = 'photos/nannies/default-avatar.jpg';
+            if (!$profile->photo) {
+            $profile->photo = 'default-avatar.jpg'; // Мінімальний ключ
             $profile->save();
         }
+
 
              
         // Оновлення спеціалізацій
