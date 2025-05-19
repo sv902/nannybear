@@ -333,10 +333,10 @@ class ProfileController extends Controller
 ], 200);
 
 
-                return response()->json([
-                    'message' => 'Профіль няні оновлено',
-                    'profile' => $user->nannyProfile()->with('educations')->first()
-                ]);
+                // return response()->json([
+                //     'message' => 'Профіль няні оновлено',
+                //     'profile' => $user->nannyProfile()->with('educations')->first()
+                // ]);
             }
 
     /**
