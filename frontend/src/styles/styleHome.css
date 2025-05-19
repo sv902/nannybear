@@ -406,6 +406,7 @@ padding: 10px 20px;
 }
 
 .reviews-section-home {
+  background-color: #F9D8E0;
   background-size: cover;           /* картинка на всю секцію */
   background-repeat: no-repeat;
   background-position: center;      /* по центру */
@@ -413,7 +414,7 @@ padding: 10px 20px;
   border-radius: 20px;
   text-align: center;
   margin: 40px auto;
-  max-width: 1460px;
+  max-width: 1300px;
   position: relative;
   min-height: 640px;                /* задає висоту секції */
   display: flex;
