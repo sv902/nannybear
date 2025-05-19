@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Робоча директорія
-WORKDIR /var/www/html
+WORKDIR /var/www/html/backend
 
 # Копіюємо тільки composer-файли для кешу
 COPY composer.json composer.lock ./
