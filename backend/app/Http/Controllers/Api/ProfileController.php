@@ -188,6 +188,7 @@ class ProfileController extends Controller
             $profile = $user->nannyProfile;
             $profile->update($validated);
         }
+dd(Storage::disk('s3')->url('default-avatar.jpg'));
 
        $photoFile = $request->file('photo');
 
