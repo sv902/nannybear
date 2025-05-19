@@ -69,23 +69,7 @@ class ProfileController extends Controller
         // Автоматично копіюємо місто з першої адреси, якщо не передано напряму
         if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
             $validated['city'] = $validated['addresses'][0]['city'];
-        }
-
-
-        if ($request->hasFile('photo')) {
-            // Видаляємо старе фото, якщо є
-            if ($user->parentProfile && $user->parentProfile->photo) {
-                \Storage::disk('s3')->delete($user->parentProfile->photo);
-            }
-        
-             $firstName = $validated['first_name'] ?? 'nanny';
-            $lastName = $validated['last_name'] ?? '';
-            $extension = $request->file('photo')->getClientOriginalExtension();
-            $filename = Str::slug($firstName . '_' . $lastName . '_parent_avatar_' . uniqid()) . '.' . $extension;
-            $path = $request->file('photo')->storeAs('photos/parents', $filename, 's3');
-            
-            $validated['photo'] = $path;
-       }        
+        }       
       
         if (isset($validated['birth_date'])) {
             // Примусово встановлюємо час на полудень, щоб уникнути зміщення
@@ -98,6 +82,23 @@ class ProfileController extends Controller
         } else {
             $profile = $user->parentProfile;
             $profile->update($validated);
+        }
+
+        
+         // Завантаження фото
+        if ($photoFile) {
+            if ($profile->photo) {
+                \Storage::disk('s3')->delete($profile->photo);
+            }
+
+            $firstName = $profile->first_name ?? 'parent';
+            $lastName = $profile->last_name ?? '';
+            $extension = $photoFile->getClientOriginalExtension();
+            $filename = Str::slug($firstName . '_' . $lastName . '_parent_avatar_' . uniqid()) . '.' . $extension;
+            $path = $photoFile->storeAs('photos/parents', $filename, 's3');
+
+            $profile->photo = $path;
+            $profile->save();
         }
        
         if (isset($validated['addresses'])) {
@@ -179,24 +180,23 @@ class ProfileController extends Controller
 
 
          // Якщо є нове фото, зберігаємо його
-        if ($request->hasFile('photo')) {
-            // Видаляємо старе фото, якщо є
-             if ($profile->photo) {
-            \Storage::disk('s3')->delete($profile->photo);
+       if ($photoFile) {
+            if ($profile->photo) {
+                \Storage::disk('s3')->delete($profile->photo);
             }
 
-            $firstName = $validated['first_name'] ?? $profile->first_name ?? 'nanny';
-            $lastName = $validated['last_name'] ?? $profile->last_name ?? '';
+            $firstName = $profile->first_name ?? 'nanny';
+            $lastName = $profile->last_name ?? '';
+            $extension = $photoFile->getClientOriginalExtension();
 
-            $extension = $request->file('photo')->getClientOriginalExtension();
             $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
+            $path = $photoFile->storeAs('photos/nannies', $filename, 's3');
 
-            $path = $request->file('photo')->storeAs('photos/nannies', $filename, 's3');
             $profile->photo = $path;
             $profile->save();
-        }                 
-               
-              
+        }                
+   
+             
         // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
             $profile->specialization = $validated['specialization'];
