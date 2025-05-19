@@ -199,10 +199,14 @@ const handleNextEdu = () => {
         <div className={`nanny-colom-color-prof ${genderClass}`}> 
         <div className="photo-wrapper">
           <img
-            src={nanny.photo || `${baseUrl}/storage/default-avatar.jpg`}
+            src={
+              nanny.photo?.startsWith("http") 
+                ? nanny.photo 
+                : `${baseUrl}/storage/${nanny.photo || "photos/nannies/default-avatar.jpg"}`
+            }
             alt="Фото няні"
             className="nanny-photo-large"
-          />   
+          />  
         </div>
   
           <div className="rating-stars">
@@ -275,7 +279,11 @@ const handleNextEdu = () => {
                     {edu.diploma_image && (
                     <div className="document-image-wrapper">
                       <img
-                        src={`${baseUrl}/storage/${edu.diploma_image}`}
+                         src={
+                            edu.diploma_image?.startsWith("http")
+                              ? edu.diploma_image
+                              : `${baseUrl}/storage/${edu.diploma_image}`
+                          }
                         alt="Диплом"
                         className="document-image"
                       />
@@ -416,7 +424,7 @@ const handleNextEdu = () => {
           <div className="video-wrapper">
             {nanny.video ? (
               <video width="417" height="740" style={{ borderRadius: "20px" }} controls>
-                <source src={`${baseUrl}/storage/${nanny.video}`} type="video/mp4" />
+                <source src={nanny.video} type="video/mp4" />
                 Ваш браузер не підтримує відео.
               </video>
             ) : (
@@ -434,7 +442,7 @@ const handleNextEdu = () => {
               nanny.gallery.map((img, idx) => (
                 <div key={idx} className="photo-item">
                   <img
-                    src={`${baseUrl}/storage/${img}`}
+                    src={img}
                     alt={`Фото ${idx + 1}`}
                     className="photo-item-img"
                   />

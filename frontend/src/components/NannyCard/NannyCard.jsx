@@ -17,7 +17,8 @@ const NannyCard = ({ nanny }) => {
   const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
   const genderClass = nanny.gender === "female" ? "female" : "male";
-  const avatar = nanny.photo ? `${baseUrl}/storage/${nanny.photo}` : `${baseUrl}/storage/default-avatar.jpg`;
+  const avatar = nanny.photo || `${baseUrl}/storage/photos/nannies/default-avatar.jpg`;
+
   const [reviews, setReviews] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false); 
   const [, setBookings] = useState(0);
@@ -76,7 +77,7 @@ const NannyCard = ({ nanny }) => {
     <div className={`nanny-card`} onClick={() => navigate(`/nanny-profiles/${nanny.id}`)}>
         <div className={`nanny-card-header ${genderClass}`}>
           <div className="nanny-avatar">
-            <img src={avatar} alt="avatar" className="nanny-avatar" />          
+            <img src={avatar} alt="avatar" className="nanny-avatar" loading="lazy" />          
           </div>
           
           <div className="nanny-name-reviews">
@@ -161,7 +162,9 @@ const NannyCard = ({ nanny }) => {
       </div>
 
       <div className="goal">
-        {nanny.about_me || "Моя мета — піклуватися про ваших дітей, забезпечуючи їм безпеку та комфорт. Я організовую цікаві заняття і допомагаю в їх розвитку."}
+        {nanny.about_me?.trim().length
+          ? nanny.about_me
+          : "Моя мета — піклуватися про ваших дітей..."}
       </div>
 
       <div className="types-scroll-wrapper">

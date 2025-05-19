@@ -28,7 +28,13 @@ const NannySettingsPage = () => {
         window.location.href = "/registrationlogin?section=login";
       }
 
-    if (!nanny) return <div>Завантаження...</div>;
+    if (!nanny) {
+  return (
+    <div className="settings-page-container">
+      <p>Завантаження профілю...</p>
+    </div>
+  );
+}
  
       
   return (
@@ -47,7 +53,7 @@ const NannySettingsPage = () => {
             src={nanny.photo || `${baseUrl}/storage/default-avatar.jpg`}
             alt="Аватар"
             className="settings-avatar"
-            />
+          />
         </div>
          <p className="parent-name-prof">{nanny.first_name} <br/> {nanny.last_name}</p>
             

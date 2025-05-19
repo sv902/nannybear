@@ -93,7 +93,7 @@ const NannyGalleryPage = () => {
       console.warn("❌ Video is not a valid File object!");
     }
 
-    if (file.size > 50 * 1024 * 1024) {
+    if (video instanceof File && video.size > 50 * 1024 * 1024) {
       alert("Відео має бути не більше 50MB");
       return;
     }
@@ -121,8 +121,15 @@ const NannyGalleryPage = () => {
       },
       withCredentials: true,
       });
-      setInitialVideo(video);
-      setInitialPhotos(photos);
+     const { data } = await axios.get("/api/nanny/profile");
+      const updatedProfile = data.profile;
+
+      setVideo(updatedProfile.video ? `${baseUrl}/storage/${updatedProfile.video}` : null);
+      setInitialVideo(updatedProfile.video ? `${baseUrl}/storage/${updatedProfile.video}` : null);
+
+      const updatedPhotos = (updatedProfile.gallery || []).map((p) => `${baseUrl}/storage/${p}`);
+      setPhotos(updatedPhotos);
+      setInitialPhotos(updatedPhotos);
       setShowSavedModal(true);
     } catch (err) {
       console.error("❌ SERVER VALIDATION ERROR", err.response?.data);
@@ -181,7 +188,7 @@ const NannyGalleryPage = () => {
             </div>
             <input
               type="file"
-              accept="video/*"
+              accept="video/mp4,video/quicktime"
               ref={videoInputRef}
               onChange={handleVideoChange}
               style={{ display: "none" }}

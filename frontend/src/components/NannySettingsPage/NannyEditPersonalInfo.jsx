@@ -68,6 +68,18 @@ const NannyEditPersonalInfo = () => {
       });
     });
   }, []);
+
+  const avatarSrc = previewPhoto
+  || (formData.photo instanceof File && URL.createObjectURL(formData.photo))
+  || formData.photo
+  || `${baseUrl}/storage/default-avatar.jpg`;
+
+  useEffect(() => {
+  return () => {
+    if (previewPhoto) URL.revokeObjectURL(previewPhoto);
+  };
+}, [previewPhoto]);
+
   const isChanged = () => {
     if (!initialData) return false;
   
@@ -194,17 +206,20 @@ const NannyEditPersonalInfo = () => {
     axios.post("/api/nanny/profile", data)
       .then(() => setShowSavedModal(true))
       .catch((error) => {
-        if (error.response && error.response.status === 422) {
-          const errors = error.response.data.errors;
-          let message = "Помилка збереження:\n";
-          Object.entries(errors).forEach(([key, messages]) => {
-            message += `• ${key}: ${messages.join(", ")}\n`;
-          });
-          alert(message);
+        if (error.response?.status === 422) {
+          const messages = Object.values(error.response.data.errors)
+            .flat()
+            .join("\n");
+          alert(`❌ Помилка збереження:\n${messages}`);
+        } else {
+          alert("❌ Невідома помилка. Спробуйте пізніше.");
         }
       });
   };
   
+  useEffect(() => {
+    document.querySelector("input[name='first_name']")?.focus();
+  }, []);
 
   const confirmExit = () => {
     setShowUnsavedModal(false);
@@ -242,19 +257,8 @@ const NannyEditPersonalInfo = () => {
 
         <div className="avatar-edit-section">
           <label htmlFor="photo-upload" className="avatar-label">
-            <img
-              src={
-                previewPhoto
-                  ? previewPhoto
-                  : formData.photo instanceof File
-                    ? URL.createObjectURL(formData.photo)
-                    : formData.photo
-                      ? `${baseUrl}/storage/${formData.photo}`
-                      : `${baseUrl}/storage/default-avatar.jpg`
-              }
-              alt="Аватар"
-              className="settings-avatar"
-            />
+            <img src={avatarSrc} alt="Аватар" className="settings-avatar" />
+
             <img src={editIcon} alt="Редагувати" className="edit-icon" />
           </label>
           <input

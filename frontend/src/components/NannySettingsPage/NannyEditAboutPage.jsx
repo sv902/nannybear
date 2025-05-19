@@ -24,6 +24,15 @@ const NannyEditAboutPage = () => {
     });
   }, []);
 
+  const textAreaRef = useRef(null);
+
+  useEffect(() => {
+    if (textAreaRef.current) {
+      textAreaRef.current.focus();
+    }
+  }, []);
+
+
   const handleChange = (e) => {
     const text = e.target.value;
     if (text.length <= 500) {
@@ -42,8 +51,8 @@ const NannyEditAboutPage = () => {
         setShowSavedModal(true);
       })
       .catch((err) => {
-        alert("❌ Помилка збереження.");
-        console.error(err);
+        console.error("❌ Помилка:", err.response?.data || err);
+        alert(err.response?.data?.message || "❌ Помилка збереження.");
       });
   };
 

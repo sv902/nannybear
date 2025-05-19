@@ -37,14 +37,37 @@ const NannyEditEducationPage = () => {
     });
   }, []);
 
-  const isChanged = () => {
-    return JSON.stringify(educations) !== JSON.stringify(initialEducations);
-  };
+    useEffect(() => {
+      return () => {
+        educations.forEach((edu) => {
+          if (edu.preview) {
+            URL.revokeObjectURL(edu.preview);
+          }
+        });
+      };
+    }, []);
+
+    const isChanged = () => {
+      return educations.some((edu, index) => {
+        const initial = initialEducations[index] || {};
+        return (
+          edu.institution !== initial.institution ||
+          edu.specialty !== initial.specialty ||
+          edu.startYear !== initial.startYear ||
+          edu.endYear !== initial.endYear ||
+          (edu.diploma_image instanceof File) // файл було змінено
+        );
+      });
+    };
+
 
   const handleInputChange = (index, e) => {
     const { name, value, files } = e.target;
     const updated = [...educations];
     if (files && files[0]) {
+      if (updated[index].preview) {
+        URL.revokeObjectURL(updated[index].preview);
+      }
       updated[index].diploma_image = files[0];
       updated[index].preview = URL.createObjectURL(files[0]);
     } else {
@@ -93,7 +116,16 @@ const NannyEditEducationPage = () => {
     });
     axios.post("/api/nanny/profile", formData)
       .then(() => {
-        setInitialEducations(educations);
+        setInitialEducations(
+          educations.map((edu) => ({
+            ...edu,
+            diploma_image:
+              typeof edu.diploma_image === "string"
+                ? edu.diploma_image
+                : null, // файл уже завантажений, не зберігаємо в initial
+            preview: null,
+          }))
+        );
         setShowSavedModal(true);
       })
       .catch(() => alert("Помилка збереження освіти"));
