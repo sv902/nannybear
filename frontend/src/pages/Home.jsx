@@ -132,12 +132,40 @@ const id = localStorage.getItem("nannyProfileId");
                 ДІЗНАЙТЕСЬ, ЯКА НЯНЯ НАЙКРАЩЕ ПІДХОДИТЬ ДЛЯ ВАШОЇ РОДИНИ.
             </p>  
             <div className="typecard-wrapper">
-                <TypeCard className="type-card-instance" />
-                <TypeCard className="type-card-2" text="НЯНЯ СУПРОВІД ЗА КОРДОН" text1={<>Допомога та підтримка дитини <br /> під час подорожі.</>} />
-                <TypeCard className="type-card-3" text="НЯНЯ З ПРОЖИВАННЯМ" text1="Щоденний догляд, розвиток, супровід дитини у комфортній атмосфері." />
-                <TypeCard className="type-card-2" text="НЯНЯ ПОГОДИННО" text1="Приходить за потреби на декілька годин, коли батькам потрібно." />
-                <TypeCard className="type-card-5" text="НЯНЯ З ПРОФЕСІЙНОЮ ОСВІТОЮ" text1={<>Догляд, розвиток і підтримка дітей <br /> з особливими потребами.</>} />
-                <TypeCard className="type-card-2" text="НЯНЯ-ДОМОГОСПОДАРКА" text1="Поєднує догляд за дитиною з допомогою по дому." />
+                <TypeCard 
+                    className="type-card-instance" 
+                    image="/assets/ILLUSTRATION-08.svg"
+                />
+                <TypeCard 
+                    className="type-card-2" 
+                    text="НЯНЯ СУПРОВІД ЗА КОРДОН" 
+                    text1={<>Допомога та підтримка дитини <br /> під час подорожі.</>} 
+                    image="/assets/ILLUSTRATION-02.svg"
+                />
+                <TypeCard 
+                    className="type-card-3" 
+                    text="НЯНЯ З ПРОЖИВАННЯМ" 
+                    text1="Щоденний догляд, розвиток, супровід дитини у комфортній атмосфері." 
+                    image="/assets/ILLUSTRATION-03.svg"
+                />
+                <TypeCard 
+                    className="type-card-2" 
+                    text="НЯНЯ ПОГОДИННО" 
+                    text1="Приходить за потреби на декілька годин, коли батькам потрібно." 
+                    image="/assets/ILLUSTRATION-04.svg"
+                />
+                <TypeCard 
+                    className="type-card-5" 
+                    text="НЯНЯ З ПРОФЕСІЙНОЮ ОСВІТОЮ" 
+                    text1={<>Догляд, розвиток і підтримка дітей <br /> з особливими потребами.</>} 
+                    image="/assets/ILLUSTRATION-06.svg"
+                />
+                <TypeCard 
+                    className="type-card-2" 
+                    text="НЯНЯ-ДОМОГОСПОДАРКА" 
+                    text1="Поєднує догляд за дитиною з допомогою по дому." 
+                     image="/assets/ILLUSTRATION-07.svg"
+                />
             </div>
             <p className="text-home">ЩЕ 10 ВИДІВ НЯНЬ...</p>
             <div className="btn-cont-home">
@@ -156,7 +184,7 @@ const id = localStorage.getItem("nannyProfileId");
             
             <div className="review-overlay-container">
                 <img
-                src="/assets/screenshot.png"
+                src="/assets/AnimalsReviews.svg"
                 alt="Ілюстрація відгуків"
                 className="review-bear-image"
                 />
