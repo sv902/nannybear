@@ -35,8 +35,8 @@ RUN a2enmod rewrite
 # Налаштування Laravel
 RUN php artisan config:clear && \
     php artisan cache:clear && \
-    php artisan migrate --force && \
-    php artisan db:seed --force && \
+    # php artisan migrate --force && \
+    # php artisan db:seed --force && \
     rm -rf public/storage && php artisan storage:link
 
 # Створення директорій
