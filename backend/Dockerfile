@@ -19,8 +19,13 @@ WORKDIR /var/www/html
 # Копіюємо composer-файли для кешу
 COPY composer.json composer.lock ./
 
+    RUN php -m
+
 # Встановлюємо залежності
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader || cat /tmp/composer.log
+RUN composer clear-cache && \
+    rm -f composer.lock && \
+    composer install --no-interaction --prefer-dist --optimize-autoloader
+
 
 # Копіюємо решту файлів
 COPY . .
