@@ -77,22 +77,19 @@ class NannyProfile extends Model
         return $this->hasMany(\App\Models\ParentReview::class);
     }
     
-    protected $appends = ['photo', 'video', 'gallery'];
-
-    public function getPhotoAttribute($value)
+    public function getPhotoUrl()
     {
-        return $value ? Storage::disk('s3')->url($value) : null;
+        return $this->photo ? Storage::disk('s3')->url($this->photo) : null;
     }
 
-    public function getVideoAttribute($value)
+    public function getVideoUrl()
     {
-        return $value ? Storage::disk('s3')->url($value) : null;
+        return $this->video ? Storage::disk('s3')->url($this->video) : null;
     }
 
-    public function getGalleryAttribute($value)
+    public function getGalleryUrls()
     {
-        $paths = is_array($value) ? $value : json_decode($value, true) ?? [];
-
+        $paths = is_array($this->gallery) ? $this->gallery : json_decode($this->gallery ?? '[]', true);
         return array_map(fn($path) => Storage::disk('s3')->url($path), $paths);
     }
 

@@ -84,10 +84,9 @@ class ParentProfile extends Model
         return $this->hasMany(Booking::class, 'parent_id');
     }
 
-    protected $appends = ['photo'];
-
-     public function getPhotoAttribute($value)
+    public function getPhotoAttribute($value)
     {
         return $value ? Storage::disk('s3')->url($value) : null;
     }
+
 }

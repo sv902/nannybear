@@ -67,9 +67,9 @@ class ProfileController extends Controller
         ]);
 
         // Автоматично копіюємо місто з першої адреси, якщо не передано напряму
-if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
-    $validated['city'] = $validated['addresses'][0]['city'];
-}
+        if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
+            $validated['city'] = $validated['addresses'][0]['city'];
+        }
 
 
         if ($request->hasFile('photo')) {
@@ -114,10 +114,13 @@ if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
 
         \Log::info('Отримані дані профілю:', $request->all());
 
-        return response()->json([
-            'message' => 'Профіль батька збережено',
-            'profile' => $profile->load(['children', 'addresses']),
-        ]);
+       return response()->json([
+        'message' => 'Профіль батька збережено',
+        'profile' => tap($profile->load(['children', 'addresses']), function ($profile) {
+            $profile->photo = $profile->photo ? \Storage::disk('s3')->url($profile->photo) : null;
+        }),
+    ]);
+
     }
     
      /**
@@ -279,50 +282,54 @@ if (!isset($validated['city']) && !empty($validated['addresses'][0]['city'])) {
        
        
        // Оновлення галереї фото
-     $existingGalleryRaw = $request->input('existing_gallery', []);
-$existingGallery = array_filter(is_array($existingGalleryRaw) ? $existingGalleryRaw : []);
+        $existingGalleryRaw = $request->input('existing_gallery', []);
+        $existingGallery = array_filter(is_array($existingGalleryRaw) ? $existingGalleryRaw : []);
 
-$oldGallery = is_array($profile->gallery)
-    ? $profile->gallery
-    : json_decode($profile->gallery ?? '[]', true);
+        $oldGallery = is_array($profile->gallery)
+            ? $profile->gallery
+            : json_decode($profile->gallery ?? '[]', true);
 
-$oldGallery = array_filter($oldGallery); // видалити пусті значення
+        $oldGallery = array_filter($oldGallery); // видалити пусті значення
 
-// Знаходимо фото, які потрібно видалити
-$toDelete = array_diff($oldGallery, $existingGallery);
-foreach ($toDelete as $path) {
-    if (!empty($path)) {
-        \Storage::disk('s3')->delete($path);
-    }
-}
-
-// Завантаження нових фото
-$galleryPaths = $existingGallery;
-if ($request->hasFile('gallery')) {
-    foreach ($request->file('gallery') as $index => $image) {
-        if ($image && $image->isValid()) {
-            $firstName = $validated['first_name'] ?? ($profile->first_name ?? $user->first_name ?? 'nanny');
-            $lastName = $validated['last_name'] ?? ($profile->last_name ?? $user->last_name ?? '');
-            $filename = Str::slug($firstName . '_' . $lastName . '_gallery_' . $index . '_' . uniqid()) . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('gallery/nannies', $filename, 's3');
-            $galleryPaths[] = $path;
+        // Знаходимо фото, які потрібно видалити
+        $toDelete = array_diff($oldGallery, $existingGallery);
+        foreach ($toDelete as $path) {
+            if (!empty($path)) {
+                \Storage::disk('s3')->delete($path);
+            }
         }
-    }
-}
 
-// Зберігаємо масив галереї
-$validated['gallery'] = array_slice($galleryPaths, 0, 8);
+        // Завантаження нових фото
+        $galleryPaths = $existingGallery;
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $index => $image) {
+                if ($image && $image->isValid()) {
+                    $firstName = $validated['first_name'] ?? ($profile->first_name ?? $user->first_name ?? 'nanny');
+                    $lastName = $validated['last_name'] ?? ($profile->last_name ?? $user->last_name ?? '');
+                    $filename = Str::slug($firstName . '_' . $lastName . '_gallery_' . $index . '_' . uniqid()) . '.' . $image->getClientOriginalExtension();
+                    $path = $image->storeAs('gallery/nannies', $filename, 's3');
+                    $galleryPaths[] = $path;
+                }
+            }
+        }
+
+        // Зберігаємо масив галереї
+        $validated['gallery'] = array_slice($galleryPaths, 0, 8);
 
 
-        // Оновлення профілю в базі даних
-        $profile->update($validated);
-        $profile->save();
+                // Оновлення профілю в базі даних
+                $profile->update($validated);
+                $profile->save();
 
-        return response()->json([
-            'message' => 'Профіль няні оновлено',
-            'profile' => $user->nannyProfile()->with('educations')->first()
-        ]);
-    }
+                $profile->photo = $profile->getPhotoUrl();
+                $profile->video = $profile->getVideoUrl();
+                $profile->gallery = $profile->getGalleryUrls();
+
+                return response()->json([
+                    'message' => 'Профіль няні оновлено',
+                    'profile' => $user->nannyProfile()->with('educations')->first()
+                ]);
+            }
 
     /**
      * Видалення профілю батька або няні
@@ -361,8 +368,10 @@ $validated['gallery'] = array_slice($galleryPaths, 0, 8);
             return response()->json(['error' => 'Профіль батька не знайдено'], 404);
         }
 
-        return response()->json([
-            'profile' => $user->parentProfile->load(['children', 'addresses', 'reviewsFromNannies']),
+       return response()->json([
+            'profile' => tap($user->parentProfile->load(['children', 'addresses', 'reviewsFromNannies']), function ($profile) {
+                $profile->photo = $profile->photo ? \Storage::disk('s3')->url($profile->photo) : null;
+            }),
         ]);
         
     }
