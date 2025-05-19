@@ -79,7 +79,18 @@ class NannyProfile extends Model
     
     public function getPhotoUrl()
     {
-        return $this->photo ? Storage::disk('s3')->url($this->photo) : null;
+        $defaultPath = 'photos/nannies/default-avatar.jpg';
+
+        if (!$this->photo || $this->photo === 'default-avatar.jpg' || $this->photo === $defaultPath) {
+            if (Storage::disk('s3')->exists($defaultPath)) {
+                return Storage::disk('s3')->url($defaultPath);
+            }
+
+            // Фолбек (лише якщо S3 не працює)
+            return asset('storage/default-avatar.jpg');
+        }
+
+        return Storage::disk('s3')->url($this->photo);
     }
 
     public function getVideoUrl()

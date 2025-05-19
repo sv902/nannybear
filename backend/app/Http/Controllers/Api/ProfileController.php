@@ -19,14 +19,14 @@ class ProfileController extends Controller
 
         if ($user->role?->name === 'parent' && !$user->parentProfile) {
             $user->parentProfile()->create([
-                'photo' => 'default-avatar.jpg',
+                'photo' => 'photos/parents/default-avatar.jpg',
             ]);
             return response()->json(['message' => 'Профіль батька створено']);
         }
 
         if ($user->role?->name === 'nanny' && !$user->nannyProfile) {
             $user->nannyProfile()->create([
-                'photo' => 'default-avatar.jpg',
+                'photo' => 'photos/nannies/default-avatar.jpg',
             ]);
             return response()->json(['message' => 'Профіль няні створено']);
         }
@@ -104,7 +104,7 @@ class ProfileController extends Controller
 
         // Якщо не передано нове фото і ще немає — встановлюємо дефолтне
         if (!$profile->photo) {
-            $profile->photo = 'default-avatar.jpg';
+            $profile->photo = 'photos/parents/default-avatar.jpg';
             $profile->save();
         }
        
@@ -124,9 +124,10 @@ class ProfileController extends Controller
        return response()->json([
         'message' => 'Профіль батька збережено',
        'profile' => tap($profile->load(['children', 'addresses']), function ($profile) {
-        $profile->photo = $profile->photo && $profile->photo !== 'default-avatar.jpg'
+            $profile->photo = $profile->photo && $profile->photo !== 'default-avatar.jpg'
             ? \Storage::disk('s3')->url($profile->photo)
-            : asset('storage/default-avatar.jpg'); // або будь-який твій шлях до дефолтної аватарки
+            : \Storage::disk('s3')->url('photos/parents/default-avatar.jpg');
+
     }),
     ]);
 
@@ -167,7 +168,7 @@ class ProfileController extends Controller
             'experience_years' => 'sometimes|required|numeric|min:0|max:50',
             'hourly_rate' => 'sometimes|required|numeric|min:0|max:500',
             'availability' => 'nullable|array',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime|max:51200', // до 20MB
+            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime|max:51200', // до 50MB
             'gallery' => 'nullable|array',
             'gallery.*' => 'nullable|file|image|max:5120', // кожне фото до 5MB
             'goat' => 'nullable|string',
@@ -206,10 +207,11 @@ class ProfileController extends Controller
         }
 
         // Якщо нічого не завантажено і фото ще немає — встановити дефолтне
-       if (!$profile->photo || $profile->photo === 'default-avatar.jpg') {
-            $profile->photo = 'default-avatar.jpg'; // без "photos/parents/"
+       if (!$profile->photo) {
+            $profile->photo = 'photos/nannies/default-avatar.jpg';
             $profile->save();
         }
+
              
         // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
@@ -279,19 +281,17 @@ class ProfileController extends Controller
             if ($profile->video) {
                 \Storage::disk('s3')->delete($profile->video);
             }
-        
-            $firstName = $validated['first_name']
-                ?? ($profile->first_name ?? $user->first_name)
-                ?? 'nanny';
-        
-            $lastName = $validated['last_name']
-                ?? ($profile->last_name ?? $user->last_name)
-                ?? '';
-        
-            $filename = Str::slug($firstName . '_' . $lastName . '_video_' . uniqid()) . '.' . $request->file('video')->getClientOriginalExtension();
 
-            $validated['video'] = $request->file('video')->storeAs('videos/nannies', $filename, 's3');
+            $firstName = $profile->first_name ?? $user->first_name ?? 'nanny';
+            $lastName = $profile->last_name ?? $user->last_name ?? '';
+
+            $filename = Str::slug($firstName . '_' . $lastName . '_video_' . uniqid()) . '.' . $request->file('video')->getClientOriginalExtension();
+            $videoPath = $request->file('video')->storeAs('videos/nannies', $filename, 's3');
+
+            $profile->video = $videoPath;
+            $profile->save();
         }
+
        
        
        // Оновлення галереї фото
@@ -313,7 +313,7 @@ class ProfileController extends Controller
         }
 
         // Завантаження нових фото
-        $galleryPaths = $existingGallery;
+        $galleryPaths = [];
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $index => $image) {
                 if ($image && $image->isValid()) {
@@ -327,23 +327,22 @@ class ProfileController extends Controller
         }
 
         // Зберігаємо масив галереї
-        $validated['gallery'] = array_slice($galleryPaths, 0, 8);
-
-
-                // // Оновлення профілю в базі даних
-                // $profile->update($validated);
-                $profile->save();
-
-                $profile->photo = $profile->getPhotoUrl();
-                $profile->video = $profile->getVideoUrl();
-                $profile->gallery = $profile->getGalleryUrls();
-               
-
+       $mergedGallery = array_merge($existingGallery, $galleryPaths);
+        $profile->gallery = array_values(array_filter($mergedGallery));
+        $profile->save();
+             
+               $profile->load('educations');
                 return response()->json([
                     'message' => 'Профіль няні оновлено',
-                    'profile' => $user->nannyProfile()->with('educations')->first()
+                    'profile' => [
+                        ...$profile->toArray(),
+                        'photo' => $profile->getPhotoUrl(),
+                        'video' => $profile->getVideoUrl(),
+                        'gallery' => $profile->getGalleryUrls(),
+                    ],
                 ]);
-            }
+
+    }
 
     /**
      * Видалення профілю батька або няні

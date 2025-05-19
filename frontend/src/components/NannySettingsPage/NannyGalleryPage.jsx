@@ -93,6 +93,11 @@ const NannyGalleryPage = () => {
       console.warn("❌ Video is not a valid File object!");
     }
 
+    if (file.size > 50 * 1024 * 1024) {
+      alert("Відео має бути не більше 50MB");
+      return;
+    }
+
     // 1. Відправити тільки нові фото
     const newPhotos = photos.filter((p) => p instanceof File);
     newPhotos.forEach((photo, index) => {

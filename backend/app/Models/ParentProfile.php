@@ -86,7 +86,15 @@ class ParentProfile extends Model
 
     public function getPhotoAttribute($value)
     {
-        return $value ? Storage::disk('s3')->url($value) : null;
+        $defaultPath = 'photos/parents/default-avatar.jpg';
+
+        if (!$value || $value === 'default-avatar.jpg' || $value === $defaultPath) {
+            return Storage::disk('s3')->exists($defaultPath)
+                ? Storage::disk('s3')->url($defaultPath)
+                : asset('storage/default-avatar.jpg');
+        }
+
+        return Storage::disk('s3')->url($value);
     }
 
 }
