@@ -12,10 +12,12 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+WORKDIR /var/www/html
+
 COPY . /var/www/html
 
-WORKDIR /var/www/html
-RUN composer install
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
 RUN php artisan migrate --force && php artisan db:seed --force
 RUN rm -rf public/storage && php artisan storage:link
 RUN a2enmod rewrite
