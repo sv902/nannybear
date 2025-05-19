@@ -129,7 +129,7 @@ class ProfileController extends Controller
     public function storeNannyProfile(Request $request)
     {
         $user = Auth::user();
-
+        
         if (!$user) {
             return response()->json(['error' => '❌ User not authenticated'], 401);
         }
@@ -164,11 +164,21 @@ class ProfileController extends Controller
             'goat' => 'nullable|string',
             'about_me' => 'nullable|string',
         ]);
-
+        
         if (isset($validated['birth_date'])) {
             // Примусово встановлюємо час на полудень, щоб уникнути зміщення
-            $validated['birth_date'] = \Carbon\Carbon::parse($validated['birth_date'])->setTime(12, 0, 0);
+        $validated['birth_date'] = \Carbon\Carbon::parse($validated['birth_date'])->setTime(12, 0, 0);
         }
+        
+         // Створюємо або оновлюємо профіль
+        if (!$user->nannyProfile) {
+            $profile = $user->nannyProfile()->create($validated);
+        } else {
+            $profile = $user->nannyProfile;
+            $profile->update($validated);
+        }
+
+      
         
         // Якщо є нове фото, зберігаємо його
         if ($request->hasFile('photo')) {
@@ -189,15 +199,7 @@ class ProfileController extends Controller
                 $validated['photo'] = 'default-avatar.jpg';
             }
         }
-
-        // Створюємо або оновлюємо профіль
-        if (!$user->nannyProfile) {
-            $profile = $user->nannyProfile()->create($validated);
-        } else {
-            $profile = $user->nannyProfile;
-            $profile->update($validated);
-        }
-        
+              
         // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
             $profile->specialization = $validated['specialization'];
@@ -317,21 +319,14 @@ class ProfileController extends Controller
         $validated['gallery'] = array_slice($galleryPaths, 0, 8);
 
 
-                // Оновлення профілю в базі даних
-                $profile->update($validated);
+                // // Оновлення профілю в базі даних
+                // $profile->update($validated);
                 $profile->save();
 
                 $profile->photo = $profile->getPhotoUrl();
                 $profile->video = $profile->getVideoUrl();
                 $profile->gallery = $profile->getGalleryUrls();
-                return response()->json([
-    'validated' => $validated,
-    'has_file' => $request->hasFile('photo'),
-    'file_name' => $request->file('photo')?->getClientOriginalName(),
-    'saved_photo_path' => $validated['photo'] ?? null,
-    'message' => 'Тест логування на фронт',
-], 200);
-
+               
 
                 return response()->json([
                     'message' => 'Профіль няні оновлено',
