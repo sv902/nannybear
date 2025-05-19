@@ -8,7 +8,7 @@ import FindNannyButton from "../components/PrimaryButton/FindNannyButton.jsx";
 import "../styles/styleHome.css";
 import { Marketing } from "../components/Marketing/Marketing.jsx";
 import DynamicHeader from "../components/Header/DynamicHeader.jsx";
-import AnimalsReviews from "../assets/AnimalsReviews.svg";
+import AnimalsReviews from "/assets/AnimalsReviews.svg";
 
 import Footer from "../components/Footer/Footer.jsx";
 
