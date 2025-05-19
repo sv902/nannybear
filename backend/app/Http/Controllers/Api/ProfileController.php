@@ -332,14 +332,14 @@ class ProfileController extends Controller
         $profile->save();
              
                $profile->load('educations');
+
                 return response()->json([
                     'message' => 'Профіль няні оновлено',
-                    'profile' => [
-                        ...$profile->toArray(),
-                        'photo' => $profile->getPhotoUrl(),
-                        'video' => $profile->getVideoUrl(),
-                        'gallery' => $profile->getGalleryUrls(),
-                    ],
+                    'profile' => tap($profile, function ($profile) {
+                        $profile->photo = $profile->getPhotoUrl();
+                        $profile->video = $profile->getVideoUrl();
+                        $profile->gallery = $profile->getGalleryUrls();
+                    }),
                 ]);
 
     }
