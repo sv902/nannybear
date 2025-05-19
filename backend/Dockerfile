@@ -35,7 +35,9 @@ RUN mkdir -p storage/framework/sessions storage/app/public && \
     chmod -R 775 storage bootstrap/cache
 
 # Artisan-команди
-RUN php artisan config:clear && \
+RUN cp .env.example .env && \
+    php artisan key:generate && \
+    php artisan config:clear && \
     php artisan cache:clear && \
     php artisan storage:link
 
