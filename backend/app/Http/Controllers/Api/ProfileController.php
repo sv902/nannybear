@@ -169,27 +169,7 @@ class ProfileController extends Controller
         $validated['birth_date'] = \Carbon\Carbon::parse($validated['birth_date'])->setTime(12, 0, 0);
         }
 
-         // Якщо є нове фото, зберігаємо його
-        if ($request->hasFile('photo')) {
-            // Видаляємо старе фото, якщо є
-            if ($user->nannyProfile && $user->nannyProfile->photo) {
-                \Storage::disk('s3')->delete($user->nannyProfile->photo);
-            }
-        
-            $firstName = $validated['first_name'] ?? 'nanny';
-            $lastName = $validated['last_name'] ?? '';
-        
-            $extension = $request->file('photo')->getClientOriginalExtension();
-            $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
-
-            $validated['photo'] = $request->file('photo')->storeAs('photos/nannies', $filename, 's3');
-            // Якщо не надіслано нове фото і в базі немає фото
-            if (empty($validated['photo']) && (!$profile->photo ?? true)) {
-                $validated['photo'] = 'default-avatar.jpg';
-            }
-        }
-        
-         // Створюємо або оновлюємо профіль
+           // Створюємо або оновлюємо профіль
         if (!$user->nannyProfile) {
             $profile = $user->nannyProfile()->create($validated);
         } else {
@@ -197,9 +177,25 @@ class ProfileController extends Controller
             $profile->update($validated);
         }
 
-      
-        
-       
+
+         // Якщо є нове фото, зберігаємо його
+        if ($request->hasFile('photo')) {
+            // Видаляємо старе фото, якщо є
+             if ($profile->photo) {
+            \Storage::disk('s3')->delete($profile->photo);
+            }
+
+            $firstName = $validated['first_name'] ?? $profile->first_name ?? 'nanny';
+            $lastName = $validated['last_name'] ?? $profile->last_name ?? '';
+
+            $extension = $request->file('photo')->getClientOriginalExtension();
+            $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
+
+            $path = $request->file('photo')->storeAs('photos/nannies', $filename, 's3');
+            $profile->photo = $path;
+            $profile->save();
+        }                 
+               
               
         // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
