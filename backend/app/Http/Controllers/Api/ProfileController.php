@@ -84,21 +84,27 @@ class ProfileController extends Controller
             $profile->update($validated);
         }
 
-        $photoFile = $request->file('photo');
-        
-         // Завантаження фото
+       $photoFile = $request->file('photo');
+
         if ($photoFile) {
-            if ($profile->photo) {
-                \Storage::disk('s3')->delete($profile->photo);
+            if ($user->parentProfile && $user->parentProfile->photo) {
+                \Storage::disk('s3')->delete($user->parentProfile->photo);
             }
 
-            $firstName = $profile->first_name ?? 'parent';
-            $lastName = $profile->last_name ?? '';
+            $firstName = $validated['first_name'] ?? $user->first_name ?? 'parent';
+            $lastName = $validated['last_name'] ?? $user->last_name ?? '';
             $extension = $photoFile->getClientOriginalExtension();
+
             $filename = Str::slug($firstName . '_' . $lastName . '_parent_avatar_' . uniqid()) . '.' . $extension;
             $path = $photoFile->storeAs('photos/parents', $filename, 's3');
 
             $profile->photo = $path;
+            $profile->save();
+        }
+
+        // Якщо не передано нове фото і ще немає — встановлюємо дефолтне
+        if (!$profile->photo) {
+            $profile->photo = 'default-avatar.jpg';
             $profile->save();
         }
        
@@ -179,16 +185,15 @@ class ProfileController extends Controller
             $profile->update($validated);
         }
 
-        $photoFile = $request->file('photo');
+       $photoFile = $request->file('photo');
 
-         // Якщо є нове фото, зберігаємо його
-       if ($photoFile) {
+        if ($photoFile) {
             if ($profile->photo) {
                 \Storage::disk('s3')->delete($profile->photo);
             }
 
-            $firstName = $profile->first_name ?? 'nanny';
-            $lastName = $profile->last_name ?? '';
+            $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
+            $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
             $extension = $photoFile->getClientOriginalExtension();
 
             $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
@@ -196,8 +201,14 @@ class ProfileController extends Controller
 
             $profile->photo = $path;
             $profile->save();
-        }                
-   
+        }
+
+        // Якщо нічого не завантажено і фото ще немає — встановити дефолтне
+        if (!$profile->photo) {
+            $profile->photo = 'default-avatar.jpg';
+            $profile->save();
+        }
+
              
         // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
