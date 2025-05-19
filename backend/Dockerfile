@@ -17,18 +17,17 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Копіюємо composer-файли для кешу
+# Копіюємо composer.json і composer.lock — лише для залежностей
 COPY composer.json composer.lock ./
 
-    RUN php -m
+# Встановлюємо лише залежності без виконання скриптів
+RUN composer install --no-scripts --no-interaction --prefer-dist --optimize-autoloader
 
-# Встановлюємо залежності
-RUN composer clear-cache && \
-    rm -f composer.lock && \
-    composer install --no-interaction --prefer-dist --optimize-autoloader
-
-
-# Копіюємо решту файлів
+# Копіюємо решту проєкту
 COPY . .
+
+# Після цього — проганяємо скрипти вручну
+RUN composer run-script post-autoload-dump
 
 # Увімкнення модулів Apache
 RUN a2enmod rewrite
