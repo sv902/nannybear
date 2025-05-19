@@ -1,6 +1,6 @@
 // components/ParentSurvey/SurveyStep7.jsx 
 import React from "react";
-import animals from "../../assets/bear-error.png"; 
+import animals from "../../assets/Qotter.png"; 
 
 const SurveyStep7 = ({ onNext, onBack }) => {
   return (

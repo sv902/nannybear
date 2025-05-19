@@ -251,12 +251,12 @@
 .step-next-button {
   display: flex; 
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 30px; 
 }
 
 .next-btn {
   width: 100%;
-  min-width: 307px;
+  max-width: 307px;
   min-height: 50px;
   margin-top: 20px;
   background-color: #4DB3AE;

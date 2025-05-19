@@ -176,13 +176,16 @@ const id = localStorage.getItem("nannyProfileId");
             <div className="home-section reviews-section-home"
             style={{ backgroundImage: `url('/assets/AnimalsReviews.svg')`}}
             >
+             <div className="review-center-content">  
             <h1 className="title-home">ВІДГУКИ</h1>
             <p className="text-home">
                 РЕАЛЬНІ ІСТОРІЇ БАТЬКІВ, ЯКІ ВЖЕ ЗНАЙШЛИ ІДЕАЛЬНУ НЯНЮ.
             </p>
 
             <div className="box-text-container">
-                    <p className="box-text">НАВЕДМІДЬ НА ПОВІДОМЛЕННЯ!</p></div>
+                    <p className="box-text">НАВЕДМІДЬ НА ПОВІДОМЛЕННЯ!</p>
+            </div>
+            </div> 
             
             <div className="review-overlay-container">
                 {/* <img

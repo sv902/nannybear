@@ -1,7 +1,7 @@
 import React from "react";
-import animals from "../../assets/bear-error.png"; 
-import axios from "../../axiosConfig"; // 👈 додай
-import { useNavigate } from "react-router-dom"; // 👈 додай
+import animals from "../../assets/Qbunny.png"; 
+import axios from "../../axiosConfig"; 
+import { useNavigate } from "react-router-dom"; 
 
 const SurveyStep14 = ({ onBack }) => {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "../../styles/register.css";
 import "../../styles/profileStep.css";
 import "../../styles/survey.css";
-import animals from "../../assets/bear-error.png";
+import animals from "../../assets/Qbear.png";
 
 const SurveyStep1 = ({onNext}) => {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ const SurveyStep1 = ({onNext}) => {
       <span
         onClick={() => {
           if (from === "nanny-list") {
-            navigate("/nanny-profiles");
+            navigate("/all-nannies");
           } else if (from === "settings") {
             navigate("/parent-profiles");
           } else if (from === "edit") {
