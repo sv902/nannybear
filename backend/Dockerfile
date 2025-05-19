@@ -21,7 +21,7 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 
 # Встановлюємо лише залежності без виконання скриптів
-RUN composer install --no-scripts --no-interaction --prefer-dist --optimize-autoloader
+RUN composer update --no-scripts --no-interaction --prefer-dist --optimize-autoloader
 
 # Копіюємо решту проєкту
 COPY . .
