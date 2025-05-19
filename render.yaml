@@ -30,4 +30,13 @@ services:
       - key: DB_PASSWORD
         value: YFr7Ecag5OPu5KrdN2eyaMbojkfnPPvo
       - key: FILESYSTEM_DRIVER
-        value: public
+        value: s3
+      - key: AWS_ACCESS_KEY_ID
+        value: false
+      - key: AWS_SECRET_ACCESS_KEY
+        value: false
+      - key: AWS_DEFAULT_REGION
+        value: eu-north-1
+      - key: AWS_BUCKET
+        value: nanny-bear-media-bucket
+
