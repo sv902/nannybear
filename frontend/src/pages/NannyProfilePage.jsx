@@ -199,14 +199,10 @@ const handleNextEdu = () => {
         <div className={`nanny-colom-color-prof ${genderClass}`}> 
         <div className="photo-wrapper">
           <img
-            src={
-              isValidPhoto
-                ? `${baseUrl}/storage/${nanny.photo}`
-                : `${baseUrl}/storage/default-avatar.jpg`
-            }
+            src={nanny.photo || `${baseUrl}/storage/default-avatar.jpg`}
             alt="Фото няні"
             className="nanny-photo-large"
-          />       
+          />   
         </div>
   
           <div className="rating-stars">

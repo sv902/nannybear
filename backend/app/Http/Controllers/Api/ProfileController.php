@@ -87,8 +87,8 @@ class ProfileController extends Controller
        $photoFile = $request->file('photo');
 
         if ($photoFile) {
-            if ($user->parentProfile && $user->parentProfile->photo) {
-                \Storage::disk('s3')->delete($user->parentProfile->photo);
+           if ($profile->photo) {
+                \Storage::disk('s3')->delete($profile->photo);
             }
 
             $firstName = $validated['first_name'] ?? $user->first_name ?? 'parent';
@@ -123,9 +123,11 @@ class ProfileController extends Controller
 
        return response()->json([
         'message' => 'Профіль батька збережено',
-        'profile' => tap($profile->load(['children', 'addresses']), function ($profile) {
-            $profile->photo = $profile->photo ? \Storage::disk('s3')->url($profile->photo) : null;
-        }),
+       'profile' => tap($profile->load(['children', 'addresses']), function ($profile) {
+        $profile->photo = $profile->photo && $profile->photo !== 'default-avatar.jpg'
+            ? \Storage::disk('s3')->url($profile->photo)
+            : asset('storage/default-avatar.jpg'); // або будь-який твій шлях до дефолтної аватарки
+    }),
     ]);
 
     }
@@ -165,7 +167,7 @@ class ProfileController extends Controller
             'experience_years' => 'sometimes|required|numeric|min:0|max:50',
             'hourly_rate' => 'sometimes|required|numeric|min:0|max:500',
             'availability' => 'nullable|array',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime|max:20480', // до 20MB
+            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime|max:51200', // до 20MB
             'gallery' => 'nullable|array',
             'gallery.*' => 'nullable|file|image|max:5120', // кожне фото до 5MB
             'goat' => 'nullable|string',
@@ -204,11 +206,10 @@ class ProfileController extends Controller
         }
 
         // Якщо нічого не завантажено і фото ще немає — встановити дефолтне
-        if (!$profile->photo) {
-            $profile->photo = 'default-avatar.jpg';
+       if (!$profile->photo || $profile->photo === 'default-avatar.jpg') {
+            $profile->photo = 'default-avatar.jpg'; // без "photos/parents/"
             $profile->save();
         }
-
              
         // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
