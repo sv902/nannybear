@@ -314,16 +314,16 @@ class ProfileController extends Controller
 
               $stream = fopen($videoFile->getRealPath(), 'r');
 
-                $filename = Str::slug($firstName . '-' . $lastName)
+               $filename = Str::slug($firstName . '-' . $lastName)
                     . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
 
-              $path = Storage::disk('s3')->put("videos/nannies/{$filename}", $stream, [
-                    'mimetype' => $videoFile->getMimeType()
+                $content = file_get_contents($videoFile->getRealPath());
+
+                $path = Storage::disk('s3')->put("videos/nannies/{$filename}", $content, [
+                    'visibility' => 'public',
+                    'mimetype' => $videoFile->getMimeType(),
+                    'ContentType' => $videoFile->getMimeType()
                 ]);
-
-
-                fclose($stream);
-
 
                 if (!$path) {
                     return response()->json([
@@ -332,7 +332,6 @@ class ProfileController extends Controller
                         'size' => $videoFile->getSize(),
                     ], 500);
                 }
-
 
                 $profile->video = $path;
                 $profile->save();
