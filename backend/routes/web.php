@@ -58,22 +58,17 @@ Route::get('/reset-password/{token}', function () {
 Route::get('/s3-test-upload', function () {
     $contents = 'Це тестовий файл';
     $filename = 'test/' . uniqid() . '.txt';
-
-    $stored = Storage::disk('s3')->put($filename, $contents);
+    
+    $stored = \Storage::disk('s3')->put($filename, $contents);
 
     if ($stored) {
-        $url = Storage::disk('s3')->url($filename);
+        $url = \Storage::disk('s3')->url($filename);
         return "✅ Файл збережено: <a href='$url' target='_blank'>$url</a>";
     }
 
-    $error = error_get_last();
-    return response()->json([
-        'message' => '❌ Не вдалося зберегти файл',
-        'error' => $error,
-        'env_key' => env('AWS_ACCESS_KEY_ID'),
-        'bucket' => env('AWS_BUCKET'),
-    ]);
+    return '❌ Не вдалося зберегти файл';
 });
+
 
 Route::get('/debug-s3', function () {
     return [
