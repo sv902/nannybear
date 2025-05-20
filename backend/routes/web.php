@@ -60,33 +60,47 @@ Route::get('/s3-test-upload', function () {
         $contents = 'Це тестовий файл';
         $filename = 'test/' . uniqid() . '.txt';
 
-        $stored = Storage::disk('s3')->put($filename, $contents);
+        // Спроба запису в S3
+        $stored = \Storage::disk('s3')->put($filename, $contents);
 
         if ($stored) {
-            $url = Storage::disk('s3')->url($filename);
+            $url = \Storage::disk('s3')->url($filename);
             return response()->json([
                 'message' => '✅ Файл збережено',
+                'filename' => $filename,
                 'url' => $url,
             ]);
-        } else {
-            return response()->json(['message' => '❌ Не вдалося зберегти файл'], 500);
         }
+
+        return response()->json([
+            'message' => '❌ Не вдалося зберегти файл',
+            'filename' => $filename,
+        ], 500);
     } catch (\Throwable $e) {
         return response()->json([
             'message' => '❌ Виняток',
-            'error' => $e->getMessage(),
+            'error_message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => collect($e->getTrace())->take(3), // скорочений трейс
         ], 500);
     }
 });
+
 
 
 Route::get('/debug-storage', function () {
     return [
         'default_disk' => config('filesystems.default'),
         'env_disk' => env('FILESYSTEM_DISK'),
-        's3_key' => env('AWS_ACCESS_KEY_ID'),
+        'key' => env('AWS_ACCESS_KEY_ID'),
+        'secret_present' => !empty(env('AWS_SECRET_ACCESS_KEY')),
+        'bucket' => env('AWS_BUCKET'),
+        'region' => env('AWS_DEFAULT_REGION'),
+        'url' => env('AWS_URL'),
     ];
 });
+
 
 
 
@@ -94,10 +108,16 @@ Route::get('/debug-s3', function () {
     return [
         'disk' => config('filesystems.default'),
         'key' => config('filesystems.disks.s3.key'),
+        'secret_present' => !empty(config('filesystems.disks.s3.secret')),
         'bucket' => config('filesystems.disks.s3.bucket'),
+        'region' => config('filesystems.disks.s3.region'),
+        'url' => config('filesystems.disks.s3.url'),
+        'endpoint' => config('filesystems.disks.s3.endpoint'),
         'env_loaded' => env('AWS_ACCESS_KEY_ID'),
+        'path_style' => config('filesystems.disks.s3.use_path_style_endpoint'),
     ];
 });
+
 
 Route::get('/clear-config', function () {
     \Artisan::call('config:clear');
