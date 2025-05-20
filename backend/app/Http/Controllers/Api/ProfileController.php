@@ -163,13 +163,13 @@ class ProfileController extends Controller
                 'education.*.institution' => 'sometimes|required|string|max:255',
                 'education.*.specialty' => 'sometimes|required|string|max:255',
                 'education.*.years' => 'sometimes|required|string|max:50',
-                'education.*.diploma_image' => 'sometimes|nullable|string|file|image|max:5120',
+                'education.*.diploma_image' => 'sometimes|nullable|file|image|max:5120',
             'languages' => 'sometimes|required|array',
             'additional_skills' => 'sometimes|required|array',
             'experience_years' => 'sometimes|required|numeric|min:0|max:50',
             'hourly_rate' => 'sometimes|required|numeric|min:0|max:500',
             'availability' => 'nullable|array',
-            'video' => 'sometimes|nullable|file|mimetypes:video/mp4,video/quicktime|max:51200', // до 50MB
+            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime|max:51200', // до 50MB
             'gallery' => 'nullable|array',
             'gallery.*' => 'nullable|file|image|max:5120', // кожне фото до 5MB
             'goat' => 'nullable|string',
@@ -289,24 +289,29 @@ class ProfileController extends Controller
        try {
             $videoFile = $request->file('video');
 
-            $filename = Str::slug($profile->user->first_name . '-' . $profile->user->last_name)
-                . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
+            if ($videoFile && $videoFile->isValid()) {
+                $filename = Str::slug($profile->user->first_name . '-' . $profile->user->last_name)
+                    . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
 
-            $path = $videoFile->storeAs('videos/nannies', $filename, 's3');
+                $path = $videoFile->storeAs('videos/nannies', $filename, 's3');
 
-            if (!$path) {
-                throw new \Exception("❌ Не вдалося зберегти відео у S3");
+                if (!$path) {
+                    throw new \Exception("❌ Не вдалося зберегти відео у S3");
+                }
+
+                $profile->video = $path;
+                $profile->save();
             }
-
-            $profile->video = $path;
-            $profile->save();
         } catch (\Exception $e) {
             \Log::error('❌ Помилка завантаження відео:', ['message' => $e->getMessage()]);
             return response()->json([
                 'error' => '❌ Внутрішня помилка сервера',
-                'details' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
             ], 500);
         }
+
       
         // Оновлення галереї фото
         $existingGalleryRaw = $request->input('existing_gallery', []);
@@ -341,7 +346,8 @@ class ProfileController extends Controller
         }
 
         // Зберігаємо масив галереї
-       $mergedGallery = array_merge($existingGallery, $galleryPaths);
+       
+        $mergedGallery = array_merge($existingGallery, $galleryPaths);
         $profile->gallery = array_values(array_filter($mergedGallery));
         $profile->save();
              
