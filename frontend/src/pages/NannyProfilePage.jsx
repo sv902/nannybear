@@ -276,7 +276,7 @@ const handleNextEdu = () => {
                     {edu.diploma_image && (
                     <div className="document-image-wrapper">
                       <img
-                        src={`${baseUrl}/storage/${edu.diploma_image}`}
+                        src={edu.diploma_image}
                         alt="Диплом"
                         className="document-image"
                       />
@@ -284,7 +284,7 @@ const handleNextEdu = () => {
                         className="view-diploma-btn"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setDiplomaPreviewUrl(`${baseUrl}/storage/${edu.diploma_image}`);
+                          setDiplomaPreviewUrl(edu.diploma_image);
                         }}
                       >
                         <img src={eye} alt="Переглянути диплом" />
