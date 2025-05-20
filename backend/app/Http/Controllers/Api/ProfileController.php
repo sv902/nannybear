@@ -290,8 +290,7 @@ class ProfileController extends Controller
 
         $videoPath = 'videos/nannies/' . $filename;
 
-        $success = Storage::disk('s3')->put($videoPath, $stream, [
-            'visibility' => 'public',
+        $success = Storage::disk('s3')->put($videoPath, $stream, [         
             'ContentType' => $request->file('video')->getMimeType(),
         ]);
 
