@@ -283,27 +283,38 @@ class ProfileController extends Controller
         }
 
         // Оновлення відео
-       $stream = fopen($request->file('video')->getRealPath(), 'r');
-        if (!$stream) {
-            throw new \Exception("Не вдалося відкрити відеофайл для зчитування");
+       try {
+            $stream = fopen($request->file('video')->getRealPath(), 'r');
+            if (!$stream) {
+                throw new \Exception("Не вдалося відкрити відеофайл для зчитування");
+            }
+
+            $filename = Str::slug($profile->user->first_name . '-' . $profile->user->last_name)
+                . '-nanny-video-' . uniqid() . '.' . $request->file('video')->getClientOriginalExtension();
+
+            $videoPath = 'videos/nannies/' . $filename;
+
+            $success = Storage::disk('s3')->put($videoPath, $stream, [             
+                'ContentType' => $request->file('video')->getMimeType(),
+            ]);
+
+            fclose($stream);
+
+            if (!$success) {
+                throw new \Exception("The video failed to upload.");
+            }
+
+            $profile->video = $videoPath;
+            $profile->save();
+        } catch (\Exception $e) {
+            \Log::error('❌ Помилка завантаження відео:', ['message' => $e->getMessage()]);
+            return response()->json([
+                'error' => '❌ Внутрішня помилка сервера',
+                'details' => $e->getMessage()
+            ], 500);
         }
-
-        $videoPath = 'videos/nannies/' . $filename;
-
-        $success = Storage::disk('s3')->put($videoPath, $stream, [         
-            'ContentType' => $request->file('video')->getMimeType(),
-        ]);
-
-        fclose($stream);
-
-        if (!$success) {
-            throw new \Exception("The video failed to upload.");
-        }
-
-        $profile->video = $videoPath;
-        $profile->save();    
-       
-       // Оновлення галереї фото
+      
+        // Оновлення галереї фото
         $existingGalleryRaw = $request->input('existing_gallery', []);
         $existingGallery = array_filter(is_array($existingGalleryRaw) ? $existingGalleryRaw : []);
 

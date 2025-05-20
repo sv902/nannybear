@@ -178,7 +178,7 @@ const NannyGalleryPage = () => {
               {video ? (
                 <>
                   <video width="417" height="740" style={{ borderRadius: "20px" }} controls>
-                    <source src={video instanceof File ? URL.createObjectURL(video) : video} type="video/mp4" />
+                    <source src={nanny.video} type="video/mp4" />
                     Ваш браузер не підтримує відео.
                   </video>
                 </>
