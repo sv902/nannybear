@@ -303,8 +303,15 @@ class ProfileController extends Controller
 
                     $path = $videoFile->storeAs('videos/nannies', $filename, 's3');
 
-                    if (!$path) {
-                        throw new \Exception("❌ Не вдалося зберегти відео у S3");
+                   if (!$path) {
+                        return response()->json([
+                            'error' => '❌ Відео не збережено',
+                            'reason' => 'storeAs повернув false',
+                            'size' => $videoFile->getSize(),
+                            'extension' => $videoFile->getClientOriginalExtension(),
+                            'mime_type' => $videoFile->getMimeType(),
+                            'original_name' => $videoFile->getClientOriginalName(),
+                        ], 500);
                     }
 
                     $profile->video = $path;
