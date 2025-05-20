@@ -191,21 +191,22 @@ class ProfileController extends Controller
 
        $photoFile = $request->file('photo');
 
-        if ($photoFile) {
+       if ($photoFile) {
             $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
             $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
             $extension = $photoFile->getClientOriginalExtension();
 
             $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
-            $path = "photos/nannies/$filename";
 
-            $stream = fopen($photoFile->getPathname(), 'r+');
-            $success = Storage::disk('s3')->put($path, $stream, ['visibility' => 'public']);
-            fclose($stream);
+            $path = Storage::disk('s3')->putFileAs(
+                'photos/nannies',
+                $photoFile,
+                $filename,
+                ['visibility' => 'public']
+            );
 
-            if (!$success) {
-                $lastError = error_get_last();
-                throw new \Exception("❌ Помилка при завантаженні фото: " . json_encode($lastError));
+            if (!$path) {
+                throw new \Exception("❌ Не вдалося зберегти фото в S3");
             }
 
             $profile->photo = $path;
