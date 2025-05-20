@@ -312,18 +312,28 @@ class ProfileController extends Controller
                 $filename = Str::slug($firstName . '-' . $lastName)
                     . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
 
-                $path = Storage::disk('s3')->putFileAs('videos/nannies', $videoFile, $filename);
+              $stream = fopen($videoFile->getRealPath(), 'r');
+
+                $filename = Str::slug($firstName . '-' . $lastName)
+                    . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
+
+              $path = Storage::disk('s3')->put("videos/nannies/{$filename}", $stream, [
+                    'visibility' => 'public',
+                    'mimetype' => $videoFile->getMimeType()
+                ]);
+
+
+                fclose($stream);
+
 
                 if (!$path) {
                     return response()->json([
-                        'error' => '❌ Відео не збережено',
-                        'reason' => 'putFileAs повернув false',
-                        'size' => $videoFile->getSize(),
-                        'extension' => $videoFile->getClientOriginalExtension(),
+                        'error' => '❌ Відео не збережено через put()',
                         'mime_type' => $videoFile->getMimeType(),
-                        'original_name' => $videoFile->getClientOriginalName(),
+                        'size' => $videoFile->getSize(),
                     ], 500);
                 }
+
 
                 $profile->video = $path;
                 $profile->save();
