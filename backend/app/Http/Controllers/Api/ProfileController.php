@@ -290,15 +290,9 @@ class ProfileController extends Controller
     } 
        
       // Оновлення відео
-        if ($request->hasFile('video')) {
+     if ($request->hasFile('video')) {
             try {
                 $videoFile = $request->file('video');
-
-                if (!$videoFile) {
-                    return response()->json([
-                        'error' => '❌ Відео не передано у запиті',
-                    ], 400);
-                }
 
                 if (!$videoFile->isValid()) {
                     return response()->json([
@@ -312,14 +306,9 @@ class ProfileController extends Controller
                 $filename = Str::slug($firstName . '-' . $lastName)
                     . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
 
-              $stream = fopen($videoFile->getRealPath(), 'r');
+                $fileContents = file_get_contents($videoFile->getRealPath());
 
-               $filename = Str::slug($firstName . '-' . $lastName)
-                    . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
-
-                $content = file_get_contents($videoFile->getRealPath());
-
-                $path = Storage::disk('s3')->put("videos/nannies/{$filename}", $content, [
+                $path = Storage::disk('s3')->put("videos/nannies/{$filename}", $fileContents, [
                     'visibility' => 'public',
                     'mimetype' => $videoFile->getMimeType(),
                     'ContentType' => $videoFile->getMimeType()
@@ -333,7 +322,7 @@ class ProfileController extends Controller
                     ], 500);
                 }
 
-                $profile->video = $path;
+                $profile->video = "videos/nannies/{$filename}";
                 $profile->save();
 
             } catch (\Throwable $e) {
@@ -345,7 +334,6 @@ class ProfileController extends Controller
                 ], 500);
             }
         }
-
       
         // Оновлення галереї фото
         $existingGalleryRaw = $request->input('existing_gallery', []);
