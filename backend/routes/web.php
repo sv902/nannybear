@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\File;
 
+use Illuminate\Support\Facades\Storage;
+
 // Підтвердження email через посилання
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
     $user = User::findOrFail($id);
@@ -53,8 +55,18 @@ Route::get('/reset-password/{token}', function () {
 //     Route::patch('/users/{id}/role', [AdminController::class, 'updateRole'])->name('admin.users.role'); // Змінити роль
 // });
 
-Route::get('/test-aws', function () {
-    return dd(env('AWS_ACCESS_KEY_ID'));
+Route::get('/s3-test-upload', function () {
+    $contents = 'Це тестовий файл';
+    $filename = 'test/' . uniqid() . '.txt';
+    
+    $stored = Storage::disk('s3')->put($filename, $contents);
+
+    if ($stored) {
+        $url = Storage::disk('s3')->url($filename);
+        return "✅ Файл збережено: <a href='$url' target='_blank'>$url</a>";
+    }
+
+    return '❌ Не вдалося зберегти файл';
 });
 
 
