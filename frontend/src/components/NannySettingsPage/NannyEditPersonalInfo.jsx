@@ -134,11 +134,7 @@ const NannyEditPersonalInfo = () => {
       date.getDate().toString().padStart(2, "0") === day
     );
   }; 
-
-    for (let pair of data.entries()) {
-    console.log(`${pair[0]}:`, pair[1]);
-  }
-    
+     
   const handleSave = () => {
     if (!isChanged()) return;
     if (!validateInputs()) return;
@@ -148,6 +144,10 @@ const NannyEditPersonalInfo = () => {
     // 📸 Фото
     if (formData.photo instanceof File) {
       data.append("photo", formData.photo);
+    }
+
+      for (let pair of data.entries()) {
+      console.log(`${pair[0]}:`, pair[1]);
     }
   
     // 📅 Дата народження
