@@ -231,10 +231,13 @@ const ScheduleDayViewParent = ({ bookings, selectedDay}) => {
                     booking_days: booking.booking_days ?? [],
                   });
                 }}>
-                <img                 
-                    src={booking.nanny?.photo
-                    || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
-                  alt="Батько"
+                <img
+                  src={
+                    booking.nanny?.photo && booking.nanny.photo.startsWith("http")
+                      ? booking.nanny.photo
+                      : `${process.env.REACT_APP_API_URL}/storage/${booking.nanny?.photo || "default-avatar.jpg"}`
+                  }
+                  alt="Няня"
                   className="mini-avatar"
                 />
                   <div className="booking-mini-info">
