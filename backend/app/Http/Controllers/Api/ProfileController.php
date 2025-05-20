@@ -283,33 +283,37 @@ class ProfileController extends Controller
             }
           }
     } 
+       
+      // Оновлення відео
+        if ($request->hasFile('video')) {
+            try {
+                $videoFile = $request->file('video');
 
+                if ($videoFile && $videoFile->isValid()) {
+                    $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
+                    $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
 
-        // Оновлення відео
-       try {
-            $videoFile = $request->file('video');
+                    $filename = Str::slug($firstName . '-' . $lastName)
+                        . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
 
-            if ($videoFile && $videoFile->isValid()) {
-                $filename = Str::slug($profile->user->first_name . '-' . $profile->user->last_name)
-                    . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
+                    $path = $videoFile->storeAs('videos/nannies', $filename, 's3');
 
-                $path = $videoFile->storeAs('videos/nannies', $filename, 's3');
+                    if (!$path) {
+                        throw new \Exception("❌ Не вдалося зберегти відео у S3");
+                    }
 
-                if (!$path) {
-                    throw new \Exception("❌ Не вдалося зберегти відео у S3");
+                    $profile->video = $path;
+                    $profile->save();
                 }
-
-                $profile->video = $path;
-                $profile->save();
+            } catch (\Exception $e) {
+                \Log::error('❌ Помилка завантаження відео:', ['message' => $e->getMessage()]);
+                return response()->json([
+                    'error' => '❌ Внутрішня помилка сервера',
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile()
+                ], 500);
             }
-        } catch (\Exception $e) {
-            \Log::error('❌ Помилка завантаження відео:', ['message' => $e->getMessage()]);
-            return response()->json([
-                'error' => '❌ Внутрішня помилка сервера',
-                'message' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile()
-            ], 500);
         }
 
       
@@ -317,6 +321,11 @@ class ProfileController extends Controller
         $existingGalleryRaw = $request->input('existing_gallery', []);
         $existingGallery = array_filter(is_array($existingGalleryRaw) ? $existingGalleryRaw : []);
 
+        if (!$request->hasFile('gallery') && empty($existingGallery)) {
+            // якщо нічого не передано, не чіпаємо галерею
+            $existingGallery = $profile->gallery ?? [];
+        }
+        
         $oldGallery = is_array($profile->gallery)
             ? $profile->gallery
             : json_decode($profile->gallery ?? '[]', true);
@@ -352,6 +361,13 @@ class ProfileController extends Controller
         $profile->save();
              
                $profile->load('educations');
+
+               $profile->educations->transform(function ($edu) {
+                    $edu->diploma_image = $edu->diploma_image
+                        ? Storage::disk('s3')->url($edu->diploma_image)
+                        : null;
+                    return $edu;
+                });
 
                 // Примусово застосовуємо getPhotoUrl, щоб гарантовано повернути повний шлях
                 $profile->photo = $profile->getPhotoUrl();

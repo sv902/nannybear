@@ -98,6 +98,10 @@ const NannyGalleryPage = () => {
       return;
     }
 
+        if (existingPhotoPaths.length === 0) {
+      formData.append("existing_gallery[]", "");
+    }
+
     // 1. Відправити тільки нові фото
     const newPhotos = photos.filter((p) => p instanceof File);
     newPhotos.forEach((photo) => {
