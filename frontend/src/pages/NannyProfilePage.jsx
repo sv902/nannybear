@@ -112,6 +112,7 @@ const totalEducationPages = Math.ceil((nanny.educations?.length || 0) / educatio
 
 const startEduIndex = educationPage * educationsPerPage;
 const visibleEducations = (nanny.educations || []).slice(startEduIndex, startEduIndex + educationsPerPage);
+console.log("Освіта для відображення:", visibleEducations);
 
 const handlePrevEdu = () => {
   setEducationPage((prev) => (prev > 0 ? prev - 1 : prev));
@@ -275,7 +276,7 @@ const handleNextEdu = () => {
                     {edu.diploma_image && (
                     <div className="document-image-wrapper">
                       <img
-                         src={edu.diploma_image}
+                        src={`${baseUrl}/storage/${edu.diploma_image}`}
                         alt="Диплом"
                         className="document-image"
                       />
@@ -283,7 +284,7 @@ const handleNextEdu = () => {
                         className="view-diploma-btn"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setDiplomaPreviewUrl(`${edu.diploma_image}`);
+                          setDiplomaPreviewUrl(`${baseUrl}/storage/${edu.diploma_image}`);
                         }}
                       >
                         <img src={eye} alt="Переглянути диплом" />

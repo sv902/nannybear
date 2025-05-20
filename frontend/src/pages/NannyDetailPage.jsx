@@ -310,7 +310,7 @@ const NannyDetailPage = () => {
                     {edu.diploma_image && (
                     <div className="document-image-wrapper">
                       <img
-                         src={edu.diploma_image}
+                        src={`${baseUrl}/storage/${edu.diploma_image}`} 
                         alt="Диплом"
                         className="document-image"
                       />
@@ -318,7 +318,7 @@ const NannyDetailPage = () => {
                         className="view-diploma-btn"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setDiplomaPreviewUrl(`${edu.diploma_image}`);
+                          setDiplomaPreviewUrl(`${baseUrl}/storage/${edu.diploma_image}`);
                         }}
                       >
                         <img src={eye} alt="Переглянути диплом" />
