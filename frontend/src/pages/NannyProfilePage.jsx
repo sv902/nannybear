@@ -199,7 +199,7 @@ const handleNextEdu = () => {
         <div className={`nanny-colom-color-prof ${genderClass}`}> 
         <div className="photo-wrapper">
           <img
-            src={nanny.photo}
+            src={nanny.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/nannies/default-avatar.jpg"}
             alt="Фото няні"
             className="nanny-photo-large"
           /> 
