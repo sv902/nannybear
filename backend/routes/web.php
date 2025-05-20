@@ -53,6 +53,12 @@ Route::get('/reset-password/{token}', function () {
 //     Route::patch('/users/{id}/role', [AdminController::class, 'updateRole'])->name('admin.users.role'); // Змінити роль
 // });
 
+Route::get('/test-aws', function () {
+    return dd(env('AWS_ACCESS_KEY_ID'));
+});
+
+
+
 // Передача всіх маршрутів фронтенду React
 Route::get('/{any}', function () {
     return file_get_contents(public_path('index.html'));

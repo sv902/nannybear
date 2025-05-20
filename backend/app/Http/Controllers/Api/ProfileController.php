@@ -192,34 +192,21 @@ class ProfileController extends Controller
        $photoFile = $request->file('photo');
 
         if ($photoFile) {
-            \Log::info('📸 Фото отримано:', ['name' => $photoFile->getClientOriginalName()]); // додай цей лог
-
-            if ($profile->photo && $profile->photo !== config('files.default_nanny_photo')) {
-                \Storage::disk('s3')->delete($profile->photo);
-            }
-
             $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
             $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
             $extension = $photoFile->getClientOriginalExtension();
 
             $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
-           
-            $stream = fopen($photoFile->getPathname(), 'r+');
             $path = "photos/nannies/$filename";
 
-            $success = Storage::disk('s3')->put($path, $stream, 'public');
+            $stream = fopen($photoFile->getPathname(), 'r+');
+            $success = Storage::disk('s3')->put($path, $stream, ['visibility' => 'public']);
             fclose($stream);
 
             if (!$success) {
-                throw new \Exception("❌ Помилка при ручному завантаженні фото");
+                $lastError = error_get_last();
+                throw new \Exception("❌ Помилка при завантаженні фото: " . json_encode($lastError));
             }
-
-
-            if (!Storage::disk('s3')->exists('/')) {
-                throw new \Exception("❌ Немає доступу до S3. Перевір ключі або bucket.");
-            }
-
-            dd(env('AWS_ACCESS_KEY_ID'));
 
             $profile->photo = $path;
             $profile->save();
