@@ -301,7 +301,7 @@ class ProfileController extends Controller
                     $filename = Str::slug($firstName . '-' . $lastName)
                         . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
 
-                    $path = $videoFile->storeAs('videos/nannies', $filename, 's3');
+                   $path = Storage::disk('s3')->putFileAs('videos/nannies', $videoFile, $filename);
 
                    if (!$path) {
                         return response()->json([

@@ -27,7 +27,7 @@ const NannyGalleryPage = () => {
     axios.get("/api/nanny/profile").then((res) => {
       const profile = res.data.profile;
       if (profile.video) {
-        const videoUrl = `${baseUrl}/storage/${profile.video}`;
+        const videoUrl = profile.video;
         setVideo(videoUrl);
         setInitialVideo(videoUrl);
       }
