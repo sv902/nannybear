@@ -42,7 +42,15 @@ class NannyProfileController extends Controller
             $user->hasRole('parent') ||
             ($user->hasRole('nanny') && $user->nannyProfile && $user->nannyProfile->id == $id)
         ) {
-            // Додай URL-адреси до медіа
+            // Додай URL-адреси до дипломів
+            $profile->educations->transform(function ($edu) {
+                $edu->diploma_image = $edu->diploma_image
+                    ? Storage::disk('s3')->url($edu->diploma_image)
+                    : null;
+                return $edu;
+            });
+
+            // Додай URL-адреси до інших медіа
             $profile->photo = $profile->getPhotoUrl();
             $profile->video = $profile->getVideoUrl();
             $profile->gallery = $profile->getGalleryUrls();
@@ -51,7 +59,8 @@ class NannyProfileController extends Controller
         }
 
         return response()->json(['message' => '🚫 Доступ заборонено'], 403);
-    }      
+    }
+    
          
     /**
      * Фільтри нянь
@@ -156,7 +165,15 @@ class NannyProfileController extends Controller
             return response()->json(['message' => 'Профіль не знайдено'], 404);
         }
 
-        // Додаємо URL-и
+        // Перетворити дипломи на повні URL-и
+        $profile->educations->transform(function ($edu) {
+            $edu->diploma_image = $edu->diploma_image
+                ? Storage::disk('s3')->url($edu->diploma_image)
+                : null;
+            return $edu;
+        });
+
+        // Інші медіа
         $profile->photo = $profile->getPhotoUrl();
         $profile->video = $profile->getVideoUrl();
         $profile->gallery = $profile->getGalleryUrls();
@@ -164,6 +181,7 @@ class NannyProfileController extends Controller
         return response()->json([
             'profile' => $profile,
         ]);
-    }      
+    }
+    
                
 }
