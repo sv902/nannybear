@@ -325,7 +325,7 @@ class ProfileController extends Controller
             // якщо нічого не передано, не чіпаємо галерею
             $existingGallery = $profile->gallery ?? [];
         }
-        
+
         $oldGallery = is_array($profile->gallery)
             ? $profile->gallery
             : json_decode($profile->gallery ?? '[]', true);
@@ -375,8 +375,7 @@ class ProfileController extends Controller
                 $profile->gallery = $profile->getGalleryUrls();
 
                 return response()->json([
-                    'message' => 'Профіль няні оновлено',
-                    'uploaded_photo_path' => $path, // DEBUG
+                    'message' => 'Профіль няні оновлено',                 
                     'profile' => $profile,
                 ]);
         } catch (\Throwable $e) {
