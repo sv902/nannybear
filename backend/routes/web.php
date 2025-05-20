@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\File;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 // Підтвердження email через посилання
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
@@ -60,33 +61,29 @@ Route::get('/s3-test-upload', function () {
         $contents = 'Це тестовий файл';
         $filename = 'test/' . uniqid() . '.txt';
 
-        // Спроба запису в S3
-        $stored = \Storage::disk('s3')->put($filename, $contents);
+        $stored = Storage::disk('s3')->put($filename, $contents);
 
         if ($stored) {
-            $url = \Storage::disk('s3')->url($filename);
+            $url = Storage::disk('s3')->url($filename);
             return response()->json([
                 'message' => '✅ Файл збережено',
-                'filename' => $filename,
                 'url' => $url,
             ]);
+        } else {
+            Log::error('❌ S3 збереження повернуло false');
+            return response()->json([
+                'message' => '❌ Не вдалося зберегти файл',
+                'filename' => $filename,
+            ], 500);
         }
-
-        return response()->json([
-            'message' => '❌ Не вдалося зберегти файл',
-            'filename' => $filename,
-        ], 500);
     } catch (\Throwable $e) {
+        Log::error('❌ Виняток при S3:', ['error' => $e->getMessage()]);
         return response()->json([
             'message' => '❌ Виняток',
-            'error_message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => collect($e->getTrace())->take(3), // скорочений трейс
+            'error' => $e->getMessage(),
         ], 500);
     }
 });
-
 
 
 Route::get('/debug-storage', function () {
