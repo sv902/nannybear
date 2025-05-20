@@ -199,14 +199,10 @@ const handleNextEdu = () => {
         <div className={`nanny-colom-color-prof ${genderClass}`}> 
         <div className="photo-wrapper">
           <img
-            src={
-              nanny.photo?.startsWith("http") 
-                ? nanny.photo 
-                : `${baseUrl}/storage/${nanny.photo || "photos/nannies/default-avatar.jpg"}`
-            }
+            src={nanny.photo}
             alt="Фото няні"
             className="nanny-photo-large"
-          />  
+          /> 
         </div>
   
           <div className="rating-stars">
@@ -279,11 +275,7 @@ const handleNextEdu = () => {
                     {edu.diploma_image && (
                     <div className="document-image-wrapper">
                       <img
-                         src={
-                            edu.diploma_image?.startsWith("http")
-                              ? edu.diploma_image
-                              : `${baseUrl}/storage/${edu.diploma_image}`
-                          }
+                         src={edu.diploma_image}
                         alt="Диплом"
                         className="document-image"
                       />
@@ -488,9 +480,9 @@ const handleNextEdu = () => {
                     <div key={idx} className="review-item">
                       <img
                         src={
-                          review.parent_profile?.photo
-                            ? `${baseUrl}/storage/${review.parent_profile.photo}`
-                            : `${baseUrl}/storage/default-avatar.jpg`
+                          review.parent_profile?.photo?.startsWith("http")
+                            ? review.parent_profile.photo
+                            : `${baseUrl}/storage/${review.parent_profile?.photo || "default-avatar.jpg"}`
                         }
                         alt="Аватар"
                         className="review-avatar"
