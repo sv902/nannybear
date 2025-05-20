@@ -213,7 +213,7 @@ class ProfileController extends Controller
 
 
         // Якщо нічого не завантажено і фото ще немає — встановити дефолтне
-            if (!$profile->photo) {
+        if (empty($profile->photo) || $profile->photo === 'default-avatar.jpg') {
             $profile->photo = config('files.default_nanny_photo');
             $profile->save();
         }
