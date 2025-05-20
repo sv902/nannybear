@@ -56,17 +56,30 @@ Route::get('/reset-password/{token}', function () {
 // });
 
 Route::get('/s3-test-upload', function () {
-    $contents = 'Це тестовий файл';
-    $filename = 'test/' . uniqid() . '.txt';
-    
-    $stored = \Storage::disk('s3')->put($filename, $contents);
+    try {
+        $filename = 'test/' . uniqid() . '.txt';
+        $content = 'Це тестовий файл';
 
-    if ($stored) {
-        $url = \Storage::disk('s3')->url($filename);
-        return "✅ Файл збережено: <a href='$url' target='_blank'>$url</a>";
+        $stream = fopen('php://temp', 'r+');
+        fwrite($stream, $content);
+        rewind($stream);
+
+        $stored = Storage::disk('s3')->put($filename, $stream);
+        fclose($stream);
+        dd(config('filesystems.default')); 
+
+        if ($stored) {
+            return "✅ Файл збережено: <a href='" . Storage::disk('s3')->url($filename) . "' target='_blank'>відкрити</a>";
+        }
+
+        return '❌ Не вдалося зберегти файл';
+    } catch (\Throwable $e) {
+        Log::error('S3 Error: ' . $e->getMessage());
+        return response()->json([
+            'message' => '❌ Помилка збереження',
+            'error' => $e->getMessage(),
+        ], 500);
     }
-
-    return '❌ Не вдалося зберегти файл';
 });
 
 
