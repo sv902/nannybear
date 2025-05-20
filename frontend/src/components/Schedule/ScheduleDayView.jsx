@@ -146,7 +146,7 @@ const slotClass = isHourBooked ? "booked-day" : (isHourInWorking ? "available-ho
               <div className="booking-block-bottom-day">
                 <div className="avatar-name-inline">
                   <img
-                    src={booking.parent?.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
+                    src={bookingToRender.parent?.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                     className="booking-avatar-day"
                     alt="avatar"
                   />
