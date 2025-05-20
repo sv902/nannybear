@@ -318,7 +318,6 @@ class ProfileController extends Controller
                     . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
 
               $path = Storage::disk('s3')->put("videos/nannies/{$filename}", $stream, [
-                    'visibility' => 'public',
                     'mimetype' => $videoFile->getMimeType()
                 ]);
 
