@@ -210,7 +210,7 @@ const NannyEditEducationPage = () => {
             {(edu.preview || (!!edu.diploma_image && typeof edu.diploma_image === "string")) && (
               <a
                 className="custom-file-upload-nanny"
-                href={edu.preview || `${baseUrl}/storage/${edu.diploma_image}`}
+                href={edu.preview || edu.diploma_image}
                 target="_blank"
                 rel="noopener noreferrer"
               >

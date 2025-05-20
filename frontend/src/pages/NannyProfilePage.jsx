@@ -275,16 +275,12 @@ const handleNextEdu = () => {
                     </div>
                     {edu.diploma_image && (
                     <div className="document-image-wrapper">
-                      <img
-                        src={edu.diploma_image}
-                        alt="Диплом"
-                        className="document-image"
-                      />
+                     <img src={edu.diploma_image.startsWith("http") ? edu.diploma_image : `${baseUrl}/storage/${edu.diploma_image}`} alt="Диплом" className="document-image" />
                       <button
                         className="view-diploma-btn"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setDiplomaPreviewUrl(edu.diploma_image);
+                          setDiplomaPreviewUrl(edu.diploma_image.startsWith("http") ? edu.diploma_image : `${baseUrl}/storage/${edu.diploma_image}`)
                         }}
                       >
                         <img src={eye} alt="Переглянути диплом" />

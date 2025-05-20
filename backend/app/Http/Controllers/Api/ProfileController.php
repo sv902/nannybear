@@ -239,8 +239,8 @@ class ProfileController extends Controller
             $profile->additional_skills = $validated['additional_skills'];
         }
 
-        // Оновлення освіти
-       if (isset($validated['education'])) {
+        // Оновлення освіти       
+        if (isset($validated['education'])) {
             foreach ($validated['education'] as $index => $eduData) {
             try {
                 $existing = $profile->educations()->where('institution', $eduData['institution'])->first();
@@ -248,7 +248,12 @@ class ProfileController extends Controller
                 $file = $request->file("education.$index.diploma_image");
                 $diplomaPath = $existing?->diploma_image;
 
-                if ($file && $file->isValid()) {
+               if ($file && $file->isValid()) {
+                    // Видалення попереднього диплома, якщо він існує
+                    if ($diplomaPath && Storage::disk('s3')->exists($diplomaPath)) {
+                        Storage::disk('s3')->delete($diplomaPath);
+                    }
+
                     $firstName = $validated['first_name'] ?? $profile->first_name ?? 'nanny';
                     $lastName = $validated['last_name'] ?? $profile->last_name ?? '';
 
@@ -354,8 +359,7 @@ class ProfileController extends Controller
             }
         }
 
-        // Зберігаємо масив галереї
-       
+        // Зберігаємо масив галереї       
         $mergedGallery = array_merge($existingGallery, $galleryPaths);
         $profile->gallery = array_values(array_filter($mergedGallery));
         $profile->save();
