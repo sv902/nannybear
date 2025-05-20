@@ -201,8 +201,7 @@ class ProfileController extends Controller
             $path = Storage::disk('s3')->putFileAs(
                 'photos/nannies',
                 $photoFile,
-                $filename,
-                ['visibility' => 'public']
+                $filename               
             );
 
             if (!$path) {
@@ -351,9 +350,15 @@ class ProfileController extends Controller
                     'profile' => $profile,
                 ]);
         } catch (\Throwable $e) {
-            \Log::error('Помилка при збереженні профілю няні: ' . $e->getMessage());
-            return response()->json(['error' => '❌ Внутрішня помилка сервера', 'details' => $e->getMessage()], 500);
-        }       
+            \Log::error('Помилка при збереженні профілю няні', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json([
+                'error' => '❌ Внутрішня помилка сервера',
+                'details' => $e->getMessage()
+            ], 500);
+        }     
 
     }
 
