@@ -140,20 +140,26 @@ class NannyProfileController extends Controller
     public function getNannyProfile(Request $request)
     {
         $user = Auth::user();
-    
+
         if (!$user || !$user->hasRole('nanny')) {
             \Log::warning("403: Доступ заборонено для користувача", ['user_id' => $user?->id]);
             return response()->json(['message' => 'Доступ заборонено'], 403);
         }
-    
-        $profile = $user->nannyProfile;
+
         $profile = $user->nannyProfile()->with('educations')->first();
-    
+
         if (!$profile) {
             return response()->json(['message' => 'Профіль не знайдено'], 404);
         }
-    
-        return response()->json(['profile' => $profile]);
-    }       
+
+        // Додаємо URL-и
+        $profile->photo = $profile->getPhotoUrl();
+        $profile->video = $profile->getVideoUrl();
+        $profile->gallery = $profile->getGalleryUrls();
+
+        return response()->json([
+            'profile' => $profile,
+        ]);
+    }      
                
 }
