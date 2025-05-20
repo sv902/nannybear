@@ -75,6 +75,15 @@ Route::get('/s3-test-upload', function () {
     ]);
 });
 
+Route::get('/debug-s3', function () {
+    return [
+        'disk' => config('filesystems.default'),
+        'key' => config('filesystems.disks.s3.key'),
+        'bucket' => config('filesystems.disks.s3.bucket'),
+        'env_loaded' => env('AWS_ACCESS_KEY_ID'),
+    ];
+});
+
 
 
 // Передача всіх маршрутів фронтенду React
