@@ -163,13 +163,13 @@ class ProfileController extends Controller
                 'education.*.institution' => 'sometimes|required|string|max:255',
                 'education.*.specialty' => 'sometimes|required|string|max:255',
                 'education.*.years' => 'sometimes|required|string|max:50',
-                'education.*.diploma_image' => 'nullable|file|image|max:5120',
+                'education.*.diploma_image' => 'sometimes|nullable|string|file|image|max:5120',
             'languages' => 'sometimes|required|array',
             'additional_skills' => 'sometimes|required|array',
             'experience_years' => 'sometimes|required|numeric|min:0|max:50',
             'hourly_rate' => 'sometimes|required|numeric|min:0|max:500',
             'availability' => 'nullable|array',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime|max:51200', // до 50MB
+            'video' => 'sometimes|nullable|file|mimetypes:video/mp4,video/quicktime|max:51200', // до 50MB
             'gallery' => 'nullable|array',
             'gallery.*' => 'nullable|file|image|max:5120', // кожне фото до 5MB
             'goat' => 'nullable|string',
@@ -240,31 +240,21 @@ class ProfileController extends Controller
         }
 
         // Оновлення освіти
-        if (isset($validated['education'])) {
+       if (isset($validated['education'])) {
             foreach ($validated['education'] as $index => $eduData) {
                 $existing = $profile->educations()->where('institution', $eduData['institution'])->first();
-        
-                $diplomaPath = null;
-        
-                if ($request->hasFile("education.$index.diploma_image")) {
-                    $file = $request->file("education.$index.diploma_image");
-        
-                    $firstName = $validated['first_name']
-                        ?? ($profile->first_name ?? $user->first_name)
-                        ?? 'nanny';
 
-                    $lastName = $validated['last_name']
-                        ?? ($profile->last_name ?? $user->last_name)
-                        ?? '';
+                $file = $request->file("education.$index.diploma_image");
+                $diplomaPath = $existing?->diploma_image;
+
+                if ($file && $file->isValid()) {
+                    $firstName = $validated['first_name'] ?? $profile->first_name ?? 'nanny';
+                    $lastName = $validated['last_name'] ?? $profile->last_name ?? '';
 
                     $filename = Str::slug($firstName . '_' . $lastName . '_' . $eduData['institution'] . '_diploma_' . uniqid()) . '.' . $file->getClientOriginalExtension();
-        
                     $diplomaPath = $file->storeAs('diplomas', $filename, 's3');
-                } else {
-                    // Якщо файл не передано, а існуючий запис є — зберігаємо старий шлях
-                    $diplomaPath = $existing?->diploma_image;
                 }
-        
+
                 if ($existing) {
                     $existing->update([
                         'specialty' => $eduData['specialty'],
@@ -282,30 +272,28 @@ class ProfileController extends Controller
             }
         }
 
+
         // Оновлення відео
        try {
-            $stream = fopen($request->file('video')->getRealPath(), 'r');
-            if (!$stream) {
-                throw new \Exception("Не вдалося відкрити відеофайл для зчитування");
+            $videoFile = $request->file('video');
+
+            if ($videoFile) {
+                $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
+                $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
+                $filename = Str::slug($firstName . '_' . $lastName . '_nanny_video_' . uniqid()) . '.' . $videoFile->getClientOriginalExtension();
+
+                $videoPath = $videoFile->storeAs('videos/nannies', $filename, 's3');
+
+                if (!$videoPath) {
+                    return response()->json([
+                        'error' => '❌ Не вдалося зберегти відео в S3',
+                    ], 500);
+                }
+
+                $profile->video = $videoPath;
+                $profile->save();
             }
 
-            $filename = Str::slug($profile->user->first_name . '-' . $profile->user->last_name)
-                . '-nanny-video-' . uniqid() . '.' . $request->file('video')->getClientOriginalExtension();
-
-            $videoPath = 'videos/nannies/' . $filename;
-
-            $success = Storage::disk('s3')->put($videoPath, $stream, [             
-                'ContentType' => $request->file('video')->getMimeType(),
-            ]);
-
-            fclose($stream);
-
-            if (!$success) {
-                throw new \Exception("The video failed to upload.");
-            }
-
-            $profile->video = $videoPath;
-            $profile->save();
         } catch (\Exception $e) {
             \Log::error('❌ Помилка завантаження відео:', ['message' => $e->getMessage()]);
             return response()->json([
@@ -370,7 +358,9 @@ class ProfileController extends Controller
             ]);
             return response()->json([
                 'error' => '❌ Внутрішня помилка сервера',
-                'details' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
             ], 500);
         }     
 
