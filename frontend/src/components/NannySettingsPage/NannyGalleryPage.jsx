@@ -31,10 +31,9 @@ const NannyGalleryPage = () => {
         setVideo(videoUrl);
         setInitialVideo(videoUrl);
       }
-      if (Array.isArray(profile.gallery)) {
-        const loadedPhotos = profile.gallery.map((photo) => `${baseUrl}/storage/${photo}`);
-        setPhotos(loadedPhotos);
-        setInitialPhotos(loadedPhotos);
+     if (Array.isArray(profile.gallery)) {
+        setPhotos(profile.gallery);
+        setInitialPhotos(profile.gallery);
       }
     });
   }, [baseUrl]);

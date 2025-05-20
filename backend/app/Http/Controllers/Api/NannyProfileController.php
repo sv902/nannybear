@@ -28,26 +28,30 @@ class NannyProfileController extends Controller
      * @param int $id - ID профілю няні
      * @return \Illuminate\Http\JsonResponse
      */  
-    public function show($id)
+   public function show($id)
     {
         $user = Auth::user();
-    
+
         if (!$user) {
             return response()->json(['message' => 'Неавторизовано'], 401);
         }
-    
+
         $profile = NannyProfile::with('educations')->findOrFail($id);
-           
+
         if (
             $user->hasRole('parent') ||
             ($user->hasRole('nanny') && $user->nannyProfile && $user->nannyProfile->id == $id)
         ) {
+            // Додай URL-адреси до медіа
+            $profile->photo = $profile->getPhotoUrl();
+            $profile->video = $profile->getVideoUrl();
+            $profile->gallery = $profile->getGalleryUrls();
+
             return response()->json($profile);
         }
-    
+
         return response()->json(['message' => '🚫 Доступ заборонено'], 403);
-    }
-       
+    }      
          
     /**
      * Фільтри нянь
