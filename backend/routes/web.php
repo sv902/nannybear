@@ -84,6 +84,11 @@ Route::get('/debug-s3', function () {
     ];
 });
 
+Route::get('/clear-config', function () {
+    \Artisan::call('config:clear');
+    \Artisan::call('config:cache');
+    return '✅ Конфіг очищено і закешовано';
+});
 
 
 // Передача всіх маршрутів фронтенду React
