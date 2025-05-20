@@ -98,10 +98,6 @@ const NannyGalleryPage = () => {
       return;
     }
 
-        if (existingPhotoPaths.length === 0) {
-      formData.append("existing_gallery[]", "");
-    }
-
     // 1. Відправити тільки нові фото
     const newPhotos = photos.filter((p) => p instanceof File);
     newPhotos.forEach((photo) => {
@@ -113,6 +109,10 @@ const NannyGalleryPage = () => {
       .filter((p) => typeof p === "string" && p.includes("/storage/"))
       .map((url) => url.replace(`${baseUrl}/storage/`, ""))
       .filter(Boolean); // прибрати пусті
+
+    if (existingPhotoPaths.length === 0) {
+      formData.append("existing_gallery[]", "");
+    }
 
     existingPhotoPaths.forEach((path) => {
       formData.append("existing_gallery[]", path); 
@@ -130,8 +130,15 @@ const NannyGalleryPage = () => {
      const { data } = await axios.get("/api/nanny/profile");
       const updatedProfile = data.profile;
 
-      setVideo(updatedProfile.video ? `${baseUrl}/storage/${updatedProfile.video}` : null);
-      setInitialVideo(updatedProfile.video ? `${baseUrl}/storage/${updatedProfile.video}` : null);
+      const videoUrl = updatedProfile.video
+        ? updatedProfile.video.startsWith("http") 
+          ? updatedProfile.video
+          : `${baseUrl}/storage/${updatedProfile.video}`
+        : null;
+
+      setVideo(videoUrl);
+      setInitialVideo(videoUrl);
+
 
       const updatedPhotos = (updatedProfile.gallery || []).map((p) => `${baseUrl}/storage/${p}`);
       setPhotos(updatedPhotos);
