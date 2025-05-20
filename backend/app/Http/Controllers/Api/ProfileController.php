@@ -204,12 +204,22 @@ class ProfileController extends Controller
 
             $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
            
-            $path = $photoFile->storeAs('photos/nannies', $filename, 's3');
-            if (!$path) {
-                throw new \Exception("📛 Не вдалося зберегти фото в S3");
+            $stream = fopen($photoFile->getPathname(), 'r+');
+            $path = "photos/nannies/$filename";
+
+            $success = Storage::disk('s3')->put($path, $stream, 'public');
+            fclose($stream);
+
+            if (!$success) {
+                throw new \Exception("❌ Помилка при ручному завантаженні фото");
             }
 
-            \Log::info('✅ Фото збережено в S3:', ['path' => $path]);
+
+            if (!Storage::disk('s3')->exists('/')) {
+                throw new \Exception("❌ Немає доступу до S3. Перевір ключі або bucket.");
+            }
+
+            dd(env('AWS_ACCESS_KEY_ID'));
 
             $profile->photo = $path;
             $profile->save();
