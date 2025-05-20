@@ -133,7 +133,7 @@ const ScheduleDayViewParent = ({ bookings, selectedDay}) => {
                 <div className="booking-block-bottom-day">
                   <div className="avatar-name-inline">
                     <img
-                     src={booking.nanny?.photo
+                     src={bookingToRender.nanny?.photo
                         || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                       className="booking-avatar-day"
                       alt="avatar"
