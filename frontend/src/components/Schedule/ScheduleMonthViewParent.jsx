@@ -290,9 +290,8 @@ const ScheduleMonthViewParent = () => {
                 }}>
                 <img
                   src={booking.nanny?.photo
-                    ? `${process.env.REACT_APP_API_URL}/storage/${booking.nanny.photo}`
-                    : `${process.env.REACT_APP_API_URL}/storage/default-avatar.jpg`}
-                  alt="Батько"
+                    || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
+                  alt="Няня"
                   className="mini-avatar"
                 />
                <div className="booking-mini-info">

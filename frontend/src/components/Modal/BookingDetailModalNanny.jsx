@@ -125,7 +125,7 @@ const BookingDetailModalNanny = ({ booking, onClose }) => {
           onClick={() => navigate(`/parent-profiles/${booking.parent.id}`)}
         >
           <img
-            src={booking.parent?.photo ? `${baseUrl}/storage/${booking.parent.photo}` : `${baseUrl}/storage/default-avatar.jpg`}
+            src={booking.parent?.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
             alt="Батько"
             className="nanny-booking-avatar"
           />

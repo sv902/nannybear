@@ -222,9 +222,7 @@ const ParentEditPersonalInfoPage = () => {
                   ? previewPhoto
                   : formData.photo instanceof File
                     ? URL.createObjectURL(formData.photo)
-                    : formData.photo
-                      ? `${baseUrl}/storage/${formData.photo}`
-                      : `${baseUrl}/storage/default-avatar.jpg`
+                    : formData.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"
               }
               alt="Аватар"
               className="settings-avatar"

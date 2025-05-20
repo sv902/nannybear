@@ -480,9 +480,8 @@ const handleNextEdu = () => {
                     <div key={idx} className="review-item">
                       <img
                         src={
-                          review.parent_profile?.photo?.startsWith("http")
-                            ? review.parent_profile.photo
-                            : `${baseUrl}/storage/${review.parent_profile?.photo || "default-avatar.jpg"}`
+                          review.parent_profile?.photo ||
+                          "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"
                         }
                         alt="Аватар"
                         className="review-avatar"

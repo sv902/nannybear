@@ -171,8 +171,11 @@ const averageRating = validReviews.length > 0
           onClick={() => navigate(`/nanny-profiles/${booking.nanny.id}`)}
         >
           <img
-            src={booking.nanny?.photo ? `${baseUrl}/storage/${booking.nanny.photo}` : `${baseUrl}/storage/default-avatar.jpg`}
-            alt="Батько"
+            src={
+                booking.nanny?.photo
+                || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/nannies/default-avatar.jpg"
+            }
+            alt="Няня"
             className="nanny-booking-avatar"
           />
           <div>

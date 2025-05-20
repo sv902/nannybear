@@ -283,28 +283,26 @@ class ProfileController extends Controller
         }
 
         // Оновлення відео
-        if (!$request->hasFile('video')) {
-            throw new \Exception("Файл video не знайдено у запиті");
+       $stream = fopen($request->file('video')->getRealPath(), 'r');
+        if (!$stream) {
+            throw new \Exception("Не вдалося відкрити відеофайл для зчитування");
         }
 
-        $videoFile = $request->file('video');
-        if (!$videoFile->isValid()) {
-            throw new \Exception("Файл video недійсний");
-        }
+        $videoPath = 'videos/nannies/' . $filename;
 
-        $firstName = $profile->first_name ?? $user->first_name ?? 'nanny';
-        $lastName = $profile->last_name ?? $user->last_name ?? '';
+        $success = Storage::disk('s3')->put($videoPath, $stream, [
+            'visibility' => 'public',
+            'ContentType' => $request->file('video')->getMimeType(),
+        ]);
 
-        $filename = Str::slug($firstName . '_' . $lastName . '_video_' . uniqid()) . '.' . $videoFile->getClientOriginalExtension();
+        fclose($stream);
 
-        $videoPath = $videoFile->storeAs('videos/nannies', $filename, 's3');
-
-        if (!$videoPath) {
+        if (!$success) {
             throw new \Exception("The video failed to upload.");
         }
 
         $profile->video = $videoPath;
-        $profile->save();       
+        $profile->save();    
        
        // Оновлення галереї фото
         $existingGalleryRaw = $request->input('existing_gallery', []);

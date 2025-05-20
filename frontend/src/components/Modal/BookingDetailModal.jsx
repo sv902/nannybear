@@ -121,11 +121,10 @@ const BookingDetailModal = ({ booking, onClose }) => {
         <div className="profile-left"
          onClick={() => navigate(`/nanny-profiles/${booking.nanny.id}`)}
         >
-            <img
+            <img            
             src={
                 booking.nanny?.photo
-                ? `${baseUrl}/storage/${booking.nanny.photo}`
-                : `${baseUrl}/storage/default-avatar.jpg`
+                || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/nannies/default-avatar.jpg"
             }
             alt="Няня"
             className="nanny-booking-avatar"

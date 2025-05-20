@@ -14,10 +14,10 @@ const NannyCard = ({ nanny }) => {
   const isFavorite = favoriteIds.some((fav) => fav.nanny_id === nanny.id);
 
   const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  // const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
   const genderClass = nanny.gender === "female" ? "female" : "male";
-  const avatar = nanny.photo || `${baseUrl}/storage/photos/nannies/default-avatar.jpg`;
+  const avatar = nanny.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/nannies/default-avatar.jpg";
 
   const [reviews, setReviews] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false); 

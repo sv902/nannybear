@@ -202,11 +202,11 @@ const NannyDetailPage = () => {
         </button>       
       
         <div className="photo-wrapper">
-          <img
+           <img
             src={nanny.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/nannies/default-avatar.jpg"}
             alt="Фото няні"
             className="nanny-photo-large"
-          />       
+          />      
         </div>
   
           <div className="rating-stars">
@@ -310,7 +310,7 @@ const NannyDetailPage = () => {
                     {edu.diploma_image && (
                     <div className="document-image-wrapper">
                       <img
-                        src={`${baseUrl}/storage/${edu.diploma_image}`}
+                         src={edu.diploma_image}
                         alt="Диплом"
                         className="document-image"
                       />
@@ -477,7 +477,7 @@ const NannyDetailPage = () => {
               nanny.gallery.map((img, idx) => (
                 <div key={idx} className="photo-item">
                   <img
-                    src={`${baseUrl}/storage/${img}`}
+                    src={img}
                     alt={`Фото ${idx + 1}`}
                     className="photo-item-img"
                   />
@@ -523,9 +523,8 @@ const NannyDetailPage = () => {
                     <div key={idx} className="review-item">
                       <img
                         src={
-                          review.parent_profile?.photo
-                            ? `${baseUrl}/storage/${review.parent_profile.photo}`
-                            : `${baseUrl}/storage/default-avatar.jpg`
+                          review.parent_profile?.photo ||
+                          "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"
                         }
                         alt="Аватар"
                         className="review-avatar"

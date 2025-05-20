@@ -193,6 +193,7 @@ class BookingController extends Controller
 
         $booking = Booking::with([
             'nanny.user',
+            'parent.user',
             'address',
             'bookingDays'
         ])->find($id);
@@ -220,8 +221,16 @@ class BookingController extends Controller
                 'user_id' => $booking->nanny->user->id,
                 'first_name' => $booking->nanny->user->first_name,
                 'last_name' => $booking->nanny->user->last_name,
-                'photo' => $booking->nanny->user->photo,
+                'photo' => $booking->nanny->photo,
             ],
+            'parent' => [
+                'id' => $booking->parent->id,
+                'user_id' => $booking->parent->user->id,
+                'first_name' => $booking->parent->user->first_name,
+                'last_name' => $booking->parent->user->last_name,
+                'photo' => $booking->parent->photo, 
+            ],
+
             'booking_days' => $booking->bookingDays->map(function ($day) {
                 return [
                     'date' => $day->date,

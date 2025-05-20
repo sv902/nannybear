@@ -188,8 +188,7 @@ const ScheduleWeekView = ({ activeDay, onDaySelect }) => {
                 }} >
                   <img
                     src={booking.parent?.photo
-                      ? `${process.env.REACT_APP_API_URL}/storage/${booking.parent.photo}`
-                      : `${process.env.REACT_APP_API_URL}/storage/default-avatar.jpg`}
+                      || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                     alt="Батько"
                     className="mini-avatar"
                   />
@@ -361,7 +360,7 @@ const ScheduleWeekView = ({ activeDay, onDaySelect }) => {
                             </div>
                             <div className="booking-block-bottom">
                               <img
-                                src={`${process.env.REACT_APP_API_URL}/storage/${booking.parent?.photo || 'default-avatar.jpg'}`}
+                                src={booking.parent?.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                                 className="booking-avatar"
                                 alt="avatar"
                               />

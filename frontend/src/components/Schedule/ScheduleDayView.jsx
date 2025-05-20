@@ -146,7 +146,7 @@ const slotClass = isHourBooked ? "booked-day" : (isHourInWorking ? "available-ho
               <div className="booking-block-bottom-day">
                 <div className="avatar-name-inline">
                   <img
-                    src={`${process.env.REACT_APP_API_URL}/storage/${bookingToRender.parent?.photo || "default-avatar.jpg"}`}
+                    src={booking.parent?.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                     className="booking-avatar-day"
                     alt="avatar"
                   />
@@ -299,9 +299,7 @@ const slotClass = isHourBooked ? "booked-day" : (isHourInWorking ? "available-ho
                   });
                 }} >
                   <img
-                    src={booking.parent?.photo
-                      ? `${process.env.REACT_APP_API_URL}/storage/${booking.parent.photo}`
-                      : `${process.env.REACT_APP_API_URL}/storage/default-avatar.jpg`}
+                    src={booking.parent?.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                     alt="Батько"
                     className="mini-avatar"
                   />
