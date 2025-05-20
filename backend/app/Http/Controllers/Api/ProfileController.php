@@ -189,10 +189,12 @@ class ProfileController extends Controller
             $profile->update($validated);
         }
 
-        $photoFile = $request->file('photo');
+       $photoFile = $request->file('photo');
 
         if ($photoFile) {
-            if ($profile->photo) {
+            \Log::info('📸 Фото отримано:', ['name' => $photoFile->getClientOriginalName()]); // додай цей лог
+
+            if ($profile->photo && $profile->photo !== config('files.default_nanny_photo')) {
                 \Storage::disk('s3')->delete($profile->photo);
             }
 
@@ -203,9 +205,12 @@ class ProfileController extends Controller
             $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
             $path = $photoFile->storeAs('photos/nannies', $filename, 's3');
 
+            \Log::info('✅ Фото збережено в S3:', ['path' => $path]);
+
             $profile->photo = $path;
             $profile->save();
         }
+
 
         // Якщо нічого не завантажено і фото ще немає — встановити дефолтне
             if (!$profile->photo) {
@@ -333,13 +338,14 @@ class ProfileController extends Controller
              
                $profile->load('educations');
 
+                // Примусово застосовуємо getPhotoUrl, щоб гарантовано повернути повний шлях
+                $profile->photo = $profile->getPhotoUrl();
+                $profile->video = $profile->getVideoUrl();
+                $profile->gallery = $profile->getGalleryUrls();
+
                 return response()->json([
                     'message' => 'Профіль няні оновлено',
-                    'profile' => tap($profile, function ($profile) {
-                        $profile->photo = $profile->getPhotoUrl();
-                        $profile->video = $profile->getVideoUrl();
-                        $profile->gallery = $profile->getGalleryUrls();
-                    }),
+                    'profile' => $profile,
                 ]);
         } catch (\Throwable $e) {
             \Log::error('Помилка при збереженні профілю няні: ' . $e->getMessage());
