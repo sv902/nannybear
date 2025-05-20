@@ -21,6 +21,7 @@ const NannyGalleryPage = () => {
   const [showSavedModal, setShowSavedModal] = useState(false);
   const videoInputRef = useRef(null);
   const photoInputRef = useRef(null);
+   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     axios.get("/api/nanny/profile").then((res) => {
@@ -46,9 +47,7 @@ const NannyGalleryPage = () => {
 
   const handlePhotoChange = (e) => {
   const files = Array.from(e.target.files);
-  const availableSlots = MAX_PHOTOS - photos.length;
-  const [isUploading, setIsUploading] = useState(false);
-
+  const availableSlots = MAX_PHOTOS - photos.length; 
 
   if (files.length > availableSlots) {
     alert(`Ви можете додати ще лише ${availableSlots} фото.`);
