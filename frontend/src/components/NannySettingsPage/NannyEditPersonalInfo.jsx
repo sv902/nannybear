@@ -134,6 +134,10 @@ const NannyEditPersonalInfo = () => {
       date.getDate().toString().padStart(2, "0") === day
     );
   }; 
+
+    for (let pair of data.entries()) {
+    console.log(`${pair[0]}:`, pair[1]);
+  }
     
   const handleSave = () => {
     if (!isChanged()) return;

@@ -140,6 +140,8 @@ class ProfileController extends Controller
      */
     public function storeNannyProfile(Request $request)
     {
+        try {
+
         $user = Auth::user();
         
         if (!$user) {
@@ -189,9 +191,8 @@ class ProfileController extends Controller
             $profile = $user->nannyProfile;
             $profile->update($validated);
         }
-dd(Storage::disk('s3')->url('default-avatar.jpg'));
 
-       $photoFile = $request->file('photo');
+        $photoFile = $request->file('photo');
 
         if ($photoFile) {
             if ($profile->photo) {
@@ -345,6 +346,10 @@ dd(Storage::disk('s3')->url('default-avatar.jpg'));
                         $profile->gallery = $profile->getGalleryUrls();
                     }),
                 ]);
+        } catch (\Throwable $e) {
+            \Log::error('Помилка при збереженні профілю няні: ' . $e->getMessage());
+            return response()->json(['error' => '❌ Внутрішня помилка сервера', 'details' => $e->getMessage()], 500);
+        }       
 
     }
 
