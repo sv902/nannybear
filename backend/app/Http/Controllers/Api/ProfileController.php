@@ -203,7 +203,11 @@ class ProfileController extends Controller
             $extension = $photoFile->getClientOriginalExtension();
 
             $filename = Str::slug($firstName . '_' . $lastName . '_nanny_avatar_' . uniqid()) . '.' . $extension;
+           
             $path = $photoFile->storeAs('photos/nannies', $filename, 's3');
+            if (!$path) {
+                throw new \Exception("📛 Не вдалося зберегти фото в S3");
+            }
 
             \Log::info('✅ Фото збережено в S3:', ['path' => $path]);
 
@@ -345,6 +349,7 @@ class ProfileController extends Controller
 
                 return response()->json([
                     'message' => 'Профіль няні оновлено',
+                    'uploaded_photo_path' => $path, // DEBUG
                     'profile' => $profile,
                 ]);
         } catch (\Throwable $e) {
