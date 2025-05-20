@@ -47,6 +47,8 @@ const NannyGalleryPage = () => {
   const handlePhotoChange = (e) => {
   const files = Array.from(e.target.files);
   const availableSlots = MAX_PHOTOS - photos.length;
+  const [isUploading, setIsUploading] = useState(false);
+
 
   if (files.length > availableSlots) {
     alert(`Ви можете додати ще лише ${availableSlots} фото.`);
@@ -100,8 +102,8 @@ const NannyGalleryPage = () => {
 
     // 1. Відправити тільки нові фото
     const newPhotos = photos.filter((p) => p instanceof File);
-    newPhotos.forEach((photo, index) => {
-      formData.append(`gallery[${index}]`, photo);
+    newPhotos.forEach((photo) => {
+      formData.append("gallery[]", photo); 
     });
 
     // 2. Відправити тільки наявні дійсні шляхи
@@ -110,9 +112,11 @@ const NannyGalleryPage = () => {
       .map((url) => url.replace(`${baseUrl}/storage/`, ""))
       .filter(Boolean); // прибрати пусті
 
-    existingPhotoPaths.forEach((path, i) => {
-      formData.append(`existing_gallery[${i}]`, path);
+    existingPhotoPaths.forEach((path) => {
+      formData.append("existing_gallery[]", path); 
     });
+
+    setIsUploading(true);
 
     try {
       await axios.post("/api/nanny/profile", formData, {
@@ -130,9 +134,11 @@ const NannyGalleryPage = () => {
       const updatedPhotos = (updatedProfile.gallery || []).map((p) => `${baseUrl}/storage/${p}`);
       setPhotos(updatedPhotos);
       setInitialPhotos(updatedPhotos);
+      setIsUploading(false);
       setShowSavedModal(true);
     } catch (err) {
       console.error("❌ SERVER VALIDATION ERROR", err.response?.data);
+      setIsUploading(false);
       alert("Помилка при збереженні файлів");
     }
   };
@@ -142,6 +148,13 @@ const NannyGalleryPage = () => {
     setShowSavedModal(false);
     navigate("/nanny/profile/edit");
   };
+
+  {isUploading && (
+      <div className="loading-overlay">
+        <div className="spinner" />
+        <p>Завантаження...</p>
+      </div>
+    )}
 
   return (
     <div>
