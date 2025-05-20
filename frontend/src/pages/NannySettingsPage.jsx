@@ -49,8 +49,12 @@ const NannySettingsPage = () => {
         </div>
         <h1 className="settings-title">Налаштування профілю</h1>
         <div className="avatar-section">       
-          <img
-            src={nanny.photo || `${baseUrl}/storage/default-avatar.jpg`}
+         <img
+            src={
+              nanny.photo?.startsWith("http")
+                ? nanny.photo
+                : `${baseUrl}/storage/default-avatar.jpg`
+            }
             alt="Аватар"
             className="settings-avatar"
           />

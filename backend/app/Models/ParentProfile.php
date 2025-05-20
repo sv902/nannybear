@@ -86,12 +86,11 @@ class ParentProfile extends Model
 
     public function getPhotoAttribute($value)
     {
-        $defaultPath = 'photos/parents/default-avatar.jpg';
+        $defaultKey = config('files.default_parent_photo', 'photos/parents/default-avatar.jpg');
 
-        if (!$value || $value === 'default-avatar.jpg' || $value === $defaultPath) {
-            return Storage::disk('s3')->exists($defaultPath)
-                ? Storage::disk('s3')->url($defaultPath)
-                : asset('storage/default-avatar.jpg');
+        // Якщо value порожнє або дорівнює дефолтному ключу — повертаємо дефолтне фото
+        if (empty($value) || $value === 'default-avatar.jpg' || $value === $defaultKey) {
+            return Storage::disk('s3')->url($defaultKey);
         }
 
         return Storage::disk('s3')->url($value);

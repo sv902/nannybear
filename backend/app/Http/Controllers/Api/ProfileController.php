@@ -20,14 +20,14 @@ class ProfileController extends Controller
 
         if ($user->role?->name === 'parent' && !$user->parentProfile) {
             $user->parentProfile()->create([
-                'photo' => 'photos/parents/default-avatar.jpg',
+                'photo' => config('files.default_parent_photo'),
             ]);
             return response()->json(['message' => 'Профіль батька створено']);
         }
 
         if ($user->role?->name === 'nanny' && !$user->nannyProfile) {
             $user->nannyProfile()->create([
-                'photo' => 'photos/nannies/default-avatar.jpg',
+                'photo' => config('files.default_nanny_photo'),
             ]);
             return response()->json(['message' => 'Профіль няні створено']);
         }
@@ -105,7 +105,7 @@ class ProfileController extends Controller
 
         // Якщо не передано нове фото і ще немає — встановлюємо дефолтне
         if (!$profile->photo) {
-            $profile->photo = 'default-avatar.jpg'; // Мінімальний ключ
+           $profile->photo = config('files.default_parent_photo');
             $profile->save();
         }
 
@@ -126,10 +126,7 @@ class ProfileController extends Controller
        return response()->json([
         'message' => 'Профіль батька збережено',
        'profile' => tap($profile->load(['children', 'addresses']), function ($profile) {
-            $profile->photo = $profile->photo && $profile->photo !== 'default-avatar.jpg'
-            ? \Storage::disk('s3')->url($profile->photo)
-            : \Storage::disk('s3')->url('photos/parents/default-avatar.jpg');
-
+            $profile->photo = \Storage::disk('s3')->url($profile->photo ?? config('files.default_parent_photo'));
     }),
     ]);
 
@@ -212,11 +209,9 @@ class ProfileController extends Controller
 
         // Якщо нічого не завантажено і фото ще немає — встановити дефолтне
             if (!$profile->photo) {
-            $profile->photo = 'default-avatar.jpg'; // Мінімальний ключ
+            $profile->photo = config('files.default_nanny_photo');
             $profile->save();
         }
-
-
              
         // Оновлення спеціалізацій
         if (isset($validated['specialization'])) {
@@ -392,7 +387,7 @@ class ProfileController extends Controller
 
        return response()->json([
             'profile' => tap($user->parentProfile->load(['children', 'addresses', 'reviewsFromNannies']), function ($profile) {
-                $profile->photo = $profile->photo ? \Storage::disk('s3')->url($profile->photo) : null;
+                $profile->photo = \Storage::disk('s3')->url($profile->photo ?? config('files.default_parent_photo'));
             }),
         ]);
         

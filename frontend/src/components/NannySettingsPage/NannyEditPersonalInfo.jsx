@@ -70,8 +70,7 @@ const NannyEditPersonalInfo = () => {
   }, []);
 
   const avatarSrc = previewPhoto
-  || (formData.photo instanceof File && URL.createObjectURL(formData.photo))
-  || formData.photo
+  || (formData.photo instanceof File ? URL.createObjectURL(formData.photo) : formData.photo)
   || `${baseUrl}/storage/default-avatar.jpg`;
 
   useEffect(() => {

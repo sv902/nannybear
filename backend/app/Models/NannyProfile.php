@@ -79,13 +79,13 @@ class NannyProfile extends Model
     
     public function getPhotoUrl()
     {
-        // Якщо фото не задане або дефолтне — повертаємо дефолтний S3 URL
-        if (!$this->photo || $this->photo === 'default-avatar.jpg' || $this->photo === 'photos/nannies/default-avatar.jpg') {
-            return 'https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/default-avatar.jpg';
+        $defaultKey = config('files.default_nanny_photo', 'photos/nannies/default-avatar.jpg');
+
+        if (empty($this->photo) || $this->photo === 'default-avatar.jpg' || $this->photo === $defaultKey) {
+            return Storage::disk('s3')->url($defaultKey);
         }
 
-        // Інакше — повний шлях до збереженого фото
-        return \Storage::disk('s3')->url($this->photo);
+        return Storage::disk('s3')->url($this->photo);
     }
 
     public function getVideoUrl()
@@ -93,10 +93,16 @@ class NannyProfile extends Model
         return $this->video ? Storage::disk('s3')->url($this->video) : null;
     }
 
-    public function getGalleryUrls()
+
+   public function getGalleryUrls()
     {
         $paths = is_array($this->gallery) ? $this->gallery : json_decode($this->gallery ?? '[]', true);
-        return array_map(fn($path) => Storage::disk('s3')->url($path), $paths);
+
+        return collect($paths ?? [])
+            ->filter(fn($path) => !empty($path))
+            ->map(fn($path) => Storage::disk('s3')->url($path))
+            ->values()
+            ->toArray();
     }
 
 }
