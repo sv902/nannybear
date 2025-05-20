@@ -318,7 +318,7 @@ const NannyDetailPage = () => {
                         className="view-diploma-btn"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setDiplomaPreviewUrl(`${baseUrl}/storage/${edu.diploma_image}`);
+                          setDiplomaPreviewUrl(`${edu.diploma_image}`);
                         }}
                       >
                         <img src={eye} alt="Переглянути диплом" />

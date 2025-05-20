@@ -106,7 +106,7 @@ const NannyEditEducationPage = () => {
 
   const handleSave = () => {
     const formData = new FormData();
-    educations.forEach((edu, index) => {
+      educations.forEach((edu, index) => {
       formData.append(`education[${index}][institution]`, edu.institution);
       formData.append(`education[${index}][specialty]`, edu.specialty);
       formData.append(`education[${index}][years]`, `${edu.startYear}-${edu.endYear}`);
@@ -114,6 +114,7 @@ const NannyEditEducationPage = () => {
         formData.append(`education[${index}][diploma_image]`, edu.diploma_image);
       }
     });
+    
     axios.post("/api/nanny/profile", formData)
       .then(() => {
         setInitialEducations(

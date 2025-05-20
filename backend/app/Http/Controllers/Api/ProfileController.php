@@ -242,6 +242,7 @@ class ProfileController extends Controller
         // Оновлення освіти
        if (isset($validated['education'])) {
             foreach ($validated['education'] as $index => $eduData) {
+            try {
                 $existing = $profile->educations()->where('institution', $eduData['institution'])->first();
 
                 $file = $request->file("education.$index.diploma_image");
@@ -253,6 +254,10 @@ class ProfileController extends Controller
 
                     $filename = Str::slug($firstName . '_' . $lastName . '_' . $eduData['institution'] . '_diploma_' . uniqid()) . '.' . $file->getClientOriginalExtension();
                     $diplomaPath = $file->storeAs('diplomas', $filename, 's3');
+                }
+
+                if (empty($eduData['institution']) || empty($eduData['specialty']) || empty($eduData['years'])) {
+                    throw new \Exception("❌ Відсутні поля institution/specialty/years у записі №$index");
                 }
 
                 if ($existing) {
@@ -269,31 +274,32 @@ class ProfileController extends Controller
                         'diploma_image' => $diplomaPath,
                     ]);
                 }
+            } catch (\Throwable $e) {
+            \Log::error("❌ Помилка в освіті #$index", ['message' => $e->getMessage()]);
+            return response()->json([
+                'error' => '❌ Помилка при збереженні освіти',
+                'details' => $e->getMessage()
+            ], 500);
             }
-        }
+          }
+    } 
 
 
         // Оновлення відео
        try {
             $videoFile = $request->file('video');
 
-            if ($videoFile) {
-                $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
-                $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
-                $filename = Str::slug($firstName . '_' . $lastName . '_nanny_video_' . uniqid()) . '.' . $videoFile->getClientOriginalExtension();
+            $filename = Str::slug($profile->user->first_name . '-' . $profile->user->last_name)
+                . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
 
-                $videoPath = $videoFile->storeAs('videos/nannies', $filename, 's3');
+            $path = $videoFile->storeAs('videos/nannies', $filename, 's3');
 
-                if (!$videoPath) {
-                    return response()->json([
-                        'error' => '❌ Не вдалося зберегти відео в S3',
-                    ], 500);
-                }
-
-                $profile->video = $videoPath;
-                $profile->save();
+            if (!$path) {
+                throw new \Exception("❌ Не вдалося зберегти відео у S3");
             }
 
+            $profile->video = $path;
+            $profile->save();
         } catch (\Exception $e) {
             \Log::error('❌ Помилка завантаження відео:', ['message' => $e->getMessage()]);
             return response()->json([
