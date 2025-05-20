@@ -294,36 +294,46 @@ class ProfileController extends Controller
             try {
                 $videoFile = $request->file('video');
 
-                if ($videoFile && $videoFile->isValid()) {
-                    $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
-                    $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
-
-                    $filename = Str::slug($firstName . '-' . $lastName)
-                        . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
-
-                   $path = Storage::disk('s3')->putFileAs('videos/nannies', $videoFile, $filename);
-
-                   if (!$path) {
-                        return response()->json([
-                            'error' => '❌ Відео не збережено',
-                            'reason' => 'storeAs повернув false',
-                            'size' => $videoFile->getSize(),
-                            'extension' => $videoFile->getClientOriginalExtension(),
-                            'mime_type' => $videoFile->getMimeType(),
-                            'original_name' => $videoFile->getClientOriginalName(),
-                        ], 500);
-                    }
-
-                    $profile->video = $path;
-                    $profile->save();
+                if (!$videoFile) {
+                    return response()->json([
+                        'error' => '❌ Відео не передано у запиті',
+                    ], 400);
                 }
-            } catch (\Exception $e) {
-                \Log::error('❌ Помилка завантаження відео:', ['message' => $e->getMessage()]);
+
+                if (!$videoFile->isValid()) {
+                    return response()->json([
+                        'error' => '❌ Відео некоректне',
+                        'reason' => $videoFile->getErrorMessage() ?? 'невідома помилка'
+                    ], 400);
+                }
+
+                $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
+                $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
+                $filename = Str::slug($firstName . '-' . $lastName)
+                    . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
+
+                $path = Storage::disk('s3')->putFileAs('videos/nannies', $videoFile, $filename);
+
+                if (!$path) {
+                    return response()->json([
+                        'error' => '❌ Відео не збережено',
+                        'reason' => 'putFileAs повернув false',
+                        'size' => $videoFile->getSize(),
+                        'extension' => $videoFile->getClientOriginalExtension(),
+                        'mime_type' => $videoFile->getMimeType(),
+                        'original_name' => $videoFile->getClientOriginalName(),
+                    ], 500);
+                }
+
+                $profile->video = $path;
+                $profile->save();
+
+            } catch (\Throwable $e) {
                 return response()->json([
                     'error' => '❌ Внутрішня помилка сервера',
                     'message' => $e->getMessage(),
                     'line' => $e->getLine(),
-                    'file' => $e->getFile()
+                    'file' => $e->getFile(),
                 ], 500);
             }
         }
