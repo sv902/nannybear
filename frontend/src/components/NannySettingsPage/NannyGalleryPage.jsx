@@ -22,6 +22,8 @@ const NannyGalleryPage = () => {
   const videoInputRef = useRef(null);
   const photoInputRef = useRef(null);
    const [isUploading, setIsUploading] = useState(false);
+   const selectedVideoRef = useRef(null);
+
 
   useEffect(() => {
     axios.get("/api/nanny/profile").then((res) => {
@@ -39,10 +41,13 @@ const NannyGalleryPage = () => {
   }, [baseUrl]);
 
   const handleVideoChange = (e) => {
-    if (e.target.files[0]) {
-      setVideo(e.target.files[0]);
-    }
-  };
+  const file = e.target.files[0];
+  if (file) {
+    selectedVideoRef.current = file;
+    setVideo(file);
+  }
+};
+
 
   const handlePhotoChange = (e) => {
   const files = Array.from(e.target.files);
@@ -83,6 +88,9 @@ const NannyGalleryPage = () => {
 
   const handleSave = async () => {
     const formData = new FormData();
+    if (selectedVideoRef.current) {
+      formData.append("video", selectedVideoRef.current); // ✅ точно буде File
+    }
          
     if (video instanceof File) {
       formData.append("video", video);
