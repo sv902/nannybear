@@ -81,6 +81,69 @@ Route::get('/clear-config', function () {
     return '✅ Конфіг очищено і закешовано';
 });
 
+///////////////////
+
+Route::post('/test-video-upload', function (Request $request) {
+    if (!$request->hasFile('video')) {
+        return response()->json(['error' => '📭 Файл "video" не передано'], 400)
+            ->withHeaders([
+                'Access-Control-Allow-Origin' => 'https://nanny-bear.onrender.com',
+                'Access-Control-Allow-Credentials' => 'true',
+            ]);
+    }
+
+    $video = $request->file('video');
+
+    if (!$video->isValid()) {
+        return response()->json(['error' => '❌ Файл пошкоджений'], 400)
+            ->withHeaders([
+                'Access-Control-Allow-Origin' => 'https://nanny-bear.onrender.com',
+                'Access-Control-Allow-Credentials' => 'true',
+            ]);
+    }
+
+    $filename = 'test/video_direct_upload_' . Str::random(6) . '.' . $video->getClientOriginalExtension();
+    $stream = fopen($video->getRealPath(), 'r');
+    $stored = Storage::disk('s3')->put($filename, $stream);
+
+    if (is_resource($stream)) {
+        fclose($stream);
+    }
+
+    return $stored
+        ? response()->json([
+            'message' => '✅ Завантажено!',
+            'url' => Storage::disk('s3')->url($filename)
+        ])->withHeaders([
+            'Access-Control-Allow-Origin' => 'https://nanny-bear.onrender.com',
+            'Access-Control-Allow-Credentials' => 'true',
+        ])
+        : response()->json(['error' => '❌ Не вдалося зберегти'], 500)
+        ->withHeaders([
+            'Access-Control-Allow-Origin' => 'https://nanny-bear.onrender.com',
+            'Access-Control-Allow-Credentials' => 'true',
+        ]);
+});
+
+Route::options('/test-video-upload', function () {
+    return response('', 204)->withHeaders([
+        'Access-Control-Allow-Origin' => 'https://nanny-bear.onrender.com',
+        'Access-Control-Allow-Methods' => 'POST, OPTIONS',
+        'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
+        'Access-Control-Allow-Credentials' => 'true',
+    ]);
+});
+
+
+Route::options('/test-cors', function () {
+    return response()->json(['message' => 'CORS OK'])->withHeaders([
+        'Access-Control-Allow-Origin' => 'https://nanny-bear.onrender.com',
+        'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
+        'Access-Control-Allow-Credentials' => 'true',
+    ]);
+});
+
 
 // Передача всіх маршрутів фронтенду React
 Route::get('/{any}', function () {
