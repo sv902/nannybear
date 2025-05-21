@@ -291,6 +291,14 @@ class ProfileController extends Controller
        
       // Оновлення відео
        if ($request->hasFile('video')) {
+        $filename = 'test/video_upload_triggered_' . \Illuminate\Support\Str::random(6) . '.json';
+
+    Storage::disk('s3')->put($filename, json_encode([
+        'message' => 'hasFile(video) спрацювало',
+        'mime' => $request->file('video')?->getMimeType(),
+        'size' => $request->file('video')?->getSize(),
+        'time' => now()->toDateTimeString()
+    ], JSON_PRETTY_PRINT));
     try {
         $videoFile = $request->file('video');
 
