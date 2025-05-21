@@ -309,8 +309,7 @@ class ProfileController extends Controller
         $path = Storage::disk('s3')->putFileAs(
             'videos/nannies',
             $videoFile,
-            $videoFilename,
-           
+            $videoFilename           
         );
 
         if (!$path) {
