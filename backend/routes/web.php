@@ -56,64 +56,18 @@ Route::get('/reset-password/{token}', function () {
 //     Route::patch('/users/{id}/role', [AdminController::class, 'updateRole'])->name('admin.users.role'); // Змінити роль
 // });
 
-Route::get('/s3-test-upload', function () {
-    try {
-        $contents = 'Це тестовий файл';
-        $filename = 'test/' . uniqid() . '.txt';
+Route::get('/debug/video-error', function () {
+    $path = storage_path('app/public/video_error_debug.json');
 
-        $stored = Storage::disk('s3')->put($filename, $contents);
-
-        if ($stored) {
-            $url = Storage::disk('s3')->url($filename);
-            return response()->json([
-                'message' => '✅ Файл збережено',
-                'url' => $url,
-            ]);
-        } else {
-            Log::error('❌ S3 збереження повернуло false');
-            return response()->json([
-                'message' => '❌ Не вдалося зберегти файл',
-                'filename' => $filename,
-            ], 500);
-        }
-    } catch (\Throwable $e) {
-        Log::error('❌ Виняток при S3:', ['error' => $e->getMessage()]);
-        return response()->json([
-            'message' => '❌ Виняток',
-            'error' => $e->getMessage(),
-        ], 500);
+    if (!file_exists($path)) {
+        return response()->json(['error' => 'Файл не знайдено'], 404);
     }
+
+    return response()->file($path, [
+        'Content-Type' => 'application/json',
+    ]);
 });
 
-
-Route::get('/debug-storage', function () {
-    return [
-        'default_disk' => config('filesystems.default'),
-        'env_disk' => env('FILESYSTEM_DISK'),
-        'key' => env('AWS_ACCESS_KEY_ID'),
-        'secret_present' => !empty(env('AWS_SECRET_ACCESS_KEY')),
-        'bucket' => env('AWS_BUCKET'),
-        'region' => env('AWS_DEFAULT_REGION'),
-        'url' => env('AWS_URL'),
-    ];
-});
-
-
-
-
-Route::get('/debug-s3', function () {
-    return [
-        'disk' => config('filesystems.default'),
-        'key' => config('filesystems.disks.s3.key'),
-        'secret_present' => !empty(config('filesystems.disks.s3.secret')),
-        'bucket' => config('filesystems.disks.s3.bucket'),
-        'region' => config('filesystems.disks.s3.region'),
-        'url' => config('filesystems.disks.s3.url'),
-        'endpoint' => config('filesystems.disks.s3.endpoint'),
-        'env_loaded' => env('AWS_ACCESS_KEY_ID'),
-        'path_style' => config('filesystems.disks.s3.use_path_style_endpoint'),
-    ];
-});
 
 
 Route::get('/clear-config', function () {

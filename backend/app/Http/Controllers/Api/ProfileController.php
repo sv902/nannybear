@@ -333,16 +333,21 @@ class ProfileController extends Controller
             $profile->save();
 
        } catch (\Throwable $e) {
-            return response()->json([
-                'error' => '❌ Внутрішня помилка сервера',
+            $debugData = [
+                'error' => '❌ Відео не збережено',
                 'message' => $e->getMessage(),
                 'line' => $e->getLine(),
                 'file' => $e->getFile(),
-                'trace' => $e->getTrace(), // ⚠️ Додає повний стек (не production-safe!)
-                'video_type' => $videoFile?->getMimeType(),
-                'video_size' => $videoFile?->getSize(),
+                'trace' => $e->getTraceAsString(),
+                'mime' => $videoFile?->getMimeType(),
+                'size' => $videoFile?->getSize(),
                 'filename' => $filename ?? null,
-            ], 500);
+                'time' => now()->toDateTimeString(),
+            ];
+
+            file_put_contents(storage_path('app/public/video_error_debug.json'), json_encode($debugData, JSON_PRETTY_PRINT));
+
+            return response()->json($debugData, 500);
         }
     }      
         // Оновлення галереї фото
