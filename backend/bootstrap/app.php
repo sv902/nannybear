@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use App\Http\Middleware\DisableCsrfForApi;
+use Illuminate\Http\Middleware\HandleCors;
 
 
 return Application::configure(basePath: dirname(__DIR__))
