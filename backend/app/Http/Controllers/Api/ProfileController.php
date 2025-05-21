@@ -333,11 +333,7 @@ class ProfileController extends Controller
             $profile->save();
 
        } catch (\Throwable $e) {
-            if (!file_exists(storage_path('app/public'))) {
-                mkdir(storage_path('app/public'), 0777, true);
-            }
-
-            file_put_contents(storage_path('app/public/video_error_debug.json'), json_encode([
+            $logContent = json_encode([
                 'message' => $e->getMessage(),
                 'line' => $e->getLine(),
                 'file' => $e->getFile(),
@@ -346,11 +342,19 @@ class ProfileController extends Controller
                 'size' => $videoFile?->getSize(),
                 'filename' => $filename ?? null,
                 'time' => now()->toDateTimeString()
-            ], JSON_PRETTY_PRINT));
+            ], JSON_PRETTY_PRINT);
 
-            return response()->json(['error' => '❌ Внутрішня помилка сервера (debug saved)'], 500);
+            $logPath = 'logs/video_upload_error_' . uniqid() . '.json';
+
+            Storage::disk('s3')->put($logPath, $logContent, ['visibility' => 'public']);
+
+            $logUrl = Storage::disk('s3')->url($logPath);
+
+            return response()->json([
+                'error' => '❌ Внутрішня помилка сервера (log saved in S3)',
+                'log_url' => $logUrl, // 🟢 даєш цю URL в браузер — бачиш лог
+            ], 500);
         }
-
     }      
         // Оновлення галереї фото
         $existingGalleryRaw = $request->input('existing_gallery', []);
