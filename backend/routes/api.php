@@ -100,7 +100,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::delete('/users/{id}', [AdminController::class, 'destroy']); // Видалити користувача
     });
 
- Route::middleware([HandleCors::class])->group(function () {   
+
 /**
  * ПРОФІЛІ
  */
@@ -244,4 +244,3 @@ Route::post('/test-video-upload', function (Request $request) {
         : response()->json(['error' => '❌ Не вдалося зберегти'], 500);
 });
 
-});

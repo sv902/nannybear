@@ -23,7 +23,7 @@ return [
     'https://nanny-bear.onrender.com',
     ],
 
-    'allowed_origins_patterns' => [],
+    // 'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
