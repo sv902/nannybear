@@ -87,29 +87,16 @@ const NannyGalleryPage = () => {
   };
 
   const handleSave = async () => {
-    const formData = new FormData();
-    if (selectedVideoRef.current) {
-      formData.append("video", selectedVideoRef.current); // ✅ точно буде File
-    }
-         
-    if (video instanceof File) {
-      formData.append("video", video);
-    } else {
-      console.warn("❌ Video is not a valid File object!");
-    }
-
-// /////
-    axios.post('https://nanny-backend-pk2s.onrender.com/api/test-video-upload', formData, {
-       withCredentials: true,
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  },
-});
-// ///////
     if (video instanceof File && video.size > 50 * 1024 * 1024) {
       alert("Відео має бути не більше 50MB");
       return;
     }
+    
+    const formData = new FormData();   
+         
+    if (video instanceof File) {
+      formData.append("video", video);
+    }    
 
     // 1. Відправити тільки нові фото
     const newPhotos = photos.filter((p) => p instanceof File);
@@ -123,53 +110,48 @@ const NannyGalleryPage = () => {
       .map((url) => url.replace(`${baseUrl}/storage/`, ""))
       .filter(Boolean); // прибрати пусті
 
-    if (existingPhotoPaths.length === 0) {
-      formData.append("existing_gallery[]", "");
-    }
-
-    existingPhotoPaths.forEach((path) => {
-      formData.append("existing_gallery[]", path); 
-    });
+    
+      if (existingPhotoPaths.length === 0) {
+        formData.append("existing_gallery[]", "");
+      } else {
+        existingPhotoPaths.forEach((path) => {
+          formData.append("existing_gallery[]", path);
+        });
+      }
 
     setIsUploading(true);
- console.log("🎥 VIDEO:", video);
-    console.log("🎥 video instanceof File:", video instanceof File);
-    console.log("🎥 Video type:", video?.type); // має бути video/mp4
-    console.log("🎥 Video size:", video?.size / 1024 / 1024, "MB");
-
     try {
-      await axios.post("/api/nanny/profile", formData, {
-     withCredentials: true, 
-     headers: {
+    const res = await axios.post("/api/nanny/profile", formData, {
+      withCredentials: true,
+      headers: {
         "Content-Type": "multipart/form-data",
       },
-      
-      });
-     const { data } = await axios.get("/api/nanny/profile");
-      const updatedProfile = data.profile;
+    });    
+                
+      const updatedProfile = res.data.profile;
 
-      const videoUrl = updatedProfile.video
-        ? updatedProfile.video.startsWith("http") 
-          ? updatedProfile.video
-          : `${baseUrl}/storage/${updatedProfile.video}`
-        : null;
+       const videoUrl = updatedProfile.video?.startsWith("http")
+      ? updatedProfile.video
+      : `${baseUrl}/storage/${updatedProfile.video}`;
 
       setVideo(videoUrl);
       setInitialVideo(videoUrl);
 
 
-      const updatedPhotos = (updatedProfile.gallery || []).map((p) => `${baseUrl}/storage/${p}`);
+      const updatedPhotos = (updatedProfile.gallery || []).map((p) =>
+      p.startsWith("http") ? p : `${baseUrl}/storage/${p}`
+    );
       setPhotos(updatedPhotos);
       setInitialPhotos(updatedPhotos);
-      setIsUploading(false);
+    
       setShowSavedModal(true);
     } catch (err) {
       console.error("❌ SERVER VALIDATION ERROR", err.response?.data);
-      setIsUploading(false);
-      alert("Помилка при збереженні файлів");
-    }
+      alert("Помилка при збереженні файлів");    
+     } finally {
+    setIsUploading(false);
+  }
   };
-
 
   const handleSavedModalClose = () => {
     setShowSavedModal(false);
