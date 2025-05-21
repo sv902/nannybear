@@ -290,54 +290,61 @@ class ProfileController extends Controller
     } 
        
       // Оновлення відео
-     if ($request->hasFile('video')) {
-            try {
-                $videoFile = $request->file('video');
+        if ($request->hasFile('video')) {
+        try {
+            $videoFile = $request->file('video');
 
-                if (!$videoFile->isValid()) {
-                    return response()->json([
-                        'error' => '❌ Відео некоректне',
-                        'reason' => $videoFile->getErrorMessage() ?? 'невідома помилка'
-                    ], 400);
-                }
-
-                $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
-                $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
-                $filename = Str::slug($firstName . '-' . $lastName)
-                    . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
-
-               $stream = fopen($videoFile->getRealPath(), 'r');
-
-                $path = Storage::disk('s3')->put("videos/nannies/{$filename}", $stream, [
-                    'visibility' => 'public',
-                    'ContentType' => $videoFile->getMimeType(), // для правильного відтворення відео
-                ]);
-
-                if (is_resource($stream)) {
-                    fclose($stream);
-                }
-                
-                if (!$path) {
-                    return response()->json([
-                        'error' => '❌ Відео не збережено через put()',
-                        'mime_type' => $videoFile->getMimeType(),
-                        'size' => $videoFile->getSize(),
-                    ], 500);
-                }
-
-                $profile->video = "videos/nannies/{$filename}";
-                $profile->save();
-
-            } catch (\Throwable $e) {
+            if (!$videoFile->isValid()) {
                 return response()->json([
-                    'error' => '❌ Внутрішня помилка сервера',
-                    'message' => $e->getMessage(),
-                    'line' => $e->getLine(),
-                    'file' => $e->getFile(),
+                    'error' => '❌ Відео некоректне',
+                    'reason' => $videoFile->getErrorMessage() ?? 'невідома помилка'
+                ], 400);
+            }
+
+            $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
+            $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
+            $filename = Str::slug($firstName . '-' . $lastName)
+                . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
+
+            $stream = fopen($videoFile->getRealPath(), 'r');
+
+            if (!$stream) {
+                return response()->json([
+                    'error' => '❌ Неможливо відкрити файл відео для читання'
                 ], 500);
             }
+
+            $success = Storage::disk('s3')->writeStream("videos/nannies/{$filename}", $stream, [
+                'visibility' => 'public',
+                'ContentType' => $videoFile->getMimeType()
+            ]);
+
+            fclose($stream);
+
+            if (!$success) {
+                return response()->json([
+                    'error' => '❌ Відео не збережено через writeStream()',
+                    'mime_type' => $videoFile->getMimeType(),
+                    'size' => $videoFile->getSize(),
+                ], 500);
+            }
+
+            $profile->video = "videos/nannies/{$filename}";
+            $profile->save();
+
+       } catch (\Throwable $e) {
+            return response()->json([
+                'error' => '❌ Внутрішня помилка сервера',
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'trace' => $e->getTrace(), // ⚠️ Додає повний стек (не production-safe!)
+                'video_type' => $videoFile?->getMimeType(),
+                'video_size' => $videoFile?->getSize(),
+                'filename' => $filename ?? null,
+            ], 500);
         }
-      
+    }      
         // Оновлення галереї фото
         $existingGalleryRaw = $request->input('existing_gallery', []);
         $existingGallery = array_filter(is_array($existingGalleryRaw) ? $existingGalleryRaw : []);
