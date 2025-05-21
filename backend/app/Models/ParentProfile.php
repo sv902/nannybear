@@ -84,16 +84,16 @@ class ParentProfile extends Model
         return $this->hasMany(Booking::class, 'parent_id');
     }
 
-    public function getPhotoAttribute($value)
+    protected $appends = ['photo_url'];
+
+    public function getPhotoUrlAttribute()
     {
         $defaultKey = config('files.default_parent_photo', 'photos/parents/default-avatar.jpg');
+        $value = $this->attributes['photo'] ?? null;
 
-        // Якщо value порожнє або дорівнює дефолтному ключу — повертаємо дефолтне фото
-        if (empty($value) || $value === 'default-avatar.jpg' || $value === $defaultKey) {
-            return Storage::disk('s3')->url($defaultKey);
-        }
-
-        return Storage::disk('s3')->url($value);
+        return empty($value)
+            ? Storage::disk('s3')->url($defaultKey)
+            : Storage::disk('s3')->url($value);
     }
 
 }

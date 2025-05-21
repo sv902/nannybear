@@ -128,11 +128,12 @@ const ParentProfilePage = () => {
         <div className="profile-columns">
         <div className="left-column-parent-prof">
           <div className="photo-wrapper">
-            <img
-              src={isValidPhoto ? `${baseUrl}/storage/${parent.photo}` : `${baseUrl}/storage/default-avatar.jpg`}
+           <img
+              src={parent.photo_url}
               alt="Фото батька"
               className="nanny-photo-large"
             />
+
             <div className="rating-stars">{renderStars(averageRating)}</div>
            
             <p className="booking-total">{totalBookings}+ бронювань</p>

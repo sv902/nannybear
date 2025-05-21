@@ -468,7 +468,7 @@ class ProfileController extends Controller
 
        return response()->json([
             'profile' => tap($user->parentProfile->load(['children', 'addresses', 'reviewsFromNannies']), function ($profile) {
-                $profile->photo = \Storage::disk('s3')->url($profile->photo ?? config('files.default_parent_photo'));
+                $profile->photo_url = $profile->photo; // працює getPhotoAttribute
             }),
         ]);
         

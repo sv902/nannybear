@@ -455,7 +455,7 @@ const NannyDetailPage = () => {
           <div className="video-wrapper">
             {nanny.video ? (
               <video width="417" height="740" style={{ borderRadius: "20px" }} controls>
-                <source src={`${baseUrl}/storage/${nanny.video}`} type="video/mp4" />
+                <source src={nanny.video} type="video/mp4" />
                 Ваш браузер не підтримує відео.
               </video>
             ) : (

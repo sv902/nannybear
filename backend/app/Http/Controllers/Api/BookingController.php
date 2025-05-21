@@ -217,18 +217,18 @@ class BookingController extends Controller
             'hourly_rate' => $booking->hourly_rate,
             'address' => $booking->address,
             'nanny' => [
-                'id' => $booking->nanny->id,
-                'user_id' => $booking->nanny->user->id,
-                'first_name' => $booking->nanny->user->first_name,
-                'last_name' => $booking->nanny->user->last_name,
-                'photo' => $booking->nanny->photo,
+                   'id' => $booking->nanny->id,
+                    'user_id' => $booking->nanny->user->id,
+                    'first_name' => $booking->nanny->user->first_name,
+                    'last_name' => $booking->nanny->user->last_name,
+                    'photo' => $booking->nanny->getPhotoUrl(),
             ],
             'parent' => [
                 'id' => $booking->parent->id,
                 'user_id' => $booking->parent->user->id,
                 'first_name' => $booking->parent->user->first_name,
                 'last_name' => $booking->parent->user->last_name,
-                'photo' => $booking->parent->photo, 
+                'photo' => $booking->parent->getPhotoAttribute($booking->parent->photo),
             ],
 
             'booking_days' => $booking->bookingDays->map(function ($day) {

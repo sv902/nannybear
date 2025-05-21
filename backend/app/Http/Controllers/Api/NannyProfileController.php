@@ -18,10 +18,18 @@ class NannyProfileController extends Controller
     public function index(Request $request)
     {
         $nannies = NannyProfile::with('user')
-        ->withAvg('reviews', 'rating') 
-        ->paginate(15);
+            ->withAvg('reviews', 'rating')
+            ->paginate(15);
+
+        // Додай photo_url до кожної няні
+        $nannies->getCollection()->transform(function ($nanny) {
+            $nanny->photo_url = $nanny->getPhotoUrl();
+            return $nanny;
+        });
+
         return response()->json($nannies);
     }
+
 
     /**
      * Отримати конкретний профіль няні за ID.
@@ -135,7 +143,13 @@ class NannyProfileController extends Controller
         \Log::info('📥 Отримано фільтри', ['filters' => $request->all()]);
         \Log::info('🎯 Кількість знайдених нянь', ['count' => $nanniesPaginated->count()]);
     
-        return response()->json($nanniesPaginated);
+         $nanniesPaginated->getCollection()->transform(function ($nanny) {
+        $nanny->photo_url = $nanny->getPhotoUrl();
+        return $nanny;
+    });
+
+    // 🟢 ПОВЕРНУТИ відповідь
+    return response()->json($nanniesPaginated);
     }   
     
     public function updateHourlyRate(Request $request)

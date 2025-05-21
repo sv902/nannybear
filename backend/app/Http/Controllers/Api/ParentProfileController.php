@@ -16,7 +16,11 @@ class ParentProfileController extends Controller
      */
     public function index()
     {
-        $parents = ParentProfile::with('user')->get();
+        $parents = ParentProfile::with('user')->get();  
+         $parents->transform(function ($parent) {
+            $parent->photo_url = $parent->photo; 
+            return $parent;
+        });      
         return response()->json($parents);
     }
 
@@ -29,6 +33,7 @@ class ParentProfileController extends Controller
     public function show($id)
     {
         $profile = \App\Models\ParentProfile::with(['user', 'children', 'addresses'])->findOrFail($id);
+        $profile->photo_url = $profile->photo;
         return response()->json($profile);
     }  
 }
