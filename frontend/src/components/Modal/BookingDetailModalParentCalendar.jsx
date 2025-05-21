@@ -172,7 +172,7 @@ const averageRating = validReviews.length > 0
         >
           <img
             src={
-                booking.nanny?.photo
+                booking.nanny?.photo_url
                 || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/nannies/default-avatar.jpg"
             }
             alt="Няня"

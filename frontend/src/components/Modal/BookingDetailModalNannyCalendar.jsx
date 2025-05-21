@@ -157,7 +157,7 @@ const BookingDetailModalNannyCalendar = ({ bookings, initialIndex = 0, onClose, 
           onClick={() => navigate(`/parent-profiles/${booking.parent.id}`)}
         >
            <img
-            src={booking.parent?.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
+            src={booking.parent?.photo_url || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
             alt="Батько"
             className="nanny-booking-avatar"
           />
