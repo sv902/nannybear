@@ -125,10 +125,11 @@ const NannyGalleryPage = () => {
 
     try {
       await axios.post("/api/nanny/profile", formData, {
-      headers: {
+     withCredentials: true, 
+     headers: {
         "Content-Type": "multipart/form-data",
       },
-      withCredentials: true,
+      
       });
      const { data } = await axios.get("/api/nanny/profile");
       const updatedProfile = data.profile;
