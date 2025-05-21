@@ -25,6 +25,12 @@ class BookingController extends Controller
             ->orderByDesc('start_date')
             ->get();
 
+            $bookings->each(function ($booking) {
+                if ($booking->nanny) {
+                    $booking->nanny->append('photo_url');
+                }
+            });
+
         return response()->json($bookings);
     }
 
