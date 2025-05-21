@@ -273,7 +273,7 @@ Route::options('/test-video-upload', function () {
 });
 
 
-Route::options('/api/test-cors', function () {
+Route::options('/test-cors', function () {
     return response()->json(['message' => 'CORS OK'])->withHeaders([
         'Access-Control-Allow-Origin' => 'https://nanny-bear.onrender.com',
         'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
