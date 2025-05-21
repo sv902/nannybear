@@ -65,7 +65,7 @@ Route::get('/s3-log-test', function () {
     $filename = 'test/video_upload_log_' . Str::random(6) . '.json';
 
     $stored = Storage::disk('s3')->put($filename, json_encode($logData, JSON_PRETTY_PRINT), [
-        'visibility' => 'public',
+        
     ]);
 
     return $stored

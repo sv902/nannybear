@@ -309,8 +309,7 @@ class ProfileController extends Controller
                 $path = Storage::disk('s3')->putFileAs(
                     'videos/nannies',
                     $videoFile,
-                    $filename,
-                    ['visibility' => 'public']
+                    $filename,                   
                 );
 
                 if (!$path) {
@@ -336,17 +335,20 @@ class ProfileController extends Controller
                     'trace' => $e->getTraceAsString(),
                 ];
 
-                $logContent = json_encode($logData, JSON_PRETTY_PRINT);
-                $logFilename = 'logs/video_error_' . uniqid() . '.json';
+                 $logData = [
+        'test' => 'Це тестовий лог',
+        'time' => now()->toDateTimeString(),
+    ];
 
-                $stored = Storage::disk('s3')->put($logFilename, $logContent, [
-                    'visibility' => 'public',
-                ]);
+    $filename = 'test/video_upload_log_' . Str::random(6) . '.json';
 
-                return response()->json([
-                    'error' => '❌ Відео не збережено (лог записано в S3)',
-                    'log_url' => $stored ? Storage::disk('s3')->url($logFilename) : null,
-                ], 500);
+    $stored = Storage::disk('s3')->put($filename, json_encode($logData, JSON_PRETTY_PRINT), [
+        
+    ]);
+
+    return $stored
+        ? ['message' => '✅ Збережено в S3', 'url' => Storage::disk('s3')->url($filename)]
+        : ['error' => '❌ Не вдалося зберегти log у S3'];
             }
 
         }
