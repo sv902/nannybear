@@ -17,7 +17,7 @@ const NannyCard = ({ nanny }) => {
   // const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
   const genderClass = nanny.gender === "female" ? "female" : "male";
-  const avatar = nanny.photo_url || fallback;
+  const avatar = nanny.photo_url;
 
   const [reviews, setReviews] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false); 
