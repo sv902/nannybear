@@ -24,6 +24,12 @@ class ReviewController extends Controller
         ->orderBy('created_at', 'desc')
         ->get();
 
+         $reviews->each(function ($review) {
+        if ($review->parentProfile) {
+                $review->parentProfile->append('photo_url');
+            }
+        });
+
         return response()->json($reviews);
     }
 
@@ -175,6 +181,12 @@ class ReviewController extends Controller
             })
             ->latest()
             ->get();
+
+             $reviews->each(function ($review) {
+            if ($review->parentProfile) {
+                    $review->parentProfile->append('photo_url');
+                }
+            });
 
         return response()->json($reviews);
     }

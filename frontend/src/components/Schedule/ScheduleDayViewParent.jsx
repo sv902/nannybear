@@ -133,7 +133,7 @@ const ScheduleDayViewParent = ({ bookings, selectedDay}) => {
                 <div className="booking-block-bottom-day">
                   <div className="avatar-name-inline">
                     <img
-                     src={bookingToRender.nanny?.photo
+                     src={bookingToRender.nanny?.photo_url
                         || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                       className="booking-avatar-day"
                       alt="avatar"
@@ -233,9 +233,8 @@ const ScheduleDayViewParent = ({ bookings, selectedDay}) => {
                 }}>
                 <img
                   src={
-                    booking.nanny?.photo && booking.nanny.photo.startsWith("http")
-                      ? booking.nanny.photo
-                      : `${process.env.REACT_APP_API_URL}/storage/${booking.nanny?.photo || "default-avatar.jpg"}`
+                    booking.nanny?.photo_url ||
+                    "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/nannies/default-avatar.jpg"
                   }
                   alt="Няня"
                   className="mini-avatar"

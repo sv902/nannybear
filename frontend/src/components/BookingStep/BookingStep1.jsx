@@ -116,7 +116,7 @@ const BookingStep1 = () => {
 
           <div className="nanny-profile-preview-edit-booking">
             <img
-              src={nanny?.photo ? `${baseUrl}/storage/${nanny.photo}` : `${baseUrl}/storage/default-avatar.jpg`}
+              src={nanny.photo_url}
               alt="Няня"
               className="nanny-booking-avatar-edit"
             />

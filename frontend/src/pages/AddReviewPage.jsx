@@ -37,12 +37,7 @@ const AddReviewPage = () => {
       setNanny(booking.nanny);
     }
   }, [booking]);
- 
-  const isValidPhoto =
-  nanny?.photo &&
-  nanny?.photo !== "null" &&
-  nanny?.photo.trim() !== "";
-
+   
   const [reviews, setReviews] = useState([]); 
 
   const averageRating = reviews.length
@@ -212,14 +207,13 @@ const AddReviewPage = () => {
                
                  <div className="photo-wrapper">
                    <img
-                     src={
-                       isValidPhoto
-                         ? `${baseUrl}/storage/${nanny.photo}`
-                         : `${baseUrl}/storage/default-avatar.jpg`
-                     }
-                     alt="Фото няні"
-                     className="nanny-photo-large"
-                   />       
+                      src={
+                        nanny?.photo_url ||
+                        "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/nannies/default-avatar.jpg"
+                      }
+                      alt="Фото няні"
+                      className="nanny-photo-large"
+                    />      
                  </div>
            
                    <div className="rating-stars">

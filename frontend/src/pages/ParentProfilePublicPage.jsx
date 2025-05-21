@@ -101,8 +101,7 @@ const ParentProfilePage = () => {
   const totalBookings = parent?.total_bookings || 100; // placeholder
     
   if (!parent) return <div>Завантаження...</div>;
-
-  const isValidPhoto = parent.photo && parent.photo !== "null" && parent.photo.trim() !== "";
+  
   const mainAddress = parent.addresses?.[0] || {};
 
  return (
@@ -125,7 +124,7 @@ const ParentProfilePage = () => {
         <div className="left-column-parent-prof">
           <div className="photo-wrapper">
             <img
-              src={isValidPhoto ? `${baseUrl}/storage/${parent.photo}` : `${baseUrl}/storage/default-avatar.jpg`}
+              src={parent.photo_url}
               alt="Фото батька"
               className="nanny-photo-large"
             />
@@ -207,9 +206,7 @@ const ParentProfilePage = () => {
               <div key={idx} className="review-item">
                 <img
                   src={
-                    review.nanny?.photo
-                      ? `${baseUrl}/storage/${review.nanny.photo}`
-                      : `${baseUrl}/storage/default-avatar.jpg`
+                    review.nanny?.photo_url                     
                   }
                   alt="Аватар"
                   className="review-avatar"

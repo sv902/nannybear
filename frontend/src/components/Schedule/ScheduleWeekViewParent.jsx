@@ -213,7 +213,7 @@ const ScheduleWeekViewParent = ({ activeDay, onDaySelect }) => {
                   });
                 }}>
                 <img
-                  src={booking.nanny?.photo
+                  src={booking.nanny?.photo_url
                     || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                   alt="Батько"
                   className="mini-avatar"
@@ -365,7 +365,7 @@ const ScheduleWeekViewParent = ({ activeDay, onDaySelect }) => {
                             </div>
                             <div className="booking-block-bottom">
                               <img
-                                src={booking.nanny?.photo
+                                src={booking.nanny?.photo_url
                                   || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                                 className="booking-avatar"
                                 alt="avatar"

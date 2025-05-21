@@ -21,6 +21,13 @@ class ParentReviewController extends Controller
         ->orderByDesc('created_at')
         ->get();
 
+         $reviews->each(function ($review) {
+                if ($review->nanny) {
+                    $review->nanny->append('photo_url');
+                }
+            
+            });
+
         return response()->json($reviews);
     }
 
@@ -68,6 +75,13 @@ class ParentReviewController extends Controller
             })
             ->orderBy('created_at', 'desc')
             ->get();
+
+             $reviews->each(function ($review) {
+                if ($review->nanny) {
+                    $review->nanny->append('photo_url');
+                }
+            
+            });
 
         return response()->json($reviews);
     }

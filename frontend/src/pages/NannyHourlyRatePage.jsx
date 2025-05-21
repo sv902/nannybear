@@ -89,13 +89,6 @@ const NannyHourlyRatePage = () => {
     });
   }, [rate]);
   
-
-  const isValidPhoto =
-  nanny && nanny.photo &&
-  nanny.photo !== "null" &&
-  nanny.photo.trim() !== "";
-
-
   const handleSubmit = async () => {
     try {
       await axios.put("/api/nanny/profile/hourly-rate", {
@@ -155,9 +148,7 @@ const NannyHourlyRatePage = () => {
               <div className="photo-wrapper">
                 <img
                   src={
-                    isValidPhoto
-                      ? `${baseUrl}/storage/${nanny.photo}`
-                      : `${baseUrl}/storage/default-avatar.jpg`
+                    nanny.photo_url
                   }
                   alt="Фото няні"
                   className="nanny-photo-large"

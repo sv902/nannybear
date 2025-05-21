@@ -300,7 +300,7 @@ const ScheduleMonthView = () => {
                   });
                 }} >
                   <img
-                    ssrc={booking.parent?.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
+                    ssrc={booking.parent?.photo_url || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                     alt="Батько"
                     className="mini-avatar"
                   />

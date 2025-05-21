@@ -25,9 +25,7 @@ const AddParentReviewPage = () => {
 
     const parent = booking?.parent;   
 
-  const parentPhoto = parent?.photo
-    ? `${baseUrl}/storage/${parent.photo}`
-    : `${baseUrl}/storage/default-avatar.jpg`;
+  const parentPhoto = parent?.photo_url;
     const [showAlreadyReviewedModal, setShowAlreadyReviewedModal] = useState(false);
 
     useEffect(() => {

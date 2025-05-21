@@ -519,7 +519,7 @@ const NannyDetailPage = () => {
                     <div key={idx} className="review-item">
                       <img
                         src={
-                          review.parent_profile?.photo ||
+                          review.parent_profile?.photo_url ||
                           "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"
                         }
                         alt="Аватар"

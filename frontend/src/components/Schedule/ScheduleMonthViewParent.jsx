@@ -289,7 +289,7 @@ const ScheduleMonthViewParent = () => {
                     });
                 }}>
                 <img
-                  src={booking.nanny?.photo
+                  src={booking.nanny?.photo_url
                     || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"}
                   alt="Няня"
                   className="mini-avatar"
