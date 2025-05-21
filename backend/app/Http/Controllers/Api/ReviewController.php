@@ -191,4 +191,21 @@ class ReviewController extends Controller
         return response()->json($reviews);
     }
 
+    public function getReviewsAboutNanny($user_id)
+    {
+        $reviews = Review::with('parentProfile') // підтягуємо дані про батька
+            ->where('nanny_id', $user_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Додай фото_url
+        $reviews->each(function ($review) {
+            if ($review->parentProfile) {
+                $review->parentProfile->append('photo_url');
+            }
+        });
+
+        return response()->json($reviews);
+    }
+
 }
