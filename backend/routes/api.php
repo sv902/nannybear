@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Middleware\HandleCors;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Api\UserController;
@@ -99,6 +100,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::delete('/users/{id}', [AdminController::class, 'destroy']); // Видалити користувача
     });
 
+ Route::middleware([HandleCors::class])->group(function () {   
 /**
  * ПРОФІЛІ
  */
@@ -240,4 +242,6 @@ Route::post('/test-video-upload', function (Request $request) {
     return $stored
         ? response()->json(['message' => '✅ Завантажено!', 'url' => Storage::disk('s3')->url($filename)])
         : response()->json(['error' => '❌ Не вдалося зберегти'], 500);
+});
+
 });
