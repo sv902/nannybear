@@ -288,19 +288,19 @@ class ProfileController extends Controller
             }
           }
     } 
-          $filename = 'test/video_upload_triggered_' . \Illuminate\Support\Str::random(6) . '.json';
+         if ($request->hasFile('video')) {
+    $videoFile = $request->file('video');
+
+    $filename = 'test/video_upload_triggered_' . \Illuminate\Support\Str::random(6) . '.json';
 
     Storage::disk('s3')->put($filename, json_encode([
         'message' => 'hasFile(video) спрацювало',
-        'mime' => $request->file('video')?->getMimeType(),
-        'size' => $request->file('video')?->getSize(),
+        'mime' => $videoFile?->getMimeType(),
+        'size' => $videoFile?->getSize(),
         'time' => now()->toDateTimeString()
     ], JSON_PRETTY_PRINT));
-      // Оновлення відео
-       if ($request->hasFile('video')) {     
-    try {
-        $videoFile = $request->file('video');
 
+    try {
         if (!$videoFile->isValid()) {
             return response()->json([
                 'error' => '❌ Відео некоректне',
@@ -313,25 +313,26 @@ class ProfileController extends Controller
         $videoFilename = Str::slug($firstName . '-' . $lastName)
             . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
 
-        $path = Storage::disk('s3')->putFileAs(
-            'videos/nannies',
-            $videoFile,
-            $videoFilename           
-        );
+        // ❗ Без 4-го аргументу, бо він не працює на Render
+        $stream = fopen($videoFile->getRealPath(), 'r');
+        $path = Storage::disk('s3')->put("videos/nannies/{$videoFilename}", $stream);
+
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
 
         if (!$path) {
             return response()->json([
-                'error' => '❌ Не вдалося зберегти відео через putFileAs()',
+                'error' => '❌ Не вдалося зберегти відео через put()',
                 'mime_type' => $videoFile->getMimeType(),
                 'size' => $videoFile->getSize(),
             ], 500);
         }
 
-        $profile->video = $path;
+        $profile->video = "videos/nannies/{$videoFilename}";
         $profile->save();
 
     } catch (\Throwable $e) {
-        // 🐞 створюємо лог помилки і зберігаємо в існуючу папку test/
         $logFilename = 'test/video_upload_log_' . Str::random(6) . '.json';
 
         $logData = [
@@ -345,16 +346,15 @@ class ProfileController extends Controller
             'trace' => $e->getTraceAsString(),
         ];
 
-        $stored = Storage::disk('s3')->put($logFilename, json_encode($logData, JSON_PRETTY_PRINT), [
-         
-        ]);
+        Storage::disk('s3')->put($logFilename, json_encode($logData, JSON_PRETTY_PRINT));
 
         return response()->json([
             'error' => '❌ Внутрішня помилка сервера (лог збережено в S3)',
-            'log_url' => $stored ? Storage::disk('s3')->url($logFilename) : null,
+            'log_url' => Storage::disk('s3')->url($logFilename),
         ], 500);
     }
 }
+
 
       
         // Оновлення галереї фото
