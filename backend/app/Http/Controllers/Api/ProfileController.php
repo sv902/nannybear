@@ -325,16 +325,30 @@ class ProfileController extends Controller
                 $profile->save();
 
             } catch (\Throwable $e) {
-                return response()->json([
-                    'error' => '❌ Внутрішня помилка сервера',
+                $logData = [
                     'message' => $e->getMessage(),
                     'line' => $e->getLine(),
                     'file' => $e->getFile(),
-                    'mime' => $videoFile?->getMimeType(),
-                    'size' => $videoFile?->getSize(),
+                    'mime' => $videoFile?->getMimeType() ?? null,
+                    'size' => $videoFile?->getSize() ?? null,
                     'filename' => $filename ?? null,
+                    'time' => now()->toDateTimeString(),
+                    'trace' => $e->getTraceAsString(),
+                ];
+
+                $logContent = json_encode($logData, JSON_PRETTY_PRINT);
+                $logFilename = 'logs/video_error_' . uniqid() . '.json';
+
+                $stored = Storage::disk('s3')->put($logFilename, $logContent, [
+                    'visibility' => 'public',
+                ]);
+
+                return response()->json([
+                    'error' => '❌ Відео не збережено (лог записано в S3)',
+                    'log_url' => $stored ? Storage::disk('s3')->url($logFilename) : null,
                 ], 500);
             }
+
         }
       
         // Оновлення галереї фото
