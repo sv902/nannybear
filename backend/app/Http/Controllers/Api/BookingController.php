@@ -21,24 +21,11 @@ class BookingController extends Controller
         }
 
         $bookings = $user->parentProfile->bookings()
-    ->with(['nanny.user', 'address', 'bookingDays'])
-    ->orderByDesc('start_date')
-    ->get();
-
-        $bookings->transform(function ($booking) {
-            if ($booking->nanny) {
-                $booking->nanny->photo = $booking->nanny->getPhotoUrl();
-            }
-
-            if ($booking->parent) {
-                $booking->parent->photo = $booking->parent->photo_url;                
-            }
-
-            return $booking;
-        });
+            ->with(['nanny.user', 'address', 'bookingDays']) // ➕ додано 'bookingDays'
+            ->orderByDesc('start_date')
+            ->get();
 
         return response()->json($bookings);
-
     }
 
 
@@ -206,7 +193,6 @@ class BookingController extends Controller
 
         $booking = Booking::with([
             'nanny.user',
-            'parent.user',
             'address',
             'bookingDays'
         ])->find($id);
@@ -230,20 +216,12 @@ class BookingController extends Controller
             'hourly_rate' => $booking->hourly_rate,
             'address' => $booking->address,
             'nanny' => [
-                   'id' => $booking->nanny->id,
-                    'user_id' => $booking->nanny->user->id,
-                    'first_name' => $booking->nanny->user->first_name,
-                    'last_name' => $booking->nanny->user->last_name,
-                    'photo' => $booking->nanny->getPhotoUrl(),
+                'id' => $booking->nanny->id,
+                'user_id' => $booking->nanny->user->id,
+                'first_name' => $booking->nanny->user->first_name,
+                'last_name' => $booking->nanny->user->last_name,
+                'photo' => $booking->nanny->photo_url,
             ],
-            'parent' => [
-                'id' => $booking->parent->id,
-                'user_id' => $booking->parent->user->id,
-                'first_name' => $booking->parent->user->first_name,
-                'last_name' => $booking->parent->user->last_name,
-                'photo' => $booking->parent->getPhotoAttribute($booking->parent->photo),
-            ],
-
             'booking_days' => $booking->bookingDays->map(function ($day) {
                 return [
                     'date' => $day->date,

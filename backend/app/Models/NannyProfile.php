@@ -105,4 +105,17 @@ class NannyProfile extends Model
             ->toArray();
     }
 
+    protected $appends = ['photo_url'];
+
+    public function getPhotoUrlAttribute()
+    {
+        $defaultKey = config('files.default_nanny_photo', 'photos/nannies/default-avatar.jpg');
+
+        if (empty($this->photo) || $this->photo === 'default-avatar.jpg' || $this->photo === $defaultKey) {
+            return Storage::disk('s3')->url($defaultKey);
+        }
+
+        return Storage::disk('s3')->url($this->photo);
+    }
+
 }
