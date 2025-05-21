@@ -56,16 +56,21 @@ Route::get('/reset-password/{token}', function () {
 //     Route::patch('/users/{id}/role', [AdminController::class, 'updateRole'])->name('admin.users.role'); // Змінити роль
 // });
 
-Route::get('/debug/video-error', function () {
-    $path = storage_path('app/public/video_error_debug.json');
+Route::get('/s3-log-test', function () {
+    $logData = [
+        'test' => 'Це тестовий лог',
+        'time' => now()->toDateTimeString(),
+    ];
 
-    if (!file_exists($path)) {
-        return response()->json(['error' => 'Файл не знайдено'], 404);
-    }
+    $filename = 'logs/video_upload_test_' . Str::random(6) . '.json';
 
-    return response()->file($path, [
-        'Content-Type' => 'application/json',
+    $stored = Storage::disk('s3')->put($filename, json_encode($logData, JSON_PRETTY_PRINT), [
+        'visibility' => 'public',
     ]);
+
+    return $stored
+        ? ['message' => '✅ Збережено в S3', 'url' => Storage::disk('s3')->url($filename)]
+        : ['error' => '❌ Не вдалося зберегти log у S3'];
 });
 
 
