@@ -100,6 +100,7 @@ const NannyGalleryPage = () => {
 
 // /////
     axios.post('https://nanny-backend-pk2s.onrender.com/api/test-video-upload', formData, {
+       withCredentials: true,
   headers: {
     'Content-Type': 'multipart/form-data',
   },
