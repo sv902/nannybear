@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\File;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 // Підтвердження email через посилання
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
