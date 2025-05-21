@@ -217,3 +217,27 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/nanny/{id}/bookings', [BookingController::class, 'getBookingsForPublic']);
 
+///////////////////
+Route::post('/test-video-upload', function (Request $request) {
+    if (!$request->hasFile('video')) {
+        return response()->json(['error' => '📭 Файл "video" не передано'], 400);
+    }
+
+    $video = $request->file('video');
+
+    if (!$video->isValid()) {
+        return response()->json(['error' => '❌ Файл пошкоджений'], 400);
+    }
+
+    $filename = 'test/video_direct_upload_' . Str::random(6) . '.' . $video->getClientOriginalExtension();
+    $stream = fopen($video->getRealPath(), 'r');
+    $stored = Storage::disk('s3')->put($filename, $stream);
+
+    if (is_resource($stream)) {
+        fclose($stream);
+    }
+
+    return $stored
+        ? response()->json(['message' => '✅ Завантажено!', 'url' => Storage::disk('s3')->url($filename)])
+        : response()->json(['error' => '❌ Не вдалося зберегти'], 500);
+});

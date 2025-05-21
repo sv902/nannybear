@@ -90,6 +90,13 @@ const NannyGalleryPage = () => {
       console.warn("❌ Video is not a valid File object!");
     }
 
+// /////
+    axios.post('https://nanny-backend-pk2s.onrender.com/api/test-video-upload', formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+});
+// ///////
     if (video instanceof File && video.size > 50 * 1024 * 1024) {
       alert("Відео має бути не більше 50MB");
       return;
