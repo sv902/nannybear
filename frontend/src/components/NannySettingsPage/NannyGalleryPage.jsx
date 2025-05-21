@@ -83,13 +83,7 @@ const NannyGalleryPage = () => {
 
   const handleSave = async () => {
     const formData = new FormData();
-
-    console.log("🎥 VIDEO:", video);
-    console.log("🎥 video instanceof File:", video instanceof File);
-    console.log("🎥 Video type:", video?.type); // має бути video/mp4
-    console.log("🎥 Video size:", video?.size / 1024 / 1024, "MB");
-
-      
+         
     if (video instanceof File) {
       formData.append("video", video);
     } else {
@@ -122,6 +116,10 @@ const NannyGalleryPage = () => {
     });
 
     setIsUploading(true);
+ console.log("🎥 VIDEO:", video);
+    console.log("🎥 video instanceof File:", video instanceof File);
+    console.log("🎥 Video type:", video?.type); // має бути video/mp4
+    console.log("🎥 Video size:", video?.size / 1024 / 1024, "MB");
 
     try {
       await axios.post("/api/nanny/profile", formData, {
