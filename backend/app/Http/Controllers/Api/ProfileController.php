@@ -290,72 +290,53 @@ class ProfileController extends Controller
     } 
        
       // Оновлення відео
-        if ($request->hasFile('video')) {
-        try {
-            $videoFile = $request->file('video');
+       if ($request->hasFile('video')) {
+            try {
+                $videoFile = $request->file('video');
 
-            if (!$videoFile->isValid()) {
+                if (!$videoFile->isValid()) {
+                    return response()->json([
+                        'error' => '❌ Відео некоректне',
+                        'reason' => $videoFile->getErrorMessage() ?? 'невідома помилка'
+                    ], 400);
+                }
+
+                $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
+                $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
+                $filename = Str::slug($firstName . '-' . $lastName)
+                    . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
+
+                $path = Storage::disk('s3')->putFileAs(
+                    'videos/nannies',
+                    $videoFile,
+                    $filename,
+                    ['visibility' => 'public']
+                );
+
+                if (!$path) {
+                    return response()->json([
+                        'error' => '❌ Не вдалося зберегти відео через putFileAs()',
+                        'mime_type' => $videoFile->getMimeType(),
+                        'size' => $videoFile->getSize(),
+                    ], 500);
+                }
+
+                $profile->video = $path;
+                $profile->save();
+
+            } catch (\Throwable $e) {
                 return response()->json([
-                    'error' => '❌ Відео некоректне',
-                    'reason' => $videoFile->getErrorMessage() ?? 'невідома помилка'
-                ], 400);
-            }
-
-            $firstName = $validated['first_name'] ?? $profile->first_name ?? $user->first_name ?? 'nanny';
-            $lastName = $validated['last_name'] ?? $profile->last_name ?? $user->last_name ?? '';
-            $filename = Str::slug($firstName . '-' . $lastName)
-                . '-nanny-video-' . uniqid() . '.' . $videoFile->getClientOriginalExtension();
-
-            $stream = fopen($videoFile->getRealPath(), 'r');
-
-            if (!$stream) {
-                return response()->json([
-                    'error' => '❌ Неможливо відкрити файл відео для читання'
+                    'error' => '❌ Внутрішня помилка сервера',
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile(),
+                    'mime' => $videoFile?->getMimeType(),
+                    'size' => $videoFile?->getSize(),
+                    'filename' => $filename ?? null,
                 ], 500);
             }
-
-            $success = Storage::disk('s3')->writeStream("videos/nannies/{$filename}", $stream, [
-                'visibility' => 'public',
-                'ContentType' => $videoFile->getMimeType()
-            ]);
-
-            fclose($stream);
-
-            if (!$success) {
-                return response()->json([
-                    'error' => '❌ Відео не збережено через writeStream()',
-                    'mime_type' => $videoFile->getMimeType(),
-                    'size' => $videoFile->getSize(),
-                ], 500);
-            }
-
-            $profile->video = "videos/nannies/{$filename}";
-            $profile->save();
-
-       } catch (\Throwable $e) {
-            $logContent = json_encode([
-                'message' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
-                'trace' => $e->getTraceAsString(),
-                'mime' => $videoFile?->getMimeType(),
-                'size' => $videoFile?->getSize(),
-                'filename' => $filename ?? null,
-                'time' => now()->toDateTimeString()
-            ], JSON_PRETTY_PRINT);
-
-            $logPath = 'logs/video_upload_error_' . uniqid() . '.json';
-
-            Storage::disk('s3')->put($logPath, $logContent, ['visibility' => 'public']);
-
-            $logUrl = Storage::disk('s3')->url($logPath);
-
-            return response()->json([
-                'error' => '❌ Внутрішня помилка сервера (log saved in S3)',
-                'log_url' => $logUrl, // 🟢 даєш цю URL в браузер — бачиш лог
-            ], 500);
         }
-    }      
+      
         // Оновлення галереї фото
         $existingGalleryRaw = $request->input('existing_gallery', []);
         $existingGallery = array_filter(is_array($existingGalleryRaw) ? $existingGalleryRaw : []);
