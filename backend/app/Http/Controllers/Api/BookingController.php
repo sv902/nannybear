@@ -21,11 +21,24 @@ class BookingController extends Controller
         }
 
         $bookings = $user->parentProfile->bookings()
-            ->with(['nanny.user', 'address', 'bookingDays']) // ➕ додано 'bookingDays'
-            ->orderByDesc('start_date')
-            ->get();
+    ->with(['nanny.user', 'address', 'bookingDays'])
+    ->orderByDesc('start_date')
+    ->get();
+
+        $bookings->transform(function ($booking) {
+            if ($booking->nanny) {
+                $booking->nanny->photo = $booking->nanny->getPhotoUrl();
+            }
+
+            if ($booking->parent) {
+                $booking->parent->photo = $booking->parent->photo_url;                
+            }
+
+            return $booking;
+        });
 
         return response()->json($bookings);
+
     }
 
 
