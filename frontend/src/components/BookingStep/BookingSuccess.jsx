@@ -95,7 +95,7 @@ const BookingSuccess = () => {
         <div className="nanny-info">
           <div className="nanny-profile-preview-edit-booking">
             <img
-              src={nanny.photo_url}
+              src={nanny.photo}
               alt="Няня"
               className="nanny-booking-avatar-edit"
             />

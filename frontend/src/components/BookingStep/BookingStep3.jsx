@@ -253,7 +253,7 @@ const booking_days = buildBookingDays();
           <h1 className="booking-title">ПЛАНУВАННЯ ЗУСТРІЧІ З</h1>
           <div className="nanny-profile-preview-edit-booking">
             <img
-              src={nanny.photo_url}
+              src={nanny.photo}
               alt="Няня"
               className="nanny-booking-avatar-edit"
             />

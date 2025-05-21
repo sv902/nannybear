@@ -116,7 +116,7 @@ const BookingStep1 = () => {
 
           <div className="nanny-profile-preview-edit-booking">
             <img
-              src={nanny.photo_url}
+              src={nanny.photo}
               alt="Няня"
               className="nanny-booking-avatar-edit"
             />
