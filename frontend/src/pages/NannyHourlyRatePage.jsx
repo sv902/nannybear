@@ -9,10 +9,9 @@ import locationIcon from "../assets/icons/location.svg";
 import SalarySavedModal from "../components/Modal/SalarySavedModal";
 
 
-const NannyHourlyRatePage = () => {
-    const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
-    const navigate = useNavigate();
-    const [rate, setRate] = useState(0);
+const NannyHourlyRatePage = () => {    
+  const navigate = useNavigate();
+  const [rate, setRate] = useState(0);
   const [newRate, setNewRate] = useState("");
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [bookings, setBookings] = useState(0);
@@ -133,7 +132,7 @@ const NannyHourlyRatePage = () => {
       );
     });    
   };  
-  if (!nanny || !nanny.photo) return <div>Завантаження профілю няні...</div>;
+  if (!nanny || !nanny.photo_url) return <div>Завантаження профілю няні...</div>;
 
   const genderClass = nanny.gender === "female" ? "female" : "male";
   // const clients = nanny.total_clients ?? 100; // placeholder

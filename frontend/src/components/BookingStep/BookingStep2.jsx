@@ -5,8 +5,7 @@ import "../../styles/booking.css";
 import VariantHeader from "../../components/Header/VariantHeader";
 import Footer from "../../components/Footer/Footer";
 
-const BookingStep2 = () => {
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const BookingStep2 = () => { 
   const navigate = useNavigate();
   const location = useLocation();
   const { startDate, startTime } = location.state || {};

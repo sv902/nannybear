@@ -12,8 +12,7 @@ import chatIcon from "../assets/icons/chat.svg";
 
 const ParentProfilePage = () => {
     const { id } = useParams(); 
-  const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const navigate = useNavigate();  
 
   const [parent, setParentProfile] = useState(null);
   const [reviews, setReviews] = useState([]);

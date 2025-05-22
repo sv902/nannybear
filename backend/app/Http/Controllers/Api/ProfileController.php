@@ -104,8 +104,7 @@ class ProfileController extends Controller
         }
 
         // Якщо не передано нове фото і ще немає — встановлюємо дефолтне
-        if (!$profile->photo) {
-           $profile->photo = config('files.default_parent_photo');
+        if (!$profile->photo) {         
             $profile->save();
         }
 
@@ -126,7 +125,7 @@ class ProfileController extends Controller
        return response()->json([
         'message' => 'Профіль батька збережено',
        'profile' => tap($profile->load(['children', 'addresses']), function ($profile) {
-            $profile->photo = \Storage::disk('s3')->url($profile->photo ?? config('files.default_parent_photo'));
+            $profile->photo_url = \Storage::disk('s3')->url($profile->photo ?? config('files.default_parent_photo'));
     }),
     ]);
 
@@ -258,12 +257,18 @@ class ProfileController extends Controller
                     $lastName = $validated['last_name'] ?? $profile->last_name ?? '';
 
                     $filename = Str::slug($firstName . '_' . $lastName . '_' . $eduData['institution'] . '_diploma_' . uniqid()) . '.' . $file->getClientOriginalExtension();
+                                        
                     $diplomaPath = $file->storeAs('diplomas', $filename, 's3');
                 }
 
-                if (empty($eduData['institution']) || empty($eduData['specialty']) || empty($eduData['years'])) {
+                if (
+                    (!isset($eduData['institution']) || trim($eduData['institution']) === '') ||
+                    (!isset($eduData['specialty']) || trim($eduData['specialty']) === '') ||
+                    (!isset($eduData['years']) || trim($eduData['years']) === '')
+                ) {
                     throw new \Exception("❌ Відсутні поля institution/specialty/years у записі №$index");
                 }
+
 
                 if ($existing) {
                     $existing->update([
@@ -346,14 +351,7 @@ class ProfileController extends Controller
                 ], 500);
             }
         }
-        if ($videoFile->getError()) {
-            return response()->json([
-                'error' => '❌ Помилка завантаження файлу',
-                'php_error' => $videoFile->getError(),
-            ], 500);
-        }
-
-      
+             
         // Оновлення галереї фото
         $existingGalleryRaw = $request->input('existing_gallery', []);
         $existingGallery = array_filter(is_array($existingGalleryRaw) ? $existingGalleryRaw : []);
@@ -406,7 +404,7 @@ class ProfileController extends Controller
                 });
 
                 // Примусово застосовуємо getPhotoUrl, щоб гарантовано повернути повний шлях
-                $profile->photo = $profile->getPhotoUrl();
+                $profile->photo_url = $profile->getPhotoUrl();
                 $profile->video = $profile->getVideoUrl();
                 $profile->gallery = $profile->getGalleryUrls();
 

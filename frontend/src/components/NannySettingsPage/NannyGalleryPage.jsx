@@ -158,16 +158,16 @@ const NannyGalleryPage = () => {
     navigate("/nanny/profile/edit");
   };
 
-  {isUploading && (
-      <div className="loading-overlay">
-        <div className="spinner" />
-        <p>Завантаження...</p>
-      </div>
-    )}
 
-  return (
+  return (    
     <div>
       <VariantHeaderNanny />
+       {isUploading && (
+        <div className="loading-overlay">
+          <div className="spinner" />
+          <p>Завантаження...</p>
+        </div>
+      )}
       <div className="edit-page-container">
         <button
           onClick={() => (isChanged() ? setShowUnsavedModal(true) : navigate(-1))}

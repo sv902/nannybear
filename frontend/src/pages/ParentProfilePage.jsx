@@ -97,9 +97,7 @@ const ParentProfilePage = () => {
   const totalBookings = parent?.total_bookings || 100; // placeholder
     
   if (!parent) return <div>Завантаження...</div>;
-
-  const isValidPhoto = parent.photo && !parent.photo.includes("index") && parent.photo.trim() !== "";
-
+ 
   const mainAddress = parent.addresses?.[0] || {};
 
  return (

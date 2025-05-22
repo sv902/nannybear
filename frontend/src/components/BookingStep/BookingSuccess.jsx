@@ -4,8 +4,7 @@ import VariantHeader from "../../components/Header/VariantHeader";
 import Footer from "../../components/Footer/Footer";
 import axios from "../../axiosConfig";
 
-const BookingSuccess = () => {
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const BookingSuccess = () => {  
   const navigate = useNavigate();
   const { state } = useLocation();
   const bookingId = state?.bookingId || localStorage.getItem("bookingId");

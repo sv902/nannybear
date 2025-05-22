@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../axiosConfig";
 import "../../styles/bookingModal.css";
 
-const BookingDetailModalNanny = ({ booking, onClose }) => {
-    const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const BookingDetailModalNanny = ({ booking, onClose }) => {   
     const [reviews, setReviews] = useState([]);
     const navigate = useNavigate(); 
     

@@ -129,11 +129,7 @@ const NannyDetailPage = () => {
   const handleNext = () => {
     setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev));
   };
-  const isValidPhoto =
-  nanny.photo &&
-  nanny.photo !== "null" &&
-  nanny.photo.trim() !== "";
-
+  
   const startIndex = currentPage * reviewsPerPage;
   const visibleReviews = reviews.slice(startIndex, startIndex + reviewsPerPage);
 

@@ -6,8 +6,7 @@ import axios from "../axiosConfig";
 import "../styles/settings.css";
 
 const NannySettingsPage = () => {
-    const navigate = useNavigate();
-    const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+    const navigate = useNavigate();   
     const [nanny, setNanny] = useState(null);
     const [, setPressedButton] = useState(null);
    

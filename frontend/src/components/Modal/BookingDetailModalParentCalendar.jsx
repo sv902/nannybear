@@ -10,8 +10,7 @@ const BookingDetailModalParentCalendar = ({ bookings, initialIndex = 0, onClose,
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
  
-  const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const navigate = useNavigate();  
   const [reviews, setReviews] = useState([]);
   const [showTooEarlyModal, setShowTooEarlyModal] = useState(false);
   const [booking, setBooking] = useState(bookings[initialIndex]);
@@ -49,7 +48,6 @@ const validReviews = Array.isArray(reviews) ? reviews : [];
 const averageRating = validReviews.length > 0
   ? (validReviews.reduce((sum, r) => sum + r.rating, 0) / validReviews.length).toFixed(1)
   : "—";
-
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);

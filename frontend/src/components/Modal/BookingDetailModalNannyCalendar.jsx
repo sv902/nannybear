@@ -10,8 +10,7 @@ const BookingDetailModalNannyCalendar = ({ bookings, initialIndex = 0, onClose, 
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [booking, setBooking] = useState(bookings[initialIndex]);
-  const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const navigate = useNavigate(); 
   const [reviews, setReviews] = useState([]);
   const [showTooEarlyModal, setShowTooEarlyModal] = useState(false);
 

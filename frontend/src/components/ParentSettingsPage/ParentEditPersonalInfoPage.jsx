@@ -11,8 +11,7 @@ import SavedChangesModal from "../Modal/SavedChangesModal";
 
 
 const ParentEditPersonalInfoPage = () => {
-  const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const navigate = useNavigate();  
 
   const [initialData, setInitialData] = useState(null);
   const [formData, setFormData] = useState({

@@ -10,8 +10,7 @@ import "../../styles/settings.css";
 
 const MAX_EDUCATIONS = 10;
 
-const NannyEditEducationPage = () => {
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const NannyEditEducationPage = () => {  
   const [educations, setEducations] = useState([]);
   const [noEducation, setNoEducation] = useState(false);
   const [initialEducations, setInitialEducations] = useState([]);
@@ -45,6 +44,7 @@ const NannyEditEducationPage = () => {
           }
         });
       };
+       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const isChanged = () => {

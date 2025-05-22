@@ -10,8 +10,7 @@ import locationIcon from "../assets/icons/location.svg";
 const AddParentReviewPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const booking = location.state?.booking;
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const booking = location.state?.booking;  
   const [parentProfile, setParentProfile] = useState(null);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");

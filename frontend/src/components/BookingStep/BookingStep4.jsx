@@ -4,8 +4,7 @@ import axios from "../../axiosConfig";
 import VariantHeader from "../../components/Header/VariantHeader";
 import Footer from "../../components/Footer/Footer";
 
-const BookingStep4 = () => {
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const BookingStep4 = () => { 
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
