@@ -257,6 +257,30 @@ class BookingController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
+    // public function getStats(Request $request)
+    // {
+    //     $year = $request->query('year', now()->year);
+    //     $nannyId = Auth::user()->nannyProfile->id;
+
+    //     $stats = Booking::where('nanny_id', $nannyId)
+    //         ->whereYear('start_date', $year)
+    //         ->selectRaw('MONTH(start_date) as month, COUNT(*) as value')
+    //         ->groupBy('month')
+    //         ->pluck('value', 'month');
+
+    //     $months = ['СІЧ','ЛЮТ','БЕР','КВІ','ТРА','ЧЕР','ЛИП','СЕР','ВЕР','ЖОВ','ЛИС','ГРУ'];
+
+    //     $result = [];
+    //     foreach (range(1, 12) as $i) {
+    //         $result[] = [
+    //             'month' => $months[$i - 1],
+    //             'value' => $stats[$i] ?? 0,
+    //         ];
+    //     }
+
+    //     return response()->json($result);
+    // }
+
     public function getStats(Request $request)
     {
         $year = $request->query('year', now()->year);
@@ -264,8 +288,8 @@ class BookingController extends Controller
 
         $stats = Booking::where('nanny_id', $nannyId)
             ->whereYear('start_date', $year)
-            ->selectRaw('MONTH(start_date) as month, COUNT(*) as value')
-            ->groupBy('month')
+            ->selectRaw('EXTRACT(MONTH FROM start_date) as month, COUNT(*) as value')
+            ->groupByRaw('EXTRACT(MONTH FROM start_date)')
             ->pluck('value', 'month');
 
         $months = ['СІЧ','ЛЮТ','БЕР','КВІ','ТРА','ЧЕР','ЛИП','СЕР','ВЕР','ЖОВ','ЛИС','ГРУ'];
@@ -274,12 +298,13 @@ class BookingController extends Controller
         foreach (range(1, 12) as $i) {
             $result[] = [
                 'month' => $months[$i - 1],
-                'value' => $stats[$i] ?? 0,
+                'value' => isset($stats[$i]) ? (int) $stats[$i] : 0,
             ];
         }
 
         return response()->json($result);
     }
+
 
     public function getBookingsForPublic($id)
     {
