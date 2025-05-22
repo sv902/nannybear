@@ -279,8 +279,7 @@ const averageRating = validReviews.length > 0
         <div className="modal-actions">
           <button
             className="add-review-btn"
-            onClick={handleAddReview}
-            disabled={!booking || isPastMeeting() === false}
+            onClick={handleAddReview}            
           >
             ДОДАТИ ВІДГУК
           </button>
