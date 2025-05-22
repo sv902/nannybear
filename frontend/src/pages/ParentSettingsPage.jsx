@@ -49,9 +49,7 @@ const ParentSettingsPage = () => {
         <div className="avatar-section">       
           <img
             src={
-                parent?.photo && parent.photo !== "null" && parent.photo.trim() !== ""
-                ? `${baseUrl}/storage/${parent.photo}`
-                : `${baseUrl}/storage/default-avatar.jpg`
+                parent?.photo_url
             }
             alt="Аватар"
             className="settings-avatar"

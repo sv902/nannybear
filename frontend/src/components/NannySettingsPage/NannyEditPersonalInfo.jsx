@@ -11,9 +11,7 @@ import SavedChangesModal from "../Modal/SavedChangesModal";
 
 
 const NannyEditPersonalInfo = () => {
-  const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
-
+  const navigate = useNavigate();  
   const [initialData, setInitialData] = useState(null);
   const [formData, setFormData] = useState({
     first_name: "",
@@ -70,8 +68,7 @@ const NannyEditPersonalInfo = () => {
   }, []);
 
   const avatarSrc = previewPhoto
-  || (formData.photo instanceof File ? URL.createObjectURL(formData.photo) : formData.photo)
-  || `${baseUrl}/storage/default-avatar.jpg`;
+  || (formData.photo instanceof File ? URL.createObjectURL(formData.photo) : formData.photo_url);
 
   useEffect(() => {
   return () => {

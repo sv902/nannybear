@@ -160,9 +160,13 @@ const NannyProfileForm = () => {
       console.log("🎉 Профіль збережено:", response.data);
   
       if (response.status === 200) {
-      const nannyId = response.data.id; 
-      localStorage.removeItem("nannyFormData");
-      navigate(`/nanny/profile/${nannyId}`);
+      const nannyId = response.data.id || response.data.profile?.id;
+      if (nannyId) {
+        localStorage.removeItem("nannyFormData");
+        navigate(`/nanny/profile/${nannyId}`);
+      } else {
+        console.error("❌ Не вдалося отримати ID профілю няні");
+      }
     }
     } catch (error) {
       console.error("❌ Помилка збереження профілю:", error.response?.data || error.message);

@@ -409,7 +409,8 @@ class ProfileController extends Controller
                 $profile->gallery = $profile->getGalleryUrls();
 
                 return response()->json([
-                    'message' => 'Профіль няні оновлено',                 
+                    'message' => 'Профіль няні оновлено', 
+                    'id' => $profile->id,                
                     'profile' => $profile,
                 ]);
         } catch (\Throwable $e) {
