@@ -63,9 +63,12 @@ class ReviewController extends Controller
 
             // Перевірити, чи існує бронювання між цим батьком і нянею
             $bookingExists = Booking::where('parent_id', $user->id)
-            ->where('nanny_id', $validated['nanny_id'])
-            ->whereDate('date', '<=', now())
-            ->exists();
+                ->where('nanny_id', $validated['nanny_id'])
+                ->whereHas('bookingDays', function ($query) {
+                    $query->whereDate('date', '<=', now());
+                })
+                ->exists();
+
 
             if (!$bookingExists) {
             return response()->json(['error' => 'Ви можете залишити відгук лише після зустрічі з нянею'], 403);
