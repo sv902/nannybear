@@ -13,7 +13,6 @@ import chatIcon from "../assets/icons/chat.svg";
 const ParentProfilePage = () => {
   
   const navigate = useNavigate();
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
   const [parent, setParentProfile] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -210,9 +209,7 @@ const ParentProfilePage = () => {
               <div key={idx} className="review-item">
                 <img
                   src={
-                    review.nanny?.photo
-                      ? `${baseUrl}/storage/${review.nanny.photo}`
-                      : `${baseUrl}/storage/default-avatar.jpg`
+                    review.nanny?.photo_url                     
                   }
                   alt="Аватар"
                   className="review-avatar"
