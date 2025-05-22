@@ -94,16 +94,16 @@ class NannyProfile extends Model
     }
 
 
-//    public function getGalleryUrls()
-//     {
-//         $paths = is_array($this->gallery) ? $this->gallery : json_decode($this->gallery ?? '[]', true);
+   public function getGalleryUrls()
+    {
+        $paths = is_array($this->gallery) ? $this->gallery : json_decode($this->gallery ?? '[]', true);
 
-//         return collect($paths ?? [])
-//             ->filter(fn($path) => !empty($path))
-//             ->map(fn($path) => Storage::disk('s3')->url($path))
-//             ->values()
-//             ->toArray();
-//     }
+        return collect($paths ?? [])
+            ->filter(fn($path) => !empty($path))
+            ->map(fn($path) => Storage::disk('s3')->url($path))
+            ->values()
+            ->toArray();
+    }
 
     protected $appends = ['photo_url'];
 
