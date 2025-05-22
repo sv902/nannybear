@@ -57,21 +57,23 @@ const averageRating = validReviews.length > 0
   };
 
   const handleAddReview = () => {
-    if (!booking || !booking.booking_days || booking.booking_days.length === 0) return;
+    if (!booking || !Array.isArray(booking.booking_days) || booking.booking_days.length === 0) return;
 
     const now = new Date();
 
-    // Перевіряємо: чи ХОЧ ОДИН день завершився
     const isMeetingCompleted = booking.booking_days.some(day => {
-      const datePart = day.date;
-      const timePart = day.end_time;
+      if (!day.date || !day.end_time) return false;
 
-      const [year, month, dayNum] = datePart.split("-").map(Number);
-      const [hours, minutes] = timePart.split(":").map(Number);
+      try {
+        const [year, month, dayNum] = day.date.split("-").map(Number);
+        const [hours, minutes] = day.end_time.split(":").map(Number);
+        const endDateTime = new Date(year, month - 1, dayNum, hours, minutes);
 
-      const meetingEnd = new Date(year, month - 1, dayNum, hours, minutes);
-
-      return meetingEnd <= now;
+        return endDateTime <= now;
+      } catch (e) {
+        console.warn("❌ Неможливо обробити дату:", day);
+        return false;
+      }
     });
 
     if (!isMeetingCompleted) {
@@ -80,7 +82,7 @@ const averageRating = validReviews.length > 0
     }
 
     navigate("/add-review", { state: { booking } });
-  };   
+  }; 
 
   const getDateLabel = (dateStr) => {
     const today = new Date();
