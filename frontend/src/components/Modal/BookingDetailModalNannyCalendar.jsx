@@ -50,21 +50,26 @@ const BookingDetailModalNannyCalendar = ({ bookings, initialIndex = 0, onClose, 
   };
   
   const handleAddReview = () => {
-    if (!booking || !booking.date) return;
-  
-    const today = new Date();
-    const bookingDate = new Date(booking.date);
-  
-    const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
-    const bookingDateOnly = new Date(bookingDate.getFullYear(), bookingDate.getMonth(), bookingDate.getDate()).getTime();
-  
-    if (bookingDateOnly > todayDate) {
-      setShowTooEarlyModal(true); // ❗ Показати модалку
+    if (!booking || !booking.booking_days || booking.booking_days.length === 0) return;
+
+    const now = new Date();
+    const isMeetingCompleted = booking.booking_days.some(day => {
+      const dayDate = new Date(day.date);
+      const [endHour, endMinute] = day.end_time.split(":").map(Number);
+
+      dayDate.setHours(endHour, endMinute, 0, 0);
+
+      return dayDate <= now;
+    });
+
+    if (!isMeetingCompleted) {
+      setShowTooEarlyModal(true); // ❗ Показати модалку якщо зустріч ще не відбулась
       return;
     }
-  
+
     navigate("/add-parent-review", { state: { booking } });
-  };   
+  };
+
 
   const getDateLabel = (dateStr) => {
     const today = new Date();
