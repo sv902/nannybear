@@ -60,13 +60,18 @@ const averageRating = validReviews.length > 0
     if (!booking || !booking.booking_days || booking.booking_days.length === 0) return;
 
     const now = new Date();
+
+    // Перевіряємо: чи ХОЧ ОДИН день завершився
     const isMeetingCompleted = booking.booking_days.some(day => {
-      const dayDate = new Date(day.date);
-      const [endHour, endMinute] = day.end_time.split(":").map(Number);
+      const datePart = day.date;
+      const timePart = day.end_time;
 
-      dayDate.setHours(endHour, endMinute, 0, 0);
+      const [year, month, dayNum] = datePart.split("-").map(Number);
+      const [hours, minutes] = timePart.split(":").map(Number);
 
-      return dayDate <= now;
+      const meetingEnd = new Date(year, month - 1, dayNum, hours, minutes);
+
+      return meetingEnd <= now;
     });
 
     if (!isMeetingCompleted) {
@@ -75,8 +80,7 @@ const averageRating = validReviews.length > 0
     }
 
     navigate("/add-review", { state: { booking } });
-  };
-  
+  };   
 
   const getDateLabel = (dateStr) => {
     const today = new Date();

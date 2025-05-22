@@ -53,23 +53,22 @@ const BookingDetailModalNannyCalendar = ({ bookings, initialIndex = 0, onClose, 
     if (!booking || !booking.booking_days || booking.booking_days.length === 0) return;
 
     const now = new Date();
+
     const isMeetingCompleted = booking.booking_days.some(day => {
-      const dayDate = new Date(day.date);
+      const [year, month, dayNum] = day.date.split("-").map(Number);
       const [endHour, endMinute] = day.end_time.split(":").map(Number);
 
-      dayDate.setHours(endHour, endMinute, 0, 0);
-
-      return dayDate <= now;
+      const meetingEnd = new Date(year, month - 1, dayNum, endHour, endMinute);
+      return meetingEnd <= now;
     });
 
     if (!isMeetingCompleted) {
-      setShowTooEarlyModal(true); // ❗ Показати модалку якщо зустріч ще не відбулась
+      setShowTooEarlyModal(true); // ✅ Відкриваємо модалку
       return;
     }
 
     navigate("/add-parent-review", { state: { booking } });
   };
-
 
   const getDateLabel = (dateStr) => {
     const today = new Date();
