@@ -51,6 +51,7 @@ const ParentEditPersonalInfoPage = () => {
         address: address.address || "",
         floor: address.floor?.toString() || "1",
         apartment: address.apartment || "",
+        photo_url: profile.photo_url ?? "", 
       };
 
       setFormData((prev) => ({ ...prev, ...updatedData }));
@@ -221,7 +222,7 @@ const ParentEditPersonalInfoPage = () => {
                   ? previewPhoto
                   : formData.photo instanceof File
                     ? URL.createObjectURL(formData.photo)
-                    : formData.photo || "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"
+                    : formData.photo_url
               }
               alt="Аватар"
               className="settings-avatar"

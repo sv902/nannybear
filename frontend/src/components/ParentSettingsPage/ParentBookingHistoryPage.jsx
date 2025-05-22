@@ -8,8 +8,7 @@ import Modal from "../../components/Modal/BookingDetailModal"; // новий к�
 
 const ParentBookingHistoryPage = () => {
   const [bookings, setBookings] = useState([]);
-  const [selectedBooking, setSelectedBooking] = useState(null);
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const [selectedBooking, setSelectedBooking] = useState(null); 
   const navigate = useNavigate();
 
   const [activeFilter, setActiveFilter] = useState("УСІ");
@@ -87,9 +86,7 @@ const ParentBookingHistoryPage = () => {
               <div className="booking-info">
                 <img
                   src={
-                    booking.nanny?.photo
-                      ? `${baseUrl}/storage/${booking.nanny.photo}`
-                      : `${baseUrl}/storage/default-avatar.jpg`
+                    booking.nanny?.photo_url                     
                   }
                   alt="Няня"
                   className="nanny-avatar"

@@ -54,7 +54,7 @@ const NannyEditPersonalInfo = () => {
         gallery: [],
       };      
 
-      setFormData((prev) => ({ ...prev, ...updatedData }));
+      setFormData((prev) => ({ ...prev, ...updatedData,  photo_url: profile.photo_url ?? "", }));
       setInitialData({
         first_name: updatedData.first_name,
         last_name: updatedData.last_name,
@@ -63,6 +63,7 @@ const NannyEditPersonalInfo = () => {
         birthMonth: month,
         birthYear: year,
         photo: updatedData.photo ?? null,
+        photo_url: profile.photo_url ?? "",
       });
     });
   }, []);

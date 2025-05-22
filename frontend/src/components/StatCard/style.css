@@ -54,3 +54,8 @@
     width: 416px;
   }
   
+   @media screen and (max-width: 768px) {
+    .stat-card .text-wrapper {
+    font-size: 50px;
+    }
+  }

@@ -605,7 +605,169 @@ border-bottom-left-radius: 20px;
  
   
  
- 
+ /*Адаптація*/
+
+@media screen and (max-width: 1200px) {
+  .baner-photo {
+    right: -200px;
+    top: 40px;
+    max-width: 80%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .box-text-container {
+    display: none;
+  }
+
+  .review-overlay-container {
+    max-height: 550px;
+  }
+
+  .reviews-section-home {
+    min-height: 550px;
+  }
+
+  .review-bear-image {
+    object-fit: fill;
+  }
+
+  .title-home {
+    font-size: 64px;
+  }
+
+  .text-home {
+    font-size: 18px;
+  }
+
+  .position-1 {
+    top: 20%;
+  }
+
+  .position-2 {
+    left: 55%;
+    top: 38%;
+  }
+
+  .position-3 {
+    left: 50%;
+  }
+
+  .position-4 {
+    top: 45%;
+    left: 20%;
+  }
+
+  .position-6 {
+    top: 20%;
+  }
+
+  .position-5 {
+    top: 5%;
+    left: 85%;
+  }
+
+  .stat-card-wrapper {
+    background-color: #ADD1F5;
+    border-radius: 30px;
+    margin-right: 24px;
+    margin-left: 24px;
+    padding-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .reviews-section-home {
+    min-height: 500px;
+  }
+
+  .stat-card-wrapper {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .stat-card-2,
+  .stat-card-3,
+  .design-component-instance-node {
+    margin-left: -50px;
+  }
+
+  .typecard-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nanny-icons {
+    flex-wrap: wrap;
+  }
+
+  .position-4,
+  .position-5,
+  .position-6,
+  .baner-subtitle {
+    display: none;
+  }
+
+  .position-1 {
+    top: 18%;
+    left: 5%;
+  }
+
+  .position-2 {
+    top: 36%;
+  }
+
+  .position-3 {
+    left: 98%;
+    top: 0;
+  }
+
+  .baner-title,
+  .baner-title-2 {
+    font-size: 64px;
+  }
+
+  .baner-title-and {
+    font-size: 128px;
+    left: 100px;
+  }
+
+  .baner {
+    height: auto;
+    min-height: 625px;
+  }
+
+  .baner-photo {
+    width: 100vw;
+    height: auto;
+    left: 50px;
+    top: auto;
+    bottom: 0;
+    object-fit: contain;
+    max-width: none;
+  }
+
+  .baner-content {
+    margin-left: 15px;
+    margin-top: 15px;
+    margin-right: 0;
+    /*z-index: 2;*/
+    display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 625px;
+  }
+
+  .find-nanny-button-class {
+  margin-top: auto;
+  align-self: center; 
+  margin-bottom: 50px;
+  position: relative;
+  z-index: 10;
+}
+}
   
 
 

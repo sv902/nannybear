@@ -11,7 +11,7 @@ const NannyBookingHistoryPage = () => {
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [activeFilter, setActiveFilter] = useState("УСІ");
-  const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+ 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,7 +81,7 @@ const NannyBookingHistoryPage = () => {
 
               <div className="booking-info">
                 <img
-                 src={booking.parent?.photo ? `${baseUrl}/storage/${booking.parent.photo}` : `${baseUrl}/storage/default-avatar.jpg`}
+                 src={booking.parent?.photo_url}
                   alt="Батько"
                   className="nanny-avatar"
                 />

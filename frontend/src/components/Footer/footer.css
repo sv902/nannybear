@@ -152,14 +152,31 @@ body {
     height: auto;
   }
 
+
 /* Зміни для мобільних */
 @media (max-width: 768px) {
+.footer {
+    padding-top: 10px;
+}
+
     .footer-email {
         font-size: 32px;
     }
 
     .footer-text-wrapper-26 {
         font-size: 14px;
+        margin-left: 5px;
+    }
+
+    .footer-form-button-instance,
+    .footer-logo-2,
+    .footer-social-icons {
+        margin-left: 5px;
+    }
+
+    .footer-title {
+        margin-left: 5px;
+        font-size: 56px;
     }
 
     .footer-text-wrapper-27 {
@@ -171,8 +188,6 @@ body {
         font-size: 16px;
     }
 
-  
-
     .footer-insta-icon,
     .footer-tiktok-icon,
     .footer-facebook-icon {
@@ -181,16 +196,30 @@ body {
         margin: 10px;
     }
 
- 
-
     .footer-body-hyperlink-instance,
     .footer-body-hyperlink-2,
-    .footer-body-hyperlink-3 {
-        font-size: 14px;
-        width: 100%;
-        text-align: center;
-        margin: 5px 0;
+    .footer-body-hyperlink-3,
+    .footer-body-hyperlink-4,
+    .footer-body-hyperlink-6,
+    .footer-body-hyperlink-5 {
+        font-size: 12px;
     }
+
+.footer-column.second-column *,
+.footer-column.third-column * {
+  text-align: left !important;
+}
+
+.footer-text-wrapper-28,
+.footer-text-wrapper-29,
+.footer-body-hyperlink-instance,
+.footer-body-hyperlink-6,
+.footer-body-hyperlink-4,
+.footer-body-hyperlink-5,
+.footer-body-hyperlink-3,
+.footer-text-wrapper-27 {
+  margin-left: -35px !important;
+}
 }
 
 /* Для планшетів */
@@ -221,4 +250,52 @@ body {
     .footer-form-button-instance {
         margin-top: 20px;
     }
+
+    .footer-content {
+    flex-direction: column;
+  }
+
+  .footer-column.first-column {
+    width: 100%;
+    margin-left: 50px;
+  }
+
+  .footer-columns-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 90%;
+    gap: 0;
+    margin-left: 50px;
+  }
+
+  .footer-column.second-column,
+  .footer-column.third-column {
+    width: calc(50% - 10px);
+    margin: 0;
+  }
+
+  .footer-text-wrapper-28,
+  .footer-text-wrapper-29,
+  .footer-body-hyperlink-instance,
+  .footer-body-hyperlink-6,
+  .footer-body-hyperlink-4,
+  .footer-body-hyperlink-5,
+  .footer-body-hyperlink-2,
+  .footer-body-hyperlink-3,
+  .footer-text-wrapper-27 {
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .bear-wrapper {
+    margin-bottom: 0;
+    justify-content: left;
+  }
+
+  .bear-ligth {
+    max-width: 100%;
+    height: auto;
+  }
 }

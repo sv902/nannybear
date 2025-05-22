@@ -90,3 +90,56 @@ color: #3A3B61;
 z-index: 2;
 position: relative;
 }
+
+@media screen and (max-width: 768px) {
+  .bear-head-home-text {
+    font-size: 36px;
+  }
+
+  .bear-head-home {
+    height: 300px;
+    margin-top: 40px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .bear-ear-home {
+    width: 200px;
+    height: 200px;
+    top: -80px;
+  }
+
+  .left-ear-home {
+    left: -100px;
+  }
+
+  .right-ear-home {
+    right: -100px;
+  }
+
+  .bear-nose-img {
+    width: 120px;
+    bottom: -40px;
+  }
+
+  .vector-2 {
+    width: 50px;
+    bottom: 40px;
+  }
+
+  .cheek {
+    bottom: -80px;
+    height: 100px;
+  }
+
+  .bear-head-home-text {
+    font-size: 28px;
+    margin-top: 5px;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1440px) {
+  .bear-head-home-text {
+    font-size: 48px;
+  }
+}
