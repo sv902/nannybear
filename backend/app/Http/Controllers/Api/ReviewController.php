@@ -60,18 +60,21 @@ class ReviewController extends Controller
         }
 
         // 🔍 Перевірка — чи є завершене бронювання
-        $bookingExists = Booking::where('parent_id', $user->id)
-            ->where('nanny_id', $validated['nanny_id'])
-            ->whereHas('bookingDays', function ($query) {
-                $query->where(function ($q) {
-                    $q->whereDate('date', '<', now()->toDateString())
-                    ->orWhere(function ($q2) {
-                        $q2->whereDate('date', now()->toDateString())
-                            ->whereTime('end_time', '<=', now()->toTimeString());
-                    });
+      $bookingExists = \App\Models\Booking::where('parent_id', $user->id)
+        ->where('nanny_id', $validated['nanny_id'])
+        ->whereHas('bookingDays', function ($query) {
+            $now = now();
+
+            $query->where(function ($q) use ($now) {
+                $q->whereDate('date', '<', $now->toDateString())
+                ->orWhere(function ($q2) use ($now) {
+                    $q2->whereDate('date', $now->toDateString())
+                        ->whereRaw("end_time <= ?", [$now->format('H:i:s')]);
                 });
-            })
-            ->exists();
+            });
+        })
+        ->exists();
+
 
         if (!$bookingExists) {
             return response()->json(['error' => 'Ви можете залишити відгук лише після зустрічі з нянею'], 403);
