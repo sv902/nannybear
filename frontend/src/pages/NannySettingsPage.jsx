@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import VariantHeaderNanny from "../components/Header/VariantHeaderNanny";
 import Footer from "../components/Footer/Footer";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 import axios from "../axiosConfig";
 import "../styles/settings.css";
 
@@ -28,14 +29,9 @@ const NannySettingsPage = () => {
       }
 
     if (!nanny) {
-  return (
-    <div className="settings-page-container">
-      <p>Завантаження профілю...</p>
-    </div>
-  );
+  return <LoadingScreen text="Завантаження профілю няні..." />;
 }
- 
-      
+       
   return (
     <div>
       <VariantHeaderNanny />

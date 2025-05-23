@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import VariantHeader from "../components/Header/VariantHeader";
 import Footer from "../components/Footer/Footer";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 import axios from "../axiosConfig";
 import "../styles/settings.css";
 
 const ParentSettingsPage = () => {
-    const navigate = useNavigate();
-    const baseUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+    const navigate = useNavigate(); 
     const [parent, setParentProfile] = useState(null);
     const [, setPressedButton] = useState(null);
    
@@ -32,7 +32,7 @@ const ParentSettingsPage = () => {
         window.location.href = "/registrationlogin?section=login";
       }
 
-    if (!parent) return <div>Завантаження...</div>;
+    if (!parent) return <LoadingScreen text="Завантаження профілю..." />;
  
       
   return (

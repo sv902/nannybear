@@ -12,6 +12,7 @@ import locationIcon from "../assets/icons/location.svg";
 import { useFavorites } from "../context/FavoritesContext";
 import VariantHeader from "../components/Header/VariantHeader";
 import Footer from "../components/Footer/Footer";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 
 const NannyDetailPage = () => {
     const [nanny, setNanny] = useState(null);
@@ -97,7 +98,7 @@ const NannyDetailPage = () => {
         });
     }, [id]);
   
-    if (!nanny) return <div>Завантаження...</div>;
+    if (!nanny) return <LoadingScreen text="Завантаження профілю няні..." />;
         
     const averageRating = reviews.length
     ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length

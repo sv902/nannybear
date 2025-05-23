@@ -7,7 +7,7 @@ import "../styles/nannyHourlyRatePage.css";
 import briefcaseIcon from "../assets/icons/briefcase.svg";
 import locationIcon from "../assets/icons/location.svg";
 import SalarySavedModal from "../components/Modal/SalarySavedModal";
-
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 
 const NannyHourlyRatePage = () => {    
   const navigate = useNavigate();
@@ -132,7 +132,7 @@ const NannyHourlyRatePage = () => {
       );
     });    
   };  
-  if (!nanny || !nanny.photo_url) return <div>Завантаження профілю няні...</div>;
+  if (!nanny || !nanny.photo_url) return <LoadingScreen text="Завантаження профілю няні..." />;
 
   const genderClass = nanny.gender === "female" ? "female" : "male";
   // const clients = nanny.total_clients ?? 100; // placeholder

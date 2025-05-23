@@ -10,6 +10,7 @@ import flash from "../assets/icons/flash.svg";
 import heart from "../assets/icons/heart.svg";
 import whiteFlash from "../assets/icons/white-flash.svg";  
 import whiteHeart from "../assets/icons/white-heart.svg";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 
 const AllNanniesPage = () => {
     const navigate = useNavigate();
@@ -166,7 +167,7 @@ const AllNanniesPage = () => {
         
   
     if (loading) {
-      return <p>Завантаження...</p>
+      return <LoadingScreen text="Завантаження сторінки..." />;
     }
   
     return (

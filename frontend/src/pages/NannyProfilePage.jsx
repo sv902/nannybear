@@ -12,6 +12,7 @@ import briefcaseIcon from "../assets/icons/briefcase.svg";
 import locationIcon from "../assets/icons/location.svg";
 import VariantNannyHeader from "../components/Header/VariantHeaderNanny";
 import Footer from "../components/Footer/Footer";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 
 const NannyProfilePage = () => {
     const [nanny, setNanny] = useState(null);   
@@ -97,7 +98,7 @@ useEffect(() => {
 }, []);
 
   
-    if (!nanny) return <div>Завантаження...</div>;
+    if (!nanny) return <LoadingScreen text="Завантаження профілю няні..." />;
         
     const averageRating = reviews.length
     ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length

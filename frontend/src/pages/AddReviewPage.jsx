@@ -10,6 +10,7 @@ import "../styles/nannycard.css";
 import ThankYouModal from "../components/Modal/ThankYouModal";
 import briefcaseIcon from "../assets/icons/briefcase.svg";
 import locationIcon from "../assets/icons/location.svg";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 
 const AddReviewPage = () => {
   const navigate = useNavigate();
@@ -150,7 +151,7 @@ const AddReviewPage = () => {
   };
 
   if (!booking || !nanny) {
-    return <div>Завантаження...</div>;
+    return <LoadingScreen text="Завантаження сторінки..." />;
   }  
 
   return (

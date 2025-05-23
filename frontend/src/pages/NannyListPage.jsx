@@ -10,6 +10,7 @@ import whiteHeart from "../assets/icons/white-heart.svg";
 import VariantHeader from "../components/Header/VariantHeader";
 import { useFavorites } from "../context/FavoritesContext";
 import Footer from "../components/Footer/Footer"; 
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 
 const NannyListPage = () => {
   const navigate = useNavigate();
@@ -206,7 +207,7 @@ const NannyListPage = () => {
  
 
   if (loading) {
-    return <p>Завантаження...</p>
+    return <LoadingScreen text="Завантаження сторінки..." />;
   }
 
   return (

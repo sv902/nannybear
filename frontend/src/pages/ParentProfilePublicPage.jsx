@@ -9,6 +9,7 @@ import Footer from "../components/Footer/Footer";
 import BearPlaceholder from "../components/BearPlaceholder/BearPlaceholder";
 import locationIcon from "../assets/icons/location.svg";
 import chatIcon from "../assets/icons/chat.svg";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 
 const ParentProfilePage = () => {
     const { id } = useParams(); 
@@ -99,7 +100,7 @@ const ParentProfilePage = () => {
   const handleNext = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
   const totalBookings = parent?.total_bookings || 100; // placeholder
     
-  if (!parent) return <div>Завантаження...</div>;
+  if (!parent) return <LoadingScreen text="Завантаження профілю..." />;
   
   const mainAddress = parent.addresses?.[0] || {};
 

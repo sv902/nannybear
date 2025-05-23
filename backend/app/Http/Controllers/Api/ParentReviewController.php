@@ -69,7 +69,7 @@ class ParentReviewController extends Controller
 
     public function getReviewsAboutParent($user_id)
     {
-        $reviews = ParentReview::with('nanny.user')// Підтягнемо ім’я та фото няні
+        $reviews = ParentReview::with('nanny.user') // Підтягнемо ім’я та фото няні
             ->whereHas('parent', function ($q) use ($user_id) {
                 $q->where('user_id', $user_id);
             })

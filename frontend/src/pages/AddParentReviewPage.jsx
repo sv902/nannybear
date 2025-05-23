@@ -6,6 +6,7 @@ import axios from "../axiosConfig";
 import ThankYouNannyModal from "../components/Modal/ThankYouNannyModal";
 import "../styles/review.css";
 import locationIcon from "../assets/icons/location.svg";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen";
 
 const AddParentReviewPage = () => {
   const navigate = useNavigate();
@@ -138,7 +139,7 @@ const AddParentReviewPage = () => {
     });
   };
 
-  if (!parent) return <div>Завантаження...</div>;
+  if (!parent) return <LoadingScreen text="Завантаження сторінки..." />;
 
   return (
     <div>
