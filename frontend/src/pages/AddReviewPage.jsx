@@ -132,7 +132,8 @@ const AddReviewPage = () => {
         nanny_id: booking.nanny.user_id,
         booking_id: booking.id, 
       });
-    
+      console.log("booking.id:", booking?.id);
+      console.log("booking.nanny.user_id:", booking?.nanny?.user_id);    
       setShowAlreadyReviewedModal(false);
       setError("");
       setShowModal(true);
