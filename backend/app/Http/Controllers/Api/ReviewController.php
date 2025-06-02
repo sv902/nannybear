@@ -55,7 +55,7 @@ class ReviewController extends Controller
         // Перевірка, чи бронювання належить цьому батькові і чи завершене
         $booking = Booking::with('bookingDays')
             ->where('id', $validated['booking_id'])
-            ->where('parent_id', $parent->user_id)
+            ->where('parent_id', $parentProfile->id)
             ->where('nanny_id', $validated['nanny_id'])
             ->first();
 
@@ -84,18 +84,17 @@ class ReviewController extends Controller
         }
 
         // Створення нового відгуку
-        $review = new Review();
-        $review->parent_id = $parent->user_id;
-        $review->nanny_id = $validated['nanny_id'];
-        $review->booking_id = $validated['booking_id'];
-        $review->rating = $validated['rating'];
-        $review->comment = $validated['comment'];
-        $review->is_anonymous = $validated['is_anonymous'] ?? false;
-        $review->save();
+        $review = Review::create([
+            'parent_id' => $parentProfile->id,
+            'nanny_id' => $validated['nanny_id'],
+            'booking_id' => $validated['booking_id'],
+            'rating' => $validated['rating'],
+            'comment' => $validated['comment'],
+        ]);
 
         return response()->json([
-            'message' => '✅ Відгук успішно додано',
-            'review' => $review,
+            'message' => 'Відгук додано успішно',
+            'review' => $review
         ], 201);
     }
 
