@@ -96,4 +96,12 @@ class ParentProfile extends Model
             : Storage::disk('s3')->url($value);
     }
 
+    /**
+     * Відгуки, які залишив цей батько (для ReviewController)
+     */
+    public function reviews()
+    {
+        return $this->hasMany(\App\Models\Review::class, 'parent_id', 'user_id');
+    }
+
 }
