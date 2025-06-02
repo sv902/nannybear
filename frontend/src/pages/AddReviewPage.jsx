@@ -94,7 +94,7 @@ const AddReviewPage = () => {
         const currentUser = await axios.get("/api/user");
         const userId = currentUser.data.id;
 
-        const res = await axios.get(`/api/reviews/${booking.nanny_profile_id}`);
+        const res = await axios.get(`/api/reviews/${booking.nanny?.user?.id}`);
 
         const alreadyReviewed = res.data.some((review) => review.parent_id === userId);
 
@@ -106,7 +106,7 @@ const AddReviewPage = () => {
       }
     };
 
-    if (booking?.nanny_profile_id) {
+    if (booking?.nanny?.user?.id) {
       checkIfAlreadyReviewed();
     }
   }, [booking]);
@@ -129,13 +129,13 @@ const AddReviewPage = () => {
     }
   
     try {
+      console.log("🎯 Відправляємо nanny_id:", booking.nanny.id);
       await axios.post("/api/reviews", {
         rating,
         comment,
-        nanny_id: booking.nanny_profile_id,
+        nanny_id: booking.nanny.id,
         is_anonymous: isAnonymous,
       });
-
   
       setShowAlreadyReviewedModal(false);
       setError("");
