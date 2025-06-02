@@ -73,8 +73,7 @@ class ReviewController extends Controller
         }
 
         $existingReview = Review::where('parent_id', $parentProfile->id)
-            ->where('nanny_id', $validated['nanny_id'])
-            ->where('booking_id', $validated['booking_id'])
+            ->where('nanny_id', $validated['nanny_id'])           
             ->first();
 
         if ($existingReview) {
@@ -83,8 +82,7 @@ class ReviewController extends Controller
 
         $review = Review::create([
             'parent_id' => $parentProfile->id,
-            'nanny_id' => $validated['nanny_id'],
-            'booking_id' => $validated['booking_id'],
+            'nanny_id' => $validated['nanny_id'],          
             'rating' => $validated['rating'],
             'comment' => $validated['comment'],
             'is_anonymous' => $validated['is_anonymous'] ?? false,
