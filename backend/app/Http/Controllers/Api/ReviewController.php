@@ -45,7 +45,7 @@ class ReviewController extends Controller
         }
 
         $validated = $request->validate([
-            'nanny_id' => 'required|exists:users,id',
+           'nanny_id' => 'required|exists:nanny_profiles,id',
             'booking_id' => 'required|exists:bookings,id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:1000',
