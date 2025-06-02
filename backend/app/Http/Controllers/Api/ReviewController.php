@@ -36,11 +36,11 @@ class ReviewController extends Controller
     /**
      * Створення нового відгуку
      */
-   public function store(Request $request)
+    public function store(Request $request)
     {
-        $parent = Auth::user()->parentProfile;
+        $parentProfile = Auth::user()->parentProfile;
 
-        if (!$parent) {
+        if (!$parentProfile) {
             return response()->json(['error' => '❌ Тільки батьки можуть залишати відгуки'], 403);
         }
 
@@ -52,7 +52,6 @@ class ReviewController extends Controller
             'is_anonymous' => 'nullable|boolean',
         ]);
 
-        // Перевірка, чи бронювання належить цьому батькові і чи завершене
         $booking = Booking::with('bookingDays')
             ->where('id', $validated['booking_id'])
             ->where('parent_id', $parentProfile->id)
@@ -73,8 +72,7 @@ class ReviewController extends Controller
             return response()->json(['error' => '⚠️ Ви можете залишити відгук лише після завершення зустрічі'], 403);
         }
 
-        // Чи вже існує такий відгук
-        $existingReview = Review::where('parent_id', $parent->user_id)
+        $existingReview = Review::where('parent_id', $parentProfile->id)
             ->where('nanny_id', $validated['nanny_id'])
             ->where('booking_id', $validated['booking_id'])
             ->first();
@@ -83,13 +81,13 @@ class ReviewController extends Controller
             return response()->json(['error' => '⚠️ Ви вже залишили відгук для цієї зустрічі'], 400);
         }
 
-        // Створення нового відгуку
         $review = Review::create([
             'parent_id' => $parentProfile->id,
             'nanny_id' => $validated['nanny_id'],
             'booking_id' => $validated['booking_id'],
             'rating' => $validated['rating'],
             'comment' => $validated['comment'],
+            'is_anonymous' => $validated['is_anonymous'] ?? false,
         ]);
 
         return response()->json([
@@ -97,7 +95,6 @@ class ReviewController extends Controller
             'review' => $review
         ], 201);
     }
-
 
     /**
      * Оновлення існуючого відгуку
