@@ -36,7 +36,7 @@ class ReviewController extends Controller
     /**
      * Створення нового відгуку
      */
-   public function store(Request $request)
+  public function store(Request $request)
     {
         $parentProfile = Auth::user()->parentProfile;
 
@@ -45,15 +45,15 @@ class ReviewController extends Controller
         }
 
         $validated = $request->validate([
-            'nanny_id' => 'required|exists:nanny_profiles,id',
+            'nanny_id' => 'required|exists:nanny_profiles,id', // ID з таблиці nanny_profiles
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:1000',
             'is_anonymous' => 'nullable|boolean',
         ]);
 
-        // Перевірка: чи вже є відгук
-        $existingReview = \App\Models\Review::where('parent_id', $parentProfile->id)
-            ->where('nanny_id', $validated['nanny_id'])
+        // Перевірка: чи вже є відгук (важливо: nanny_id = profile_id, parent_id = user_id)
+        $existingReview = Review::where('parent_id', $parentProfile->user_id)
+            ->where('nanny_id', $validated['nanny_id']) // перевіряємо по profile_id
             ->first();
 
         if ($existingReview) {
@@ -61,8 +61,9 @@ class ReviewController extends Controller
         }
 
         // Створення відгуку
-        $review = $parentProfile->reviews()->create([
-            'nanny_id' => $validated['nanny_id'],
+        $review = Review::create([
+            'parent_id' => $parentProfile->user_id,        // parent_id — це user_id
+            'nanny_id' => $validated['nanny_id'],          // nanny_id — це profile_id
             'rating' => $validated['rating'],
             'comment' => $validated['comment'],
             'is_anonymous' => $validated['is_anonymous'] ?? false,
@@ -73,6 +74,7 @@ class ReviewController extends Controller
             'review' => $review,
         ], 201);
     }
+
 
 
     /**

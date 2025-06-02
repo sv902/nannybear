@@ -13,27 +13,28 @@ use App\Events\BookingCancelled;
 
 class BookingController extends Controller
 {
-    public function index()
+   public function index()
     {
         $user = Auth::user();
+
         if (!$user || !$user->parentProfile) {
             return response()->json(['error' => 'Не знайдено профіль батька'], 403);
         }
 
         $bookings = $user->parentProfile->bookings()
-            ->with(['nanny.user', 'address', 'bookingDays']) // ➕ додано 'bookingDays'
+            ->with(['nanny.user', 'address', 'bookingDays'])
             ->orderByDesc('start_date')
             ->get();
 
-            $bookings->each(function ($booking) {
-                if ($booking->nanny) {
-                    $booking->nanny->append('photo_url');
-                }
-            });
+        $bookings->each(function ($booking) {
+            if ($booking->nanny) {
+                $booking->nanny->append('photo_url');               
+                $booking->nanny_profile_id = $booking->nanny->id;
+            }
+        });
 
         return response()->json($bookings);
     }
-
 
     public function store(Request $request)
     {

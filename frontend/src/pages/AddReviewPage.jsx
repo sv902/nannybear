@@ -88,13 +88,16 @@ const AddReviewPage = () => {
     });
   }; 
 
-  useEffect(() => {
-    const checkIfAlreadyReviewed = async () => {
+ useEffect(() => {
+  const checkIfAlreadyReviewed = async () => {
       try {
-        const res = await axios.get(`/api/reviews/${booking.nanny.user_id}`);
-        const alreadyReviewed = res.data.some(
-          (r) => r.parent_id === booking.parent_id
-        );
+        const currentUser = await axios.get("/api/user");
+        const userId = currentUser.data.id;
+
+        const res = await axios.get(`/api/reviews/${booking.nanny_profile_id}`);
+
+        const alreadyReviewed = res.data.some((review) => review.parent_id === userId);
+
         if (alreadyReviewed) {
           setShowAlreadyReviewedModal(true);
         }
@@ -103,7 +106,7 @@ const AddReviewPage = () => {
       }
     };
 
-    if (booking?.parent_id && booking?.nanny?.user_id) {
+    if (booking?.nanny_profile_id) {
       checkIfAlreadyReviewed();
     }
   }, [booking]);
@@ -129,9 +132,10 @@ const AddReviewPage = () => {
       await axios.post("/api/reviews", {
         rating,
         comment,
-        nanny_id: booking.nanny.id,
-        booking_id: booking.id,      
+        nanny_id: booking.nanny_profile_id,
+        is_anonymous: isAnonymous,
       });
+
   
       setShowAlreadyReviewedModal(false);
       setError("");
