@@ -20,7 +20,7 @@ class ReviewController extends Controller
         $reviews = Review::with([
             'parentProfile:id,user_id,first_name,last_name,photo'
         ])
-        ->where('nanny_id', $nannyProfileId)
+        ->where('nanny_id', $nanny_id)
         ->orderBy('created_at', 'desc')
         ->get();
 
@@ -139,7 +139,7 @@ class ReviewController extends Controller
             $review = Review::findOrFail($review_id);
 
             // Перевірка, що поточний користувач є нянею, якій належить відгук
-            if ($review->nanny_id !== $user->id) {
+            if (!$user->nannyProfile || $review->nanny_id !== $user->nannyProfile->id) {
                 return response()->json(['error' => 'Ви не можете відповідати на чужий відгук'], 403);
             }
 
