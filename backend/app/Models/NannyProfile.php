@@ -76,6 +76,11 @@ class NannyProfile extends Model
     {
         return $this->hasMany(\App\Models\ParentReview::class);
     }
+
+    public function workingHours()
+    {
+        return $this->hasMany(WorkingHour::class, 'nanny_id');
+    }
     
     public function getPhotoUrl()
     {

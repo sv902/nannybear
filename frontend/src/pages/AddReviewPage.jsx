@@ -129,9 +129,8 @@ const AddReviewPage = () => {
       await axios.post("/api/reviews", {
         rating,
         comment,
-        is_anonymous: isAnonymous,
-        booking_id: booking.id,
         nanny_id: booking.nanny.user_id,
+        booking_id: booking.id, 
       });
     
       setShowAlreadyReviewedModal(false);

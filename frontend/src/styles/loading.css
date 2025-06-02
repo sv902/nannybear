@@ -1,57 +1,74 @@
 .loading-screen {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #FFFAEE;
-}
-
-.image-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  max-height: 900px;
-}
-
-.background-image {
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-.overlay-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: #FFF9EE;
+  height: 100vh;
+  padding: 20px;
+  text-align: center;
 }
 
-.spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid #e0e0e0;
-  border-top: 8px solid #3A3B61;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
+.loading-bear-box{
+  min-width: 638px;
+  min-height: 355px;
+  background-color: #3A3B61;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.loading-bear {
+  width: 200px;
 }
 
-.loading-text {
-  font-size: 26px;
-  font-weight: 400;
+.loading-title {
   color: #3A3B61;
+  margin: 0;  
   font-family: "Oswald", sans-serif;
+  text-transform: uppercase; 
+  font-weight: 400;
+  font-size: 100px;
+  line-height: 105%;
+  letter-spacing: 0%;
+  }
+
+.progress-bar-wrapper {
+  width: 638px;
+  height: 10px;
+  background-color: #e0f0ec;
+  border-radius: 4px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #34b4a0;
+  transition: width 0.3s ease;
+}
+
+.loading-subtitle {
+  font-size: 18px;
+  color: #3A3B61;
+  font-weight: 600;
   text-transform: uppercase;
+  font-family: Oswald;
+  font-weight: 400;
+  font-size: 36px;
   line-height: 120%;
+  letter-spacing: 0%;
+}
+
+.loading-description {
+  margin-top: 10px;
+  font-size: 14px;
+  max-width: 860px;
+  font-family: Comfortaa;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
+  color: #3A3B61;
 }

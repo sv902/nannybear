@@ -72,8 +72,15 @@ const NannyListPage = () => {
       );
     }
   
-    if (isUrgentClicked) {
-      filtered = filtered.filter((nanny) => nanny.availability && nanny.availability.includes("вільна")); // Виводимо тільки вільних нянь
+   if (isUrgentClicked) {
+      const now = new Date();
+
+      filtered = filtered.filter((nanny) =>
+        nanny.working_hours?.some((wh) => {
+          const startDateTime = new Date(`${wh.start_date}T${wh.start_time}`);
+          return wh.is_available && startDateTime >= now;
+        })
+      );
     }
   
     // Сортування за обраним критерієм

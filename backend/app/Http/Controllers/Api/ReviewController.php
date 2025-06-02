@@ -45,47 +45,48 @@ class ReviewController extends Controller
         }
 
         $validated = $request->validate([
+            'booking_id' => 'required|exists:bookings,id',
             'nanny_id' => 'required|exists:users,id',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|max:1000'
         ]);
-
-        // Перевірка: чи вже існує відгук
-        $existingReview = Review::where('parent_id', $user->id)
+     
+        $booking = Booking::with('bookingDays')
+            ->where('id', $validated['booking_id'])
+            ->where('parent_id', $user->id)
             ->where('nanny_id', $validated['nanny_id'])
             ->first();
 
+        if (!$booking) {
+            return response()->json(['error' => '❌ Бронювання не знайдено або не належить вам'], 403);
+        }
+ 
+        $now = now();
+        $isCompleted = $booking->bookingDays->every(function ($day) use ($now) {
+            return $day->date < $now->toDateString() ||
+                ($day->date === $now->toDateString() && $day->end_time <= $now->format('H:i:s'));
+        });
+
+        if (!$isCompleted) {
+            return response()->json(['error' => 'Ви можете залишити відгук лише після завершення зустрічі'], 403);
+        }
+
+        $existingReview = Review::where('parent_id', $user->id)
+            ->where('nanny_id', $validated['nanny_id'])
+            ->where('booking_id', $validated['booking_id'])
+            ->first();
+
         if ($existingReview) {
-            return response()->json(['error' => 'Ви вже залишили відгук для цієї няні'], 400);
+            return response()->json(['error' => 'Ви вже залишили відгук для цієї зустрічі'], 400);
         }
 
-        // 🔍 Перевірка — чи є завершене бронювання
-      $bookingExists = \App\Models\Booking::where('parent_id', $user->id)
-        ->where('nanny_id', $validated['nanny_id'])
-        ->whereHas('bookingDays', function ($query) {
-            $now = now();
+        $review = new Review();
+        $review->parent_id = $user->id;
+        $review->nanny_id = $validated['nanny_id'];
+        $review->rating = $validated['rating'];
+        $review->comment = $validated['comment'];
+        $review->save();
 
-            $query->where(function ($q) use ($now) {
-                $q->whereDate('date', '<', $now->toDateString())
-                ->orWhere(function ($q2) use ($now) {
-                    $q2->whereDate('date', $now->toDateString())
-                        ->whereRaw("end_time <= ?", [$now->format('H:i:s')]);
-                });
-            });
-        })
-        ->exists();
-
-
-        if (!$bookingExists) {
-            return response()->json(['error' => 'Ви можете залишити відгук лише після зустрічі з нянею'], 403);
-        }
-
-        $review = Review::create([
-            'parent_id' => $user->id,
-            'nanny_id' => $validated['nanny_id'],
-            'rating' => $validated['rating'],
-            'comment' => $validated['comment']
-        ]);
 
         return response()->json([
             'message' => 'Відгук додано успішно',

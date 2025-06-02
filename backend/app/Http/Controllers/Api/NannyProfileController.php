@@ -17,7 +17,7 @@ class NannyProfileController extends Controller
      */
     public function index(Request $request)
     {
-        $nannies = NannyProfile::with('user')
+        $nannies = NannyProfile::with(['user', 'workingHours'])
             ->withAvg('reviews', 'rating')
             ->paginate(15);
 
