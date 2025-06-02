@@ -129,7 +129,7 @@ const AddReviewPage = () => {
       await axios.post("/api/reviews", {
         rating,
         comment,
-        nanny_id: booking.nanny.user_id,
+        nanny_id: booking.nanny.id,
         booking_id: booking.id,      
       });
   
