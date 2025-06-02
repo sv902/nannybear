@@ -472,14 +472,14 @@ const handleNextEdu = () => {
               {visibleReviews.length > 0 ? (
                   visibleReviews.map((review, idx) => (
                     <div key={idx} className="review-item">
-                      <img
+                        <img
                         src={
-                          review.parent_profile?.photo ||
+                          review.parent_profile?.photo_url ||
                           "https://nanny-bear-media-bucket.s3.eu-north-1.amazonaws.com/photos/parents/default-avatar.jpg"
-                        }
-                        alt="Аватар"
-                        className="review-avatar"
-                      />
+                          }
+                          alt="Аватар"
+                          className="review-avatar"
+                        />
                     <div className="review-text">
                       <strong className="name-parent-rev">
                         {review.parent_profile?.first_name}{" "}
