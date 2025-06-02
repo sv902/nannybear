@@ -170,7 +170,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::get('/reviews/parent/{user_id}', [ReviewController::class, 'getParentReviews']);
     Route::get('/reviews/about-parent/{user_id}', [ParentReviewController::class, 'getReviewsAboutParent']);
-    Route::get('/reviews/about-nanny/{user_id}', [ReviewController::class, 'getReviewsAboutNanny']);
+    Route::get('/reviews/about-nanny/{nanny_id}', [ReviewController::class, 'getReviewsAboutNanny']);
 
 
     Route::post('/parent-reviews', [ParentReviewController::class, 'store']);

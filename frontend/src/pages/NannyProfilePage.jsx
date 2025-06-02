@@ -50,11 +50,11 @@ const NannyProfilePage = () => {
     
 
     useEffect(() => {
-      if (!nanny || !nanny.user_id) return;
+      if (!nanny || !nanny.id) return;
     
       const fetchReviews = async () => {
         try {
-          const response = await axios.get(`/api/reviews/${nanny.user_id}`);
+          const response = await axios.get(`/api/reviews/${nanny.id}`);
           console.log("Відгуки, які будуть рендеритись:", response.data);
           setReviews(response.data);
         } catch (error) {

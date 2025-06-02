@@ -20,7 +20,7 @@ class ReviewController extends Controller
         $reviews = Review::with([
             'parentProfile:id,user_id,first_name,last_name,photo'
         ])
-        ->where('nanny_id', $nanny_id)
+        ->where('nanny_id', $nannyProfileId)
         ->orderBy('created_at', 'desc')
         ->get();
 
@@ -180,10 +180,10 @@ class ReviewController extends Controller
         return response()->json($reviews);
     }
 
-    public function getReviewsAboutNanny($user_id)
+    public function getReviewsAboutNanny($nannyProfileId)
     {
         $reviews = Review::with('parentProfile') // підтягуємо дані про батька
-            ->where('nanny_id', $user_id)
+            ->where('nanny_id', $nannyProfileId)
             ->orderBy('created_at', 'desc')
             ->get();
 
