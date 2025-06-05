@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import VariantHeader from "../../components/Header/VariantHeader";
 import Footer from "../../components/Footer/Footer";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 import axios from "../../axiosConfig";
 
 const BookingSuccess = () => {  

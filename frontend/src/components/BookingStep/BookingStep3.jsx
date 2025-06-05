@@ -4,6 +4,7 @@ import axios from "../../axiosConfig";
 import VariantHeader from "../../components/Header/VariantHeader";
 import Footer from "../../components/Footer/Footer";
 import "../../styles/booking.css";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const BookingStep3 = () => {  
   const navigate = useNavigate();

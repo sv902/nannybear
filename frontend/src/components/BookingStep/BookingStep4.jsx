@@ -3,6 +3,7 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import axios from "../../axiosConfig";
 import VariantHeader from "../../components/Header/VariantHeader";
 import Footer from "../../components/Footer/Footer";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const BookingStep4 = () => { 
   const navigate = useNavigate();
