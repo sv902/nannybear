@@ -90,7 +90,7 @@ const BookingStep2 = () => {
   : "—";
 
  
-  if (!nanny) return <div>Завантаження...</div>;
+  if (!nanny) return <LoadingScreen text="Завантаження сторінки..." />;
 
   return (
     <div className="booking-page">

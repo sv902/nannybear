@@ -16,7 +16,7 @@ const LoadingScreen = () => {
     <div className="loading-screen">
       <div className="loading-bear-box">
       <img
-        src="/assets/loading-bear.png" 
+        src="/assets/loading_bear.png" 
         alt="Ведмедик завантажує"
         className="loading-bear"
       />

@@ -43,7 +43,7 @@ const BookingSuccess = () => {
     ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
     : "—";
 
-  if (!bookingData) return <div>Завантаження...</div>;
+  if (!bookingData) return <LoadingScreen text="Завантаження сторінки..." />;
 
   // Після перевірки!
   const { address, payment_type, total_price, booking_days, hourly_rate } = bookingData;
@@ -77,7 +77,7 @@ const BookingSuccess = () => {
   : "—";
 
 
-  if (!bookingData || !nanny) return <div>Завантаження...</div>;
+  if (!bookingData || !nanny) return <LoadingScreen text="Завантаження сторінки..." />;
 
   return (
     <div >

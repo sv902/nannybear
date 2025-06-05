@@ -170,8 +170,7 @@ const getTimeRangeFromBookingDays = () => {
     return `${day}.${month}.${year} р.`;
   };
 
-  if (!nanny) return <div>Завантаження...</div>;
-
+  if (!nanny) return <LoadingScreen text="Завантаження сторінки..." />;
   return (
     <div className="booking-page">
       <VariantHeader />

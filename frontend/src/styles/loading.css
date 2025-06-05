@@ -10,16 +10,13 @@
 }
 
 .loading-bear-box{
-  min-width: 638px;
-  min-height: 355px;
-  background-color: #3A3B61;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .loading-bear {
-  width: 200px;
+  width: 638px;
 }
 
 .loading-title {
